@@ -14,3 +14,5 @@ Is the [PUP Programming Guild](https://fb.com/puprogrammingguild) that is compos
 ## Purpose
 
 This is for the upcoming [Bigas2Hack](http://rice-hackathon.irri.org/) competition to be held later this year.
+
+Note: Use Notepad++ for opening the fortran files.
