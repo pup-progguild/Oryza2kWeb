@@ -1,0 +1,51 @@
+*------------------------------------------------------------
+* 1. Input files
+*-----------------------------------------------------------
+*E:\DS08\CALIBRIN2.dat
+FILEON = 'E:\DS08\RES.DAT'
+FILEOL = 'E:\DS08\MODEL.LOG'
+FILEIR = 'E:\DS08\Rerun2.dat'
+FILEIT = 'E:\DS08\ARB 2.exp'  ! Experimental data
+FILEI1 = 'E:\DS08\ARB 2.crp'  !crop file
+FILEI2 = 'E:\DS08\SoilAYT.sol'  !soil file
+
+*----------------------------------------------------------------------*
+* 2. CALIBRATION PARAMETER CONTROLS                                             *
+*----------------------------------------------------------------------*
+INRERUNS = 1  !THE MULTIPLE ENVIRONMENTS
+OUTFOLDER = 'E:\DS08\'     !THE PLACE FOR CALIBRATION OUTPUTS
+ORYZA = 'E:\Execute\ORYZA3.exe'   !The folder of ORYZA2000 executable program
+
+*CROP PARAMETERS WITH SINGLE VALUES
+CROPSVN = 'FNTRT','MAXD','FSWTD','FSTR'  !THE NAMES OF PARAMETERS
+CROPSVR = 0.5, 0.5, 0.5, 0.5        !THE MAXIMUM CHANGE FRACTION
+*CROP PARAMETERS WITH TABLE VALUES
+CROPTVN = 'KDFTB','SLATB','FSHTB','FSOTB','FLVTB','FSTTB','DRLVT'   
+          !THE NAME OF PARAMETERS
+CROPTVR = 0.2,0.5,0.5,0.5,0.5,0.5,0.5   !THE MAXIMUM CHANGE FRACTION OF PARAMETERS
+
+*SOIL PARAMETERS WITH SINGLE VALUES
+*SOILSVN =    !THE NAMES OF PARAMETERS
+*SOILSVR =    !THE MAXIMUM CHANGE RANGES OF PARMETERS
+*SOIL PARAMETERS WITH MULTIPLE VALUES
+*SOILMVN = 'KST','VGA','VGL'   !THE NAMES OF PARAMETERS
+*SOILMVR = 1.0,0.5,0.5         !THE MAXIMUM CHANGE RANGES OF PARAMETER
+
+*-------------------------------------------------------------
+* 3. GIVE CRITICAL METHODS: 
+*     1: USE RMSEn; 2: MODELING EFFICIENCY. NORMALLY
+* OBSERVATIONS ARE LESS THAN 4, USE METHODS 1, OTHERWISE USE 2;
+*--------------------------------------------------------------
+CMETHODS = 1
+* CMETHODS =1, THE CRITICAL VALUE FOR THE BEST IS APPROXIMATE TO 0.0
+* CMETHODS = 2, THE CRITICAL VALUE FOR THE BEST IS APPROXIMATE TO 1.0
+
+WSO = .05
+WAGT = .05
+LAI = .1
+WLVG = .15
+WST = .15
+WLVD = .25
+NFLV = .3
+*CRITICAL VALUE FOR ALL OBSERVERED VARIABLESSHOULD CORRESPOND METHODS
+
