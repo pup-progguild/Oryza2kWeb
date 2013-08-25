@@ -14,7 +14,7 @@
 | path to your installation.
 |
 */
-$config['base_url']	= 'http://localhost/oryza2kweb/';
+$config['base_url']	= '';
 
 /*
 |--------------------------------------------------------------------------
