@@ -1,5 +1,7 @@
-AddType application/x-web-app-manifest+json .webapp
-
 RewriteEngine on
+RewriteBase /
 RewriteCond $1 !^(index\.php|css|js|img|robots\.txt)
-RewriteRule ^(.*)$ /index.php/$1 [L]
+RewriteRule ^(application|system|\.git) index.php/$1 [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php/$1 [QSA,L]
