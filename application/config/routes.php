@@ -38,8 +38,8 @@
 */
 
 $route['default_controller'] = 'Homepage';
-$route['about'] = 'About';
-//$route['input'] = 'input';
+// $route['about'] = 'views/pages/about';
+// $route['input'] = 'input';
 $route['404_override'] = '';
 
 

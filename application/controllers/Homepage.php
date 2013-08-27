@@ -16,4 +16,24 @@ class Homepage extends CI_Controller {
         $this->load->view('templates/content-end', $data);
         $this->load->view('templates/footer', $data);
     }
+
+    public function input() {
+        $data['title'] = 'Input';
+
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/content-start', $data);
+        $this->load->view('pages/input', $data);
+        $this->load->view('templates/content-end', $data);
+        $this->load->view('templates/footer', $data);
+    }
+
+    public function about() {
+        $data['title'] = 'About';
+
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/content-start', $data);
+        $this->load->view('pages/about', $data);
+        $this->load->view('templates/content-end', $data);
+        $this->load->view('templates/footer', $data);
+    }
 }
