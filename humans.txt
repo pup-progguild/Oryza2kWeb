@@ -3,13 +3,15 @@
 
 # TEAM
 
-    Temoto-kun -- developer -- @temotoKun
+    	awkwardusername -- developer -- @the_dead_poetic
+	Temoto-kun -- developer -- @temotoKun
 
 # THANKS
 
-    <name>
+    	Microsoft. Google.
 
 # TECHNOLOGY COLOPHON
 
-    HTML5, CSS3, Bootstrap
-    Normalize.css, jQuery, Modernizr
+    	HTML5, CSS3, Bootstrap
+    	Normalize.css, jQuery, Modernizr
+	CodeIgniter
