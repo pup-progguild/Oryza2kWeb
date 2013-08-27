@@ -12,12 +12,14 @@
 
 		<!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
-		<link rel="stylesheet" href="./css/normalize.css">
-		<link rel="stylesheet" href="./css/main.css">
+        <?php $base_url = base_url() ?>
+
+		<link rel="stylesheet" href="<?= $base_url ?>css/normalize.css">
+		<link rel="stylesheet" href="<?= $base_url ?>css/main.css">
 
 		<!-- Bootstrap -->
-		<link rel="stylesheet" href="./css/bootstrap/bootstrap.min.css">
-		<link rel="stylesheet" href="./css/bootstrap/bootstrap-responsive.min.css">
+		<link rel="stylesheet" href="<?= $base_url ?>css/bootstrap/bootstrap.min.css">
+		<link rel="stylesheet" href="<?= $base_url ?>css/bootstrap/bootstrap-responsive.min.css">
 
 
 		<style type="text/css">
