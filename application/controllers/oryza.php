@@ -32,6 +32,7 @@ class Oryza extends CI_Controller {
         $this->load->view('templates/content-start', $data);
         $this->load->view('pages/input', $data);
         $this->load->view('templates/content-end', $data);
+        $this->load->view('templates/input-script.js', $data);
         $this->load->view('templates/footer', $data);
     }
 

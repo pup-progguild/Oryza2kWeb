@@ -20,9 +20,9 @@
 
                 <div class="nav-collapse collapse">
                     <ul class="nav">
-                        <li <? if($title == "Home"): ?>class="active"<? endif ?>><a href="index">Home</a></li>
-                        <li <? if($title == "Input"): ?>class="active"<? endif ?>><a href="input">Simulation</a></li>
-                        <li <? if($title == "About"): ?>class="active"<? endif ?>><a href="about">About</a></li>
+                        <li <? if($title == "Home"): ?>class="active"<? endif ?>><a href="<?= base_url() ?>index.php/oryza/index">Home</a></li>
+                        <li <? if($title == "Input"): ?>class="active"<? endif ?>><a href="<?= base_url() ?>index.php/oryza/input">Simulation</a></li>
+                        <li <? if($title == "About"): ?>class="active"<? endif ?>><a href="<?= base_url() ?>index.php/oryza/about">About</a></li>
                     </ul>
                 </div>
                 <!--/.nav-collapse -->
