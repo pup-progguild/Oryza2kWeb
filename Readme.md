@@ -6,7 +6,7 @@ A mission to webify that Oryza2000 crop modeling tool from [IRRI](https://sites.
 
 Is the [PUP Programming Guild](https://fb.com/puprogrammingguild) that is composed of the ff.
 
-* awkwardusername (http://iamexistent.wordpress.com)
+* awkwardusername
 * Temoto-kun
 * Carl
 * Jeremiah
