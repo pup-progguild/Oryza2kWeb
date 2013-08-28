@@ -148,6 +148,10 @@
                 <li>a mistyped address</li>
                 <li>an out-of-date link</li>
             </ul>
+
+            <h2>L33t Info</h2>
+            <?php echo $this->agent->agent_string(); ?>
+
             <script>
                 var GOOG_FIXURL_LANG = (navigator.language || '').slice(0,2),GOOG_FIXURL_SITE = location.host;
             </script>

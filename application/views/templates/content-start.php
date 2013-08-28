@@ -16,13 +16,13 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="brand" href="index">ORYZA 2K Web</a>
+                <a class="brand" href="<?= base_url() ?>">ORYZA 2K Web</a>
 
                 <div class="nav-collapse collapse">
                     <ul class="nav">
-                        <li <? if($title == "Home"): ?>class="active"<? endif ?>><a href="<?= base_url() ?>index.php/oryza/index">Home</a></li>
-                        <li <? if($title == "Input"): ?>class="active"<? endif ?>><a href="<?= base_url() ?>index.php/oryza/input">Simulation</a></li>
-                        <li <? if($title == "About"): ?>class="active"<? endif ?>><a href="<?= base_url() ?>index.php/oryza/about">About</a></li>
+                        <li <? if($title == "Home"): ?>class="active"<? endif ?>><a href="<?= base_url() ?>index.php/oryza">Home</a></li>
+                        <li <? if($title == "Input"): ?>class="active"<? endif ?>><a href="<?= base_url() ?>index.php/input">Simulation</a></li>
+                        <li <? if($title == "About"): ?>class="active"<? endif ?>><a href="<?= base_url() ?>index.php/about">About</a></li>
                     </ul>
                 </div>
                 <!--/.nav-collapse -->

@@ -38,9 +38,9 @@
 */
 
 $route['default_controller'] = 'Oryza';
-// $route['about'] = 'views/pages/about';
+$route['home'] = 'Oryza';
 // $route['input'] = 'input';
-$route['404_override'] = '';
+$route['404_override'] = 'errors/page_missing';
 
 
 /* End of file routes.php */
