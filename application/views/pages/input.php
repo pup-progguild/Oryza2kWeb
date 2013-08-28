@@ -1,8 +1,19 @@
+<style type="text/css">
+    #editor {
+        position: relative !important;
+        border: 1px solid lightgray;
+        margin: auto;
+        height: 200px;
+        width: 80%;
+    }
+</style>
+
 <div class="page-header">
 	<h1>ORYZA 2K Potential Yield Information</h1>
 </div>
 
-<div class="tabbable">
+<button id="btn-run" class="btn btn-primary" data-loading>Run</button>
+<div class="tabbable tabs-left">
     <ul class="nav nav-tabs">
         <li class="active"><a href="#param" data-toggle="tab">Parameters</a></li>
         <li><a href="#advanced" data-toggle="tab">Advanced Input</a></li>
@@ -28,17 +39,17 @@
                 </div>
 
                 <div class="control-group" id="year-field">
-                    <input type="hidden" id="year" name="year" value="1991">
+                    <input type="hidden" id="year" name="year" value="<?= $year_start ?>">
                     <label class="control-label" for="year-control">Year</label>
                     <div class="controls">
                         <div id="year-control" class="btn-group">
                             <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                                <span id="year-value">1991</span> <span class="caret"></span>
+                                <span id="year-value"><?= $year_start ?></span> <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
-                                <?php for($y = 1991; $y <= 1993; $y++) : ?>
-                                    <li><a href="#!year=<?= $y ?>"><?php echo $y ?></a></li>
-                                <?php endfor; ?>
+                                <? for($y = $year_start; $y <= $year_end; $y++) : ?>
+                                    <li><a href="#!year=<?= $y ?>"><?= $y ?></a></li>
+                                <? endfor ?>
                             </ul>
                         </div>
                     </div>
@@ -99,14 +110,49 @@
                         <input id="transpl" name="transpl" type="text">
                     </div>
                 </div>
+
+                <div style="height: 32px"></div>
             </form>
         </div>
         <div id="advanced" class="tab-pane">
-            <p>Advanced Input here</p>
+            <form class="form-horizontal">
+                <div class="control-group" id="variety-edit-field">
+                    <input type="hidden" id="variety-edit" name="variety-edit" value="variety-edit-short">
+                    <label class="control-label" for="variety-edit-control">Variety</label>
+                    <div class="controls">
+                        <div id="variety-edit-control" class="btn-group">
+                            <button class="btn active" id="variety-edit-short">Short-term</a></button>
+                            <button class="btn" id="variety-edit-medium">Medium-term</a></button>
+                            <button class="btn" id="variety-edit-long">Long-term</a></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="control-group" id="year-edit-field">
+                    <input type="hidden" id="year-edit" name="year-edit" value="<?= $year_start ?>">
+                    <label class="control-label" for="year-edit-control">Year</label>
+                    <div class="controls">
+                        <div id="year-edit-control" class="btn-group">
+                            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                                <span id="year-edit-value"><?= $year_start ?></span> <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <? for($y = $year_start; $y <= $year_end; $y++) : ?>
+                                    <li><a href="#!year-edit=<?= $y ?>"><?= $y ?></a></li>
+                                <? endfor ?>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div id="editor"></div>
+                </div>
+
+                <div style="height: 96px"></div>
+            </form>
         </div>
     </div>
 </div>
-<button id="btn-run" class="btn btn-primary" data-loading>Run</button>
 
 <!--
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
@@ -115,6 +161,9 @@
 <script src="<?= base_url() ?>js/vendor/jquery-1.9.1.min.js"></script>
 <script src="<?= base_url() ?>js/vendor/jquery.ba-hashchange.min.js"></script>
 <script src="<?= base_url() ?>js/plugins.js"></script>
+<script src="<?= base_url() ?>js/vendor/require.js"></script>
+<script src="<?= base_url() ?>js/vendor/ace-builds/src-noconflict/ace.js" type="text/javascript"></script>
+<script src="<?= base_url() ?>js/vendor/ace-builds/src-noconflict/mode-oryza_dat.js"></script>
 
 <script>
     (function() {
@@ -153,6 +202,12 @@
             return valid;
         }
 
+        function readyEditor() {
+            var editor = ace.edit("editor");
+            editor.setTheme("ace/theme/monokai");
+            editor.getSession().setMode("ace/mode/oryza_dat");
+        }
+
         $(window).hashchange(function() {
             var rawHash = location.hash.substr(1);
             var isHashEvent = rawHash.indexOf('!') == 0; // event data k/v pair(s) are specified after bang character.
@@ -174,8 +229,6 @@
                     doLogic();
                 }
             }
-
-            location.hash = "";
         });
 
         $(".dropdown-menu").find("li").find("a").click(function() {
@@ -190,9 +243,16 @@
                 $("#main").submit();
         });
 
+        $("#variety-edit-control").find(".btn").click(function() {
+            $("#variety-edit").val(this.id);
+            $("#variety-edit-control").find(".btn").removeClass("active");
+            $(this).addClass("active");
+        })
+
         $(document).ready(function() {
             $("#transpl-field").hide();
             location.hash = "";
+            readyEditor();
         })
     })();
 </script>

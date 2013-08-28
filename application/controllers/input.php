@@ -17,6 +17,8 @@ class Input extends CI_Controller {
 
     public function index() {
         $data['title'] = 'Simulation';
+        $data['year_start'] = 1991;
+        $data['year_end'] = 1993;
 
         $this->_init();
 
