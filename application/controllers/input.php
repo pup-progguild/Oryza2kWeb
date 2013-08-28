@@ -16,7 +16,7 @@ class Input extends CI_Controller {
     }
 
     public function index() {
-        $data['title'] = 'Input';
+        $data['title'] = 'Simulation';
 
         $this->_init();
 

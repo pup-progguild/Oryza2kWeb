@@ -6,7 +6,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<title>ORYZA 2K Web</title>
+		<title>ORYZA 2K Web<?= (isset($title) && !empty($title) && $title != "Home" ? " &mdash; $title" : "") ?></title>
 		<meta name="description" content="">
 		<meta name="viewport" content="width=device-width">
 
