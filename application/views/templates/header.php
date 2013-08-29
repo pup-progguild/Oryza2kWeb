@@ -17,7 +17,6 @@
 
 		<!-- Bootstrap -->
 		<link rel="stylesheet" href="<?= base_url() ?>css/bootstrap/bootstrap.min.css">
-		<link rel="stylesheet" href="<?= base_url() ?>css/bootstrap/bootstrap-responsive.min.css">
 
 
 		<style type="text/css">
@@ -71,6 +70,13 @@
 			code {
 				font-size: 80%;
 			}
+
+            /* Responsive layout for typography */
+            @media(max-width: 400px) {
+                body {
+                    font-size: 0.5em;
+                }
+            }
 		</style>
 	</head>
 	<body>

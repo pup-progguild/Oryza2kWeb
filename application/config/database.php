@@ -48,7 +48,7 @@
 $active_group = 'default';
 $active_record = TRUE;
 
-$db['default']['hostname'] = 'localhost';
+$db['default']['hostname'] = '192.168.7.144';
 $db['default']['username'] = 'oryza';
 $db['default']['password'] = 'dev_oryza2kweb';
 $db['default']['database'] = 'oryza';

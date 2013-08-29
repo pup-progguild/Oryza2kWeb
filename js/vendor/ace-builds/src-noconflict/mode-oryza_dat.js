@@ -68,14 +68,14 @@ var OryzaDatHighlightRules = function() {
     this.$rules = {
         "start" : [
             {
+                // push <<comment>>
                 token : "comment",
-                regex : /[!].*$/
+                regex : /[*!]/,
+                next  : "comment"
             }, {
-                token : "comment",
-                regex : /((^[\s**])|!).*$/
-            }, {
+                // eat whitespace
                 token : "keyword.operator",
-                regex : /[=]/,
+                regex : /[=]\s*/,
                 next  : "value"
             }, {
                 defaultToken: "variable"
@@ -83,51 +83,105 @@ var OryzaDatHighlightRules = function() {
         ],
         "value" : [
             {
+                // push <<comma>>
+                token : "punctuation.operator",
+                regex : /[,]\s*/,
+                next  : "cvalue"
+            }, {
+                // push <<squote>>
                 token : "string",
                 regex : /[']/,
                 next  : "qstring"
             }, {
+                // push <<dquote>>
                 token : "string",
                 regex : /["]/,
                 next  : "qqstring"
             }, {
-                token : "punctuation.operator",
-                regex : /[,]/,
-                next  : "value"
+                // push <<comment>>
+                token : "comment",
+                regex : /[*!]/,
+                next  : "comment"
             }, {
                 token : "value",
                 regex : /$/,
                 next  : "start"
             }, {
-                token : "comment",
-                regex : /!.*$/,
-                next  : "comment"
+                // eat whitespace
+                token : "value",
+                regex : /\s/
             }, {
-                defaultToken: "value"
+                defaultToken : "value"
+            }
+        ],
+        "cvalue" : [ // just like "value", but <<comma>> stack is not empty
+            {
+                // push <<comma>>, technically NOOP, also eat whitespace
+                token : "punctuation.operator",
+                regex : /[,]\s*/,
+                next  : "cvalue"
+            }, {
+                // push <<squote>>
+                token : "string",
+                regex : /[']/,
+                next  : "qstring"
+            }, {
+                // push <<dquote>>
+                token : "string",
+                regex : /["]/,
+                next  : "qqstring"
+            }, {
+                // push <<comment>>
+                token : "comment",
+                regex : /[*!]/,
+                next  : "ccomment"
+            }, {
+                token : "value",
+                regex : /$/,
+                next  : "start"
+            }, {
+                // any other match pops <<comma>>
+                defaultToken : "value"
             }
         ],
         "qstring" : [
             {
-                token : "string",
-                regex : /[^']/
-            }, {
+                // pop <<squote>>
                 token : "string",
                 regex : /[']/,
                 next  : "value"
             }, {
-                defaultToken: "string"
+                defaultToken : "string"
             }
         ],
         "qqstring" : [
             {
+                // pop <<dquote>>
                 token : "string",
-                regex : /[^"]/
-            }, {
                 regex : /["]/,
-                token : "string",
                 next  : "value"
             }, {
-                defaultToken: "string"
+                defaultToken : "string"
+            }
+        ],
+        "comment" : [
+            {
+                // pop <<comment>>
+                token : "comment",
+                regex : /$/,
+                next  : "start"
+            }, {
+                defaultToken : "comment"
+            }
+        ],
+        "ccomment" : [ // just like "comment", but <<comma>> stack is not empty
+            {
+                // pop <<comment>>
+                token : "comment",
+                regex : /$/,
+                next  : "value"
+            }, {
+                defaultToken : "comment"
             }
         ]
     };
