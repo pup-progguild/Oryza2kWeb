@@ -72,7 +72,7 @@ var OryzaDatHighlightRules = function() {
                 regex : /[!].*$/
             }, {
                 token : "comment",
-                regex : /((^[*])|!).*$/
+                regex : /((^[*])|( ^[*])|!).*$/
             }, {
                 token : "keyword.operator",
                 regex : /[=]/,

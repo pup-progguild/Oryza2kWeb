@@ -2,10 +2,11 @@
   "version": "0.1",
   "name": "Oryza2k Web",
   "description": "A web frontend to Oryza2000 by IRRI, a crop modeling tool for rice research.",
-  "launch_path": "/index.html",
+  "launch_path": "/index.php",
   "icons": {
-    "60": "/img/logo/oryza2k-logo-60.png",
-    "128": "/img/logo/oryza2k-logo-128.png"
+    "60": "/img/logo/oryza2k-logo-64.png",
+    "128": "/img/logo/oryza2k-logo-128.png",
+	"256": "/img/logo/oryza2k-logo-256.png"
   },
   "developer": {
     "name": "PUP Programming Guild",
