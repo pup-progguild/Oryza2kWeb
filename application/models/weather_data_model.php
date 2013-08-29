@@ -84,13 +84,44 @@ class Weather_data_model extends CI_Model {
      * @function         get_country_location_list
      * @description      returns 'country' => 'year' value pairs
      */
-    public function get_country_location_list() {
+    public function get_country_year_list() {
         $this->db->start_cache();
-        $this->db->select('country', 'year');
+        $this->db->select('country, year');
         $this->db->stop_cache();
 
         $query = $this->db->get($this->WEATHER_DATA_TABLE);
 
+        return $query->result_array();
+    }
+
+    /*
+     * @function         get_countries
+     * @description      returns countries
+     */
+    public function get_countries() {
+        // this must be get_sites(), since I have used "Site" for this value in the UI ~Temoto-kun
+        $this->db->start_cache();
+        $this->db->select('country');
+        $this->db->stop_cache();
+
+        $query = $this->db->get($this->WEATHER_DATA_TABLE);
+
+        // TODO get unique values only
+        return $query->result_array();
+    }
+
+    /*
+     * @function          get_years
+     * @description       returns years
+     */
+    public function get_years() {
+        $this->db->start_cache();
+        $this->db->select('year');
+        $this->db->stop_cache();
+
+        $query = $this->db->get($this->WEATHER_DATA_TABLE);
+
+        // TODO get unique values only
         return $query->result_array();
     }
 }

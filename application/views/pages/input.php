@@ -30,9 +30,9 @@
                                 <span id="site-value">Philippines</span> <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a href="#!site=ph">Philippines</a></li>
-                                <li><a href="#!site=in">Indonesia</a></li>
-                                <li><a href="#!site=ch">China</a></li>
+                                <?php foreach($weather_data as $weather): ?>
+                                    <li><a href="#!site=<?= $weather['country'] ?>">Philippines</a></li>
+                                <?php endforeach ?>
                             </ul>
                         </div>
                     </div>
@@ -118,21 +118,44 @@
             <form class="form-horizontal">
                 <input type="hidden" id="variety-edit" name="variety-edit" value="variety-edit-short">
                 <div id="variety-edit-control" class="btn-group">
-                    <button type="button" class="btn active" id="variety-edit-short">Short-term</a></button>
-                    <button type="button" class="btn" id="variety-edit-medium">Medium-term</a></button>
-                    <button type="button" class="btn" id="variety-edit-long">Long-term</a></button>
+                    <?php foreach ($template as $variety): ?>
+                        <button type="button" class="btn" id="<?= underscore($variety['label']) ?>"><?= $variety['label'] ?></a></button>
+                    <?php endforeach ?>
                 </div>
+                <!--
+                I have no way of looking at the output, but hey sync this, will you?
+                We have to separate the year with the country (site) in "Advanced Input".
+                ~Temoto-kun
+                -->
                 <input type="hidden" id="year-edit" name="year-edit" value="<?= $year_start ?>">
                 <div id="year-edit-control" class="btn-group">
                     <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
                         <span id="year-edit-value"><?= $year_start ?></span> <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
-                        <? for($y = $year_start; $y <= $year_end; $y++) : ?>
-                            <li><a href="#!year-edit=<?= $y ?>"><?= $y ?></a></li>
-                        <? endfor ?>
+                        <?php foreach ($years as $year): ?>
+                            <li><a href="#!year-edit=<?= $year['year'] ?>">
+                                    <?= $year['year'] ?>
+                                </a>
+                            </li>
+                        <?php endforeach ?>
                     </ul>
                 </div>
+                <input type="hidden" id="site-edit" name="site-edit" value="ph">
+                <div id="site-edit-control" class="btn-group">
+                    <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                        <span id="site-edit-value">Philippines</span> <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <?php foreach ($sites as $site): ?>
+                            <li><a href="#!site-edit=<?= $site['site'] ?>">
+                                    <?= $site['site'] ?>
+                                </a>
+                            </li>
+                        <?php endforeach ?>
+                    </ul>
+                </div>
+
 
                 <div class="row-fluid">
                     <div class="span3">
@@ -148,9 +171,9 @@
                     <div class="span3" id="editor"></div>
                 </div>
 
-                <?php foreach ($template as $variety): ?>
-                    <?= $variety ?>
-                <?php endforeach ?>
+
+
+
 
                 <div style="height: 96px"></div>
             </form>
