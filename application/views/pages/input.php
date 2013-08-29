@@ -3,8 +3,8 @@
         position: relative !important;
         border: 1px solid lightgray;
         margin: auto;
-        height: 200px;
-        width: 80%;
+        height: 300px;
+        width: 70%;
     }
 </style>
 
@@ -12,11 +12,11 @@
 	<h1>ORYZA 2K Potential Yield Information</h1>
 </div>
 
-<button id="btn-run" class="btn btn-primary" data-loading>Run</button>
-<div class="tabbable tabs-left">
+<div class="tabbable">
     <ul class="nav nav-tabs">
         <li class="active"><a href="#param" data-toggle="tab">Parameters</a></li>
         <li><a href="#advanced" data-toggle="tab">Advanced Input</a></li>
+        <li><a href="#run" data-toggle="tab" id="tab-run">Run</a></li>
     </ul>
     <div class="tab-content">
         <div id="param" class="tab-pane active">
@@ -116,40 +116,43 @@
         </div>
         <div id="advanced" class="tab-pane">
             <form class="form-horizontal">
-                <div class="control-group" id="variety-edit-field">
-                    <input type="hidden" id="variety-edit" name="variety-edit" value="variety-edit-short">
-                    <label class="control-label" for="variety-edit-control">Variety</label>
-                    <div class="controls">
-                        <div id="variety-edit-control" class="btn-group">
-                            <button class="btn active" id="variety-edit-short">Short-term</a></button>
-                            <button class="btn" id="variety-edit-medium">Medium-term</a></button>
-                            <button class="btn" id="variety-edit-long">Long-term</a></button>
-                        </div>
-                    </div>
+                <input type="hidden" id="variety-edit" name="variety-edit" value="variety-edit-short">
+                <div id="variety-edit-control" class="btn-group">
+                    <button type="button" class="btn active" id="variety-edit-short">Short-term</a></button>
+                    <button type="button" class="btn" id="variety-edit-medium">Medium-term</a></button>
+                    <button type="button" class="btn" id="variety-edit-long">Long-term</a></button>
                 </div>
-                <div class="control-group" id="year-edit-field">
-                    <input type="hidden" id="year-edit" name="year-edit" value="<?= $year_start ?>">
-                    <label class="control-label" for="year-edit-control">Year</label>
-                    <div class="controls">
-                        <div id="year-edit-control" class="btn-group">
-                            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                                <span id="year-edit-value"><?= $year_start ?></span> <span class="caret"></span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <? for($y = $year_start; $y <= $year_end; $y++) : ?>
-                                    <li><a href="#!year-edit=<?= $y ?>"><?= $y ?></a></li>
-                                <? endfor ?>
-                            </ul>
-                        </div>
-                    </div>
+                <input type="hidden" id="year-edit" name="year-edit" value="<?= $year_start ?>">
+                <div id="year-edit-control" class="btn-group">
+                    <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                        <span id="year-edit-value"><?= $year_start ?></span> <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <? for($y = $year_start; $y <= $year_end; $y++) : ?>
+                            <li><a href="#!year-edit=<?= $y ?>"><?= $y ?></a></li>
+                        <? endfor ?>
+                    </ul>
                 </div>
 
-                <div>
-                    <div id="editor"></div>
+                <div class="row-fluid">
+                    <div class="span3">
+                        <ul class="nav nav-list">
+                            <li class="nav-header">Control files</li>
+                            <li class="active"><a href="#!">control.dat</a></li>
+                            <li><a href="#">reruns.dat</a></li>
+                            <li class="nav-header">Data files</li>
+                            <li><a href="#">short_term.crp</a></li>
+                            <li><a href="#">short_term.exp</a></li>
+                        </ul>
+                    </div>
+                    <div class="span3" id="editor"></div>
                 </div>
 
                 <div style="height: 96px"></div>
             </form>
+        </div>
+        <div id="run" class="tab-pane">
+            OMG RESULTS HERE
         </div>
     </div>
 </div>
@@ -208,6 +211,14 @@
             editor.getSession().setMode("ace/mode/oryza_dat");
         }
 
+        function run() {
+            if(!validate()) {
+                alert("Invalid input");
+            }
+            else
+                $("#main").submit();
+        }
+
         $(window).hashchange(function() {
             var rawHash = location.hash.substr(1);
             var isHashEvent = rawHash.indexOf('!') == 0; // event data k/v pair(s) are specified after bang character.
@@ -235,12 +246,8 @@
             lastItem = $(this).text();
         });
 
-        $("#btn-run").click(function(e) {
-            if(!validate()) {
-                alert("Invalid input");
-            }
-            else
-                $("#main").submit();
+        $("#tab-run").click(function() {
+            run();
         });
 
         $("#variety-edit-control").find(".btn").click(function() {
