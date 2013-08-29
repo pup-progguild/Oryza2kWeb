@@ -22,7 +22,7 @@
         <div id="param" class="tab-pane active">
             <form name="main" id="main" method="get" class="form-horizontal">
                 <div class="control-group" id="site-field">
-                    <input type="hidden" id="site" name="year" value="ph">
+                    <input type="hidden" id="site" name="site" value="ph">
                     <label class="control-label" for="site-control">Site</label>
                     <div class="controls">
                         <div id="site-control" class="btn-group">
