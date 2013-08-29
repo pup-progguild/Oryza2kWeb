@@ -28,8 +28,8 @@ class Run_templates_data_model extends CI_Model {
     }
 
     /*
-     * function         add()
-     * description      generic addition of row data to table
+     * @function         add()
+     * @description      generic addition of row data to table
      */
     public function add() {
         $this->input->post('label');

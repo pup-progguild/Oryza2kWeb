@@ -15,6 +15,7 @@ class Run_stream_model extends CI_Model {
 
     var $run_cache_refFK = '';
     var $users_refFK = '';
+    var $date = '';
 
     public function __construct() {
         parent::__construct();

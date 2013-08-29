@@ -13,6 +13,8 @@
 class Input extends CI_Controller {
     private function _init() {
         $this->load->helper('url');
+
+
     }
 
     public function index() {
@@ -22,11 +24,18 @@ class Input extends CI_Controller {
 
         $this->_init();
 
+        $data['template'] = $this->Run_templates_data_model->get_template();
+
         $this->load->view('templates/header', $data);
         $this->load->view('templates/content-start', $data);
         $this->load->view('pages/input', $data);
         $this->load->view('templates/content-end', $data);
         $this->load->view('templates/footer', $data);
+
+        $this->load->model('Run_templates_data_model');
+
+
+
     }
 
     public function simulate($site, $year, $variety, $dateofsowing, $seeding) {

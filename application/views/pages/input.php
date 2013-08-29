@@ -148,6 +148,10 @@
                     <div id="editor"></div>
                 </div>
 
+                <?php foreach ($template as $variety): ?>
+                    <?= $variety ?>
+                <?php endforeach ?>
+
                 <div style="height: 96px"></div>
             </form>
         </div>
