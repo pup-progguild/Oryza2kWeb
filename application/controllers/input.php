@@ -47,4 +47,14 @@ class Input extends CI_Controller {
             'seeding' => $seeding
         );
     }
+
+    public function retrieve() {
+        $this -> load -> database();
+        $this -> load -> model('Run_templates_data_model', '', true);
+
+        $run_templates_data = $this -> db -> get('run_templates_data');
+
+        foreach($run_templates_data -> result_object() as $result)
+            print_r($result);
+    }
 }
