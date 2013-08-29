@@ -12,30 +12,27 @@
 
 class Input extends CI_Controller {
     private function _init() {
-        $this->load->helper('url');
+        $this->load->helper(array('url', 'inflector'));
 
-
+        $this->load->model('run_templates_data_model');
+        $this->load->model('weather_data_model');
     }
 
     public function index() {
         $data['title'] = 'Simulation';
-        $data['year_start'] = 1991;
-        $data['year_end'] = 1993;
+        $data['year_start'] = '1991';
+        $data['year_end'] = '1993';
 
         $this->_init();
 
-        $data['template'] = $this->Run_templates_data_model->get_template();
+        $data['template'] = $this->run_templates_data_model->get_template();
+        $data['weather_years'] = $this->weather_data_model->get_country_year_list();
 
         $this->load->view('templates/header', $data);
         $this->load->view('templates/content-start', $data);
         $this->load->view('pages/input', $data);
         $this->load->view('templates/content-end', $data);
         $this->load->view('templates/footer', $data);
-
-        $this->load->model('Run_templates_data_model');
-
-
-
     }
 
     public function simulate($site, $year, $variety, $dateofsowing, $seeding) {

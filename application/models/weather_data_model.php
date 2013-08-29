@@ -84,9 +84,9 @@ class Weather_data_model extends CI_Model {
      * @function         get_country_location_list
      * @description      returns 'country' => 'year' value pairs
      */
-    public function get_country_location_list() {
+    public function get_country_year_list() {
         $this->db->start_cache();
-        $this->db->select('country', 'year');
+        $this->db->select('country, year');
         $this->db->stop_cache();
 
         $query = $this->db->get($this->WEATHER_DATA_TABLE);

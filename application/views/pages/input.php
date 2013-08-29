@@ -118,9 +118,9 @@
             <form class="form-horizontal">
                 <input type="hidden" id="variety-edit" name="variety-edit" value="variety-edit-short">
                 <div id="variety-edit-control" class="btn-group">
-                    <button type="button" class="btn active" id="variety-edit-short">Short-term</a></button>
-                    <button type="button" class="btn" id="variety-edit-medium">Medium-term</a></button>
-                    <button type="button" class="btn" id="variety-edit-long">Long-term</a></button>
+                    <?php foreach ($template as $variety): ?>
+                        <button type="button" class="btn" id="<?= underscore($variety['label']) ?>"><?= $variety['label'] ?></a></button>
+                    <?php endforeach ?>
                 </div>
                 <input type="hidden" id="year-edit" name="year-edit" value="<?= $year_start ?>">
                 <div id="year-edit-control" class="btn-group">
@@ -128,11 +128,15 @@
                         <span id="year-edit-value"><?= $year_start ?></span> <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
-                        <? for($y = $year_start; $y <= $year_end; $y++) : ?>
-                            <li><a href="#!year-edit=<?= $y ?>"><?= $y ?></a></li>
-                        <? endfor ?>
+                        <?php foreach ($weather_years as $weather): ?>
+                            <li><a href="#!year-edit=<?= $weather['year'] ?>">
+                                    <?= $weather['country'] . '_' . $weather['year'] ?>
+                                </a>
+                            </li>
+                        <?php endforeach ?>
                     </ul>
                 </div>
+
 
                 <div class="row-fluid">
                     <div class="span3">
@@ -148,9 +152,9 @@
                     <div class="span3" id="editor"></div>
                 </div>
 
-                <?php foreach ($template as $variety): ?>
-                    <?= $variety ?>
-                <?php endforeach ?>
+
+
+
 
                 <div style="height: 96px"></div>
             </form>
