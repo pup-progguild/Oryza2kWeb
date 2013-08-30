@@ -1,5 +1,5 @@
 <?php
- /**
+/**
  * Super Class
  *
  * @package	    Input
@@ -60,7 +60,7 @@ class Input extends CI_Controller {
         header("Content-Type: text/plain");
         echo $control_dat;
 
-        echo $this->modify_control_dat($control_dat, $template_data['file_prefix']);
+        $control_dat = $this->modify_control_dat($control_dat, $template_data['file_prefix']);
         echo $this->modify_experiment_data_dat($experiment_data_dat, $site, $year, $dateofsowing, $seeding);
 
 
@@ -89,10 +89,30 @@ class Input extends CI_Controller {
     private function modify_experiment_data_dat($experiment_data_dat, $site, $year, $dateofsowing, $seeding) {
         //$experiment_data_dat = preg_replace("/(IYEAR)(\\s*)(=)(\\s+)((?:(?:[1]{1}\\d{1}\\d{1}\\d{1})|(?:[2]{1}\\d{3})))(?![\\d])/", 'IYEAR = '. $year, $experiment_data_dat);
         //$experiment_data_dat = preg_replace("/(EMYR)(\\s*)(=)(\\s+)((?:(?:[1]{1}\\d{1}\\d{1}\\d{1})|(?:[2]{1}\\d{3})))(?![\\d])/", 'EMYR = '. $year, $experiment_data_dat);
+        $first_year = $this->weather_data_model->get_first_year();
+        $rerun_dat = '';
+        $experiment_data_dat = '';
 
+        if ($year > $first_year) {
+            $count = 1;
+            for($i = $first_year; $i < $year; $i++) {
+                $rerun_dat = $rerun_dat . '* rerun # ' . $count. '\r\n
+                                           IYEAR = ' . $i . '\r\n
+                                           EMYR = ' . $i . '\r\n';
+                $count++;
+            }
+        } elseif ($year === $first_year) {
+            $experiment_data_dat = preg_replace("/(IYEAR)(\\s*)(=)(\\s+)((?:(?:[1]{1}\\d{1}\\d{1}\\d{1})|(?:[2]{1}\\d{3})))(?![\\d])/", 'IYEAR = '. $year, $experiment_data_dat);
+            $experiment_data_dat = preg_replace("/(EMYR)(\\s*)(=)(\\s+)((?:(?:[1]{1}\\d{1}\\d{1}\\d{1})|(?:[2]{1}\\d{3})))(?![\\d])/", 'EMYR = '. $year, $experiment_data_dat);
+        } else {
+            echo 'I CAN HAS NOT SEE TEH EXISTENCE OF ' . $year . ' IN DATABASE. THAT SUCKS.';
+        }
 
+        $station_code = $this->weather_data_model->get_station_code($site);
 
+        $experiment_data_dat = preg_replace("/(CNTR)(\\s*)(=)(\\s*)(\\\'.*?\\\')/", 'CNTR = ' . $site, $experiment_data_dat);
+        $experiment_data_dat = preg_replace("/(ISTN)(\\s*)(=)(\\s*)(\\\'.*?\\\')/", 'ISTN = ' . $station_code['station_code'], $experiment_data_dat);
 
-        return $experiment_data_dat;
+        //return $experiment_data_dat;
     }
 }
