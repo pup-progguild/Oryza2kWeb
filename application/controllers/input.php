@@ -1,5 +1,5 @@
 <?php
- /**
+/**
  * Super Class
  *
  * @package	    Input
@@ -41,13 +41,78 @@ class Input extends CI_Controller {
         echo $template[$variety][$file];
     }
 
-    public function simulate($site, $year, $variety, $dateofsowing, $seeding) {
-        $data = array(
-            'site' => $site,
-            'year' => $year,
-            'variety' => $variety,
-            'dateofsowing' => $dateofsowing,
-            'seeding' => $seeding
-        );
+    /*
+     * @function         simulate_basic
+     * @description      runs a simulation using basic input
+     * @params           $site          sets the location of weather data, maps to CNTR and ISTN at *.exp file
+     *                   $year          sets the year of weather data, maps to IYEAR = EMYR at *.exp file
+     *                   $variety       fetches the template for getting the *.exp and *.crp data
+     *                   $dateofsowing  sets the day of year of the start day of simulation, maps to STTIME at *.exp
+     *                   $seeding       sets method of seeding, maps to ESTAB at *.exp
+     */
+    public function simulate_basic($site, $year, $variety, $dateofsowing, $seeding) {
+        $template_data = $this->run_templates_data_model->get_template($variety);
+
+        $control_dat = $template_data['control_dat'];
+        $experiment_data_dat = $template_data['experiment_data_dat'];
+        $crop_data_dat = $template_data['crop_data_dat'];
+
+        header("Content-Type: text/plain");
+        echo $control_dat;
+
+        $control_dat = $this->modify_control_dat($control_dat, $template_data['file_prefix']);
+        echo $this->modify_experiment_data_dat($experiment_data_dat, $site, $year, $dateofsowing, $seeding);
+
+
+        // print_r($experiment_data_dat);
+
+        // print_r($crop_data_dat);
+    }
+
+    public function retrieve() {
+        $this -> load -> database();
+        $this -> load -> model('run_templates_data_model');
+
+        $run_templates_data = $this -> db -> get('run_templates_data');
+
+        foreach($run_templates_data -> result_object() as $result)
+            print_r($result);
+    }
+
+    private function modify_control_dat($control_dat, $file_prefix) {
+        $control_dat = preg_replace("/(FILEIT)(\\s*)(=)(\\s*)(\\\'.*?\\\')/", 'FILEIT = \''.$file_prefix.'.exp\'', $control_dat, 1);
+        $control_dat = preg_replace("/(FILEI1)(\\s*)(=)(\\s*)(\\\'.*?\\\')/", 'FILEI1 = \''.$file_prefix.'.crp\'', $control_dat, 1);
+
+        return $control_dat;
+    }
+
+    private function modify_experiment_data_dat($experiment_data_dat, $site, $year, $dateofsowing, $seeding) {
+        //$experiment_data_dat = preg_replace("/(IYEAR)(\\s*)(=)(\\s+)((?:(?:[1]{1}\\d{1}\\d{1}\\d{1})|(?:[2]{1}\\d{3})))(?![\\d])/", 'IYEAR = '. $year, $experiment_data_dat);
+        //$experiment_data_dat = preg_replace("/(EMYR)(\\s*)(=)(\\s+)((?:(?:[1]{1}\\d{1}\\d{1}\\d{1})|(?:[2]{1}\\d{3})))(?![\\d])/", 'EMYR = '. $year, $experiment_data_dat);
+        $first_year = $this->weather_data_model->get_first_year();
+        $rerun_dat = '';
+        $experiment_data_dat = '';
+
+        if ($year > $first_year) {
+            $count = 1;
+            for($i = $first_year; $i < $year; $i++) {
+                $rerun_dat = $rerun_dat . '* rerun # ' . $count. '\r\n
+                                           IYEAR = ' . $i . '\r\n
+                                           EMYR = ' . $i . '\r\n';
+                $count++;
+            }
+        } elseif ($year === $first_year) {
+            $experiment_data_dat = preg_replace("/(IYEAR)(\\s*)(=)(\\s+)((?:(?:[1]{1}\\d{1}\\d{1}\\d{1})|(?:[2]{1}\\d{3})))(?![\\d])/", 'IYEAR = '. $year, $experiment_data_dat);
+            $experiment_data_dat = preg_replace("/(EMYR)(\\s*)(=)(\\s+)((?:(?:[1]{1}\\d{1}\\d{1}\\d{1})|(?:[2]{1}\\d{3})))(?![\\d])/", 'EMYR = '. $year, $experiment_data_dat);
+        } else {
+            echo 'I CAN HAS NOT SEE TEH EXISTENCE OF ' . $year . ' IN DATABASE. THAT SUCKS.';
+        }
+
+        $station_code = $this->weather_data_model->get_station_code($site);
+
+        $experiment_data_dat = preg_replace("/(CNTR)(\\s*)(=)(\\s*)(\\\'.*?\\\')/", 'CNTR = ' . $site, $experiment_data_dat);
+        $experiment_data_dat = preg_replace("/(ISTN)(\\s*)(=)(\\s*)(\\\'.*?\\\')/", 'ISTN = ' . $station_code['station_code'], $experiment_data_dat);
+
+        //return $experiment_data_dat;
     }
 }
