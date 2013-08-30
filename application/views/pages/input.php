@@ -141,8 +141,13 @@
                             <li><a href="#!">Experimental data</a></li>
                         </ul>
                     </div>
-                    <div class="span3" id="editor"></div>
+                    <div class="span3" id="editor"><? //echo html_escape($template[0]['control_dat']) ?></div>
                 </div>
+
+
+
+
+
                 <div style="height: 96px"></div>
             </form>
         </div>
@@ -254,11 +259,8 @@
             $("#transpl-field").hide();
             location.hash = "";
             readyEditor();
-            buffer["0"] = [];
-            $.get("http://localhost/index.php/input/retrieve_template/0/control_dat", function(value) {
-                buffer["0"]["control"] = value;
-                editor.getSession().getDocument().setValue(buffer["0"]["control"]);
-            });
-        });
+
+            $("#editor").val(buffer);
+        })
     })();
 </script>
