@@ -11,7 +11,9 @@
  */
 
 class Input extends CI_Controller {
-    private function _init() {
+    public function __construct() {
+        parent::__construct();
+
         $this->load->helper(array('url', 'inflector'));
 
         $this->load->model('run_templates_data_model');
@@ -34,7 +36,6 @@ class Input extends CI_Controller {
     }
 
     public function retrieve_template($variety, $file) {
-        $this->_init();
         $template = $this->run_templates_data_model -> get_template();
         header("Content-Type: text/plain");
         echo $template[$variety][$file];
@@ -48,15 +49,5 @@ class Input extends CI_Controller {
             'dateofsowing' => $dateofsowing,
             'seeding' => $seeding
         );
-    }
-
-    public function retrieve() {
-        $this -> load -> database();
-        $this -> load -> model('Run_templates_data_model', '', true);
-
-        $run_templates_data = $this -> db -> get('run_templates_data');
-
-        foreach($run_templates_data -> result_object() as $result)
-            print_r($result);
     }
 }

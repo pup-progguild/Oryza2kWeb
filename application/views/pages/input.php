@@ -130,36 +130,6 @@
                         <?php endforeach ?>
                     </ul>
                 </div>
-                <input type="hidden" id="year-edit" name="year-edit" value="1991">
-                <div id="year-edit-control" class="btn-group">
-                    <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                        <span id="year-edit-value">1991</span> <span class="caret"></span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <?php foreach ($years as $year): ?>
-                            <li><a href="#!year-edit=<?= $year['year'] ?>">
-                                    <?= $year['year'] ?>
-                                </a>
-                            </li>
-                        <?php endforeach ?>
-                    </ul>
-                </div>
-                <input type="hidden" id="site-edit" name="site-edit" value="PHL">
-                <div id="site-edit-control" class="btn-group">
-                    <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                        <span id="site-edit-value">PHL</span> <span class="caret"></span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <?php foreach ($sites as $site): ?>
-                            <li><a href="#!site-edit=<?= $site['country'] ?>">
-                                    <?= $site['country'] ?>
-                                </a>
-                            </li>
-                        <?php endforeach ?>
-                    </ul>
-                </div>
-
-
                 <div class="row-fluid">
                     <div class="span3">
                         <ul class="nav nav-list">
@@ -171,13 +141,8 @@
                             <li><a href="#!">Experimental data</a></li>
                         </ul>
                     </div>
-                    <div class="span3" id="editor"><? //echo html_escape($template[0]['control_dat']) ?></div>
+                    <div class="span3" id="editor"></div>
                 </div>
-
-
-
-
-
                 <div style="height: 96px"></div>
             </form>
         </div>
@@ -199,10 +164,8 @@
 <script src="<?= base_url() ?>js/vendor/ace-builds/src-noconflict/mode-oryza_dat.js"></script>
 
 <script>
-    var buffer = $.get({
-        url: "http://localhost/index.php/input/retrieve_template/0/control_dat",
-        data: "text/plain"
-    }, function() { alert("loaded") });
+    var buffer = [];
+    var editor;
 
     (function() {
         var lastItem;
@@ -241,7 +204,7 @@
         }
 
         function readyEditor() {
-            var editor = ace.edit("editor");
+            editor = ace.edit("editor");
             editor.setTheme("ace/theme/monokai");
             editor.getSession().setMode("ace/mode/oryza_dat");
         }
@@ -291,8 +254,11 @@
             $("#transpl-field").hide();
             location.hash = "";
             readyEditor();
-
-            $("#editor").val(buffer);
-        })
+            buffer["0"] = [];
+            $.get("http://localhost/index.php/input/retrieve_template/0/control_dat", function(value) {
+                buffer["0"]["control"] = value;
+                editor.getSession().getDocument().setValue(buffer["0"]["control"]);
+            });
+        });
     })();
 </script>
