@@ -7,14 +7,13 @@
  * To change this template use File | Settings | File Templates.
  */
 class Oryza extends CI_Controller {
-    private function _init() {
+    public function __construct() {
+        parent::__construct();
         $this->load->helper('url');
     }
 
     public function index() {
         $data['title'] = 'Home';
-
-        $this->_init();
 
         $this->load->view('templates/header', $data);
         $this->load->view('templates/content-start', $data);
