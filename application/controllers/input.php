@@ -36,7 +36,6 @@ class Input extends CI_Controller {
     }
 
     public function retrieve_template($variety, $file) {
-        $this->_init();
         $template = $this->run_templates_data_model -> get_template();
         header("Content-Type: text/plain");
         echo $template[$variety][$file];
