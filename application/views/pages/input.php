@@ -121,7 +121,7 @@
             <form class="form-horizontal">
                 <input type="hidden" id="variety-edit" name="variety-edit" value="<?= 0 ?>">
                 <div id="variety-edit-control" class="btn-group">
-                    <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                    <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" data-loading-text="Loading...">
                         <span id="variety-edit-value">Short-term duration</span> <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu" id="variety-edit-dropdown">
@@ -180,6 +180,7 @@
     (function() {
         var lastItem;
         var edited = false;
+        var isChangedVariety = false;
 
         function isTransplanted() {
             return $("#seeding").val() == "t";
@@ -188,6 +189,10 @@
         function doLogic() {
             displayTransplField(isTransplanted());
 
+            if(isChangedVariety) {
+                loadTemplate($("#variety-edit").val());
+                isChangedVariety = false;
+            }
             refreshEditor();
         }
 
@@ -216,16 +221,17 @@
             return valid;
         }
 
-        function loadTemplate(index) {
+        function loadTemplate() {
             var templates = ["description", "control_dat", "reruns_dat", "crop_data_dat", "experiment_data_dat", "preset"];
-            buffer[index] = [];
+            buffer = [];
+            var index = $("#variety-edit").val();
             for(var t in templates) {
                 $.ajax("<?= base_url() ?>index.php/input/retrieve_template/" + index + "/" + templates[t],
                 {
                     async: false,
                     type: 'GET'
                 }).done(function(value) {
-                    buffer[index][templates[t]] = value;
+                    buffer[templates[t]] = value;
                 });
             }
         }
@@ -234,12 +240,7 @@
             editor = ace.edit("editor");
             editor.setTheme("ace/theme/monokai");
             editor.getSession().setMode("ace/mode/oryza_dat");
-            for(var i = <?= 0 ?>; i < <?= count($template) ?>; i++) {
-                var templates = ["description", "control_dat", "reruns_dat", "crop_data_dat", "experiment_data_dat"];
-                buffer[i] = [];
-                loadTemplate(i)
-            }
-
+            loadTemplate($("#variety-edit").val());
             refreshEditor();
         }
 
@@ -252,11 +253,16 @@
         }
 
         function refreshEditor() {
-            editor.getSession().getDocument().setValue(buffer[$("#variety-edit").val()][$("#template").val()]);
+            // TODO modify this so that editor swaps documents instead of modifying the text itself to simulate document swapping (this is for onchange event)
+            editor.getSession().getDocument().setValue(buffer[$("#template").val()]);
             editor.moveCursorTo(0, 0);
-            $("#variety-desc").val(buffer[$("#variety-edit").val()]["description"]);
-            if($("#preset").val()) {
+            $("#variety-desc").val(buffer["description"]);
 
+            if($("#preset").val()) {
+                $("#save").hide();
+            }
+            else {
+                $("#save").show();
             }
         }
 
@@ -323,6 +329,10 @@
             if(!$(this).hasClass(".no-select"))
                 $(this).parent().addClass("active");
         });
+
+        $("#variety-edit-dropdown").find("li").find("a").click(function() {
+            isChangedVariety = true;
+        })
 
         $(document).ready(function() {
             $("#transpl-field").hide();
