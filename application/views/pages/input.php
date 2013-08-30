@@ -134,6 +134,7 @@
                     </ul>
                 </div>
                 <input type="hidden" id="template" name="template" value="control_dat">
+                <input type="hidden" id="preset" name="preset" value="true">
                 <div class="row-fluid">
                     <div class="span3">
                         <ul id="template-sidebar" class="nav nav-list">
@@ -146,7 +147,7 @@
                             <li class="nav-header">Description</li>
                             <li><textarea id="variety-desc" style="width: 95%"></textarea></li>
                             <li class="nav-header">Save</li>
-                            <li class="no-select"><a href="#!save">Save</a></li>
+                            <li class="no-select" id="save"><a href="#!save">Save</a></li>
                             <li class="no-select"><a href="#!save_as">Save As...</a></li>
                         </ul>
                     </div>
@@ -216,10 +217,10 @@
         }
 
         function loadTemplate(index) {
-            var templates = ["description", "control_dat", "reruns_dat", "crop_data_dat", "experiment_data_dat"];
+            var templates = ["description", "control_dat", "reruns_dat", "crop_data_dat", "experiment_data_dat", "preset"];
             buffer[index] = [];
             for(var t in templates) {
-                $.ajax("http://localhost/index.php/input/retrieve_template/" + i + "/" + templates[t],
+                $.ajax("<?= base_url() ?>index.php/input/retrieve_template/" + index + "/" + templates[t],
                 {
                     async: false,
                     type: 'GET'
@@ -236,15 +237,7 @@
             for(var i = <?= 0 ?>; i < <?= count($template) ?>; i++) {
                 var templates = ["description", "control_dat", "reruns_dat", "crop_data_dat", "experiment_data_dat"];
                 buffer[i] = [];
-                for(var t in templates) {
-                    $.ajax("http://localhost/index.php/input/retrieve_template/" + i + "/" + templates[t],
-                    {
-                        async: false,
-                        type: 'GET'
-                    }).done(function(value) {
-                        buffer[i][templates[t]] = value;
-                    });
-                }
+                loadTemplate(i)
             }
 
             refreshEditor();
@@ -262,6 +255,9 @@
             editor.getSession().getDocument().setValue(buffer[$("#variety-edit").val()][$("#template").val()]);
             editor.moveCursorTo(0, 0);
             $("#variety-desc").val(buffer[$("#variety-edit").val()]["description"]);
+            if($("#preset").val()) {
+
+            }
         }
 
         function isExisting(varietyName) {
