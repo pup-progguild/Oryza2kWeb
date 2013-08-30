@@ -11,7 +11,9 @@
  */
 
 class Input extends CI_Controller {
-    private function _init() {
+    public function __construct() {
+        parent::__construct();
+
         $this->load->helper(array('url', 'inflector'));
 
         $this->load->model('run_templates_data_model');
@@ -52,7 +54,7 @@ class Input extends CI_Controller {
 
     public function retrieve() {
         $this -> load -> database();
-        $this -> load -> model('Run_templates_data_model', '', true);
+        $this -> load -> model('run_templates_data_model');
 
         $run_templates_data = $this -> db -> get('run_templates_data');
 
