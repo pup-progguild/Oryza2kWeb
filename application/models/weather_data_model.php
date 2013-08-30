@@ -122,9 +122,10 @@ class Weather_data_model extends CI_Model {
      */
     public function get_years() {
         $this->db->start_cache();
-        $this->db->select('year')->distinct()->order_by('year','asc');
+        $this->db->select('year')->order_by('year','asc');
         $this->db->stop_cache();
 
+        $this->db->distinct();
         $query = $this->db->get($this->WEATHER_DATA_TABLE);
 
         return $query->result_array();
