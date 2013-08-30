@@ -11,7 +11,9 @@
  */
 
 class Input extends CI_Controller {
-    private function _init() {
+    public function __construct() {
+        parent::__construct();
+
         $this->load->helper(array('url', 'inflector'));
 
         $this->load->model('run_templates_data_model');
@@ -22,8 +24,6 @@ class Input extends CI_Controller {
         $data['title'] = 'Simulation';
         $data['year_start'] = '1991';
         $data['year_end'] = '1993';
-
-        $this->_init();
 
         $data['template'] = $this->run_templates_data_model->get_template();
         $data['weather_years'] = $this->weather_data_model->get_country_year_list();
