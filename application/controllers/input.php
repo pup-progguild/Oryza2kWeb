@@ -20,21 +20,25 @@ class Input extends CI_Controller {
 
     public function index() {
         $data['title'] = 'Simulation';
-        $data['year_start'] = '1991';
-        $data['year_end'] = '1993';
 
         $this->_init();
 
-        $data['template'] = $this->run_templates_data_model->get_template();
-        $data['weather_years'] = $this->weather_data_model->get_country_year_list();
         $data['years'] = $this->weather_data_model -> get_years();
         $data['sites'] = $this->weather_data_model -> get_countries();
+        $data['weather_years'] = $this->weather_data_model->get_country_year_list();
 
         $this->load->view('templates/header', $data);
         $this->load->view('templates/content-start', $data);
         $this->load->view('pages/input', $data);
         $this->load->view('templates/content-end', $data);
         $this->load->view('templates/footer', $data);
+    }
+
+    public function retrieve_template($variety, $file) {
+        $this->_init();
+        $template = $this->run_templates_data_model -> get_template();
+        header("Content-Type: text/plain");
+        echo $template[$variety][$file];
     }
 
     public function simulate($site, $year, $variety, $dateofsowing, $seeding) {
@@ -45,28 +49,5 @@ class Input extends CI_Controller {
             'dateofsowing' => $dateofsowing,
             'seeding' => $seeding
         );
-    }
-
-
-    public function retrieve($id = false, $file) {
-        $this -> load -> database();
-        $this -> load -> model('Run_templates_data_model', '', true);
-
-        // TODO read models directly, not fetch directly from database
-        $run_templates_data = $this -> db -> get('run_templates_data');
-
-        $result_all = array();
-        foreach($run_templates_data -> result_array() as $result) {
-            if(!is_integer($id) && $result['id'] == $id) {
-                echo $result[$file];
-                return $result[$file];
-            }
-            else
-                $result_all[] = $result;
-        }
-
-        if(count($result_all) > 1)
-            return $result_all;
-        return false;
     }
 }

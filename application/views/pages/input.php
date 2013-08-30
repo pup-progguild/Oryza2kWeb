@@ -22,34 +22,34 @@
         <div id="param" class="tab-pane active">
             <form name="main" id="main" method="get" class="form-horizontal">
                 <div class="control-group" id="site-field">
-                    <input type="hidden" id="site" name="site" value="ph">
+                    <input type="hidden" id="site" name="site" value="PHL">
                     <label class="control-label" for="site-control">Site</label>
                     <div class="controls">
                         <div id="site-control" class="btn-group">
                             <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                                <span id="site-value">Philippines</span> <span class="caret"></span>
+                                <span id="site-value">PHL</span> <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
-                                <?php foreach($weather_data as $weather): ?>
-                                    <li><a href="#!site=<?= $weather['country'] ?>">Philippines</a></li>
-                                <?php endforeach ?>
+                                <?php for($i = 0; $i < count($sites); $i++): $site = $sites[$i] ?>
+                                    <li<?= $i == 0 ? ' class="active"' : '' ?>><a href="#!site=<?= $site['country'] ?>"><?= $site['country'] ?></a></li>
+                                <?php endfor ?>
                             </ul>
                         </div>
                     </div>
                 </div>
 
                 <div class="control-group" id="year-field">
-                    <input type="hidden" id="year" name="year" value="<?= $year_start ?>">
+                    <input type="hidden" id="year" name="year" value="1991">
                     <label class="control-label" for="year-control">Year</label>
                     <div class="controls">
                         <div id="year-control" class="btn-group">
                             <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                                <span id="year-value"><?= $year_start ?></span> <span class="caret"></span>
+                                <span id="year-value">1991</span> <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
-                                <? for($y = $year_start; $y <= $year_end; $y++) : ?>
-                                    <li><a href="#!year=<?= $y ?>"><?= $y ?></a></li>
-                                <? endfor ?>
+                                <? foreach($years as $year): ?>
+                                    <li><a href="#!year=<?= $year['year'] ?>"><?= $year['year'] ?></a></li>
+                                <? endforeach ?>
                             </ul>
                         </div>
                     </div>
@@ -116,21 +116,24 @@
         </div>
         <div id="advanced" class="tab-pane">
             <form class="form-horizontal">
-                <input type="hidden" id="variety-edit" name="variety-edit" value="variety-edit-short">
+                <input type="hidden" id="variety-edit" name="variety-edit" value="short-term_duration">
                 <div id="variety-edit-control" class="btn-group">
-                    <?php foreach ($template as $variety): ?>
-                        <button type="button" class="btn" id="<?= underscore($variety['label']) ?>"><?= $variety['label'] ?></a></button>
-                    <?php endforeach ?>
+                    <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                        <span id="variety-edit-value">Short-term duration</span> <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <?php foreach ($template as $variety): ?>
+                            <li><a href="#!variety-edit=<?= underscore($variety['label']) ?>">
+                                    <?= $variety['label'] ?>
+                                </a>
+                            </li>
+                        <?php endforeach ?>
+                    </ul>
                 </div>
-                <!--
-                I have no way of looking at the output, but hey sync this, will you?
-                We have to separate the year with the country (site) in "Advanced Input".
-                ~Temoto-kun
-                -->
-                <input type="hidden" id="year-edit" name="year-edit" value="<?= $year_start ?>">
+                <input type="hidden" id="year-edit" name="year-edit" value="1991">
                 <div id="year-edit-control" class="btn-group">
                     <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                        <span id="year-edit-value"><?= $year_start ?></span> <span class="caret"></span>
+                        <span id="year-edit-value">1991</span> <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
                         <?php foreach ($years as $year): ?>
@@ -141,15 +144,15 @@
                         <?php endforeach ?>
                     </ul>
                 </div>
-                <input type="hidden" id="site-edit" name="site-edit" value="ph">
+                <input type="hidden" id="site-edit" name="site-edit" value="PHL">
                 <div id="site-edit-control" class="btn-group">
                     <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                        <span id="site-edit-value">Philippines</span> <span class="caret"></span>
+                        <span id="site-edit-value">PHL</span> <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
                         <?php foreach ($sites as $site): ?>
-                            <li><a href="#!site-edit=<?= $site['site'] ?>">
-                                    <?= $site['site'] ?>
+                            <li><a href="#!site-edit=<?= $site['country'] ?>">
+                                    <?= $site['country'] ?>
                                 </a>
                             </li>
                         <?php endforeach ?>
@@ -161,14 +164,14 @@
                     <div class="span3">
                         <ul class="nav nav-list">
                             <li class="nav-header">Control files</li>
-                            <li class="active"><a href="#!">control.dat</a></li>
-                            <li><a href="#">reruns.dat</a></li>
+                            <li class="active"><a href="#!">Control data</a></li>
+                            <li><a href="#!">Rerun data</a></li>
                             <li class="nav-header">Data files</li>
-                            <li><a href="#">short_term.crp</a></li>
-                            <li><a href="#">short_term.exp</a></li>
+                            <li><a href="#!">Crop data</a></li>
+                            <li><a href="#!">Experimental data</a></li>
                         </ul>
                     </div>
-                    <div class="span3" id="editor"></div>
+                    <div class="span3" id="editor"><? //echo html_escape($template[0]['control_dat']) ?></div>
                 </div>
 
 
@@ -190,12 +193,17 @@
 -->
 <script src="<?= base_url() ?>js/vendor/jquery-1.9.1.min.js"></script>
 <script src="<?= base_url() ?>js/vendor/jquery.ba-hashchange.min.js"></script>
-<script src="<?= base_url() ?>js/plugins.js"></script>
+<!-- <script src="<?= base_url() ?>js/plugins.js"></script> -->
 <script src="<?= base_url() ?>js/vendor/require.js"></script>
 <script src="<?= base_url() ?>js/vendor/ace-builds/src-noconflict/ace.js" type="text/javascript"></script>
 <script src="<?= base_url() ?>js/vendor/ace-builds/src-noconflict/mode-oryza_dat.js"></script>
 
 <script>
+    var buffer = $.get({
+        url: "http://localhost/index.php/input/retrieve_template/0/control_dat",
+        data: "text/plain"
+    }, function() { alert("loaded") });
+
     (function() {
         var lastItem;
 
@@ -270,6 +278,8 @@
         });
 
         $(".dropdown-menu").find("li").find("a").click(function() {
+            $(this).parent().parent().find("li").removeClass("active");
+            $(this).parent().addClass("active");
             lastItem = $(this).text();
         });
 
@@ -277,16 +287,12 @@
             run();
         });
 
-        $("#variety-edit-control").find(".btn").click(function() {
-            $("#variety-edit").val(this.id);
-            $("#variety-edit-control").find(".btn").removeClass("active");
-            $(this).addClass("active");
-        })
-
         $(document).ready(function() {
             $("#transpl-field").hide();
             location.hash = "";
             readyEditor();
+
+            $("#editor").val(buffer);
         })
     })();
 </script>
