@@ -64,17 +64,16 @@ class Run_templates_data_model extends CI_Model {
 
     /*
      * @function         get_template
-     * @description      returns template data for desired $file_prefix. if not specified, all table data is returned.
-     * @params           $file_prefix         the URL friendly template descriptor
+     * @description      returns template data for desired $label. if not specified, all table data is returned.
+     * @params           $label         The short description of a template
      */
-    public function get_template($file_prefix = FALSE) {
-        if($file_prefix === FALSE) {
+    public function get_template($label = FALSE) {
+        if($label === FALSE) {
             $query = $this->db->get($this->RUN_TEMPLATES_DATA_TABLE);
             return $query->result_array();
         }
 
-        // TODO should fetch only one row
-        $query = $this->db->get_where($this->RUN_TEMPLATES_DATA_TABLE, array('file_prefix' => $file_prefix));
+        $query = $this->db->get_where($this->RUN_TEMPLATES_DATA_TABLE, array('label' => $label));
         return $query->row_array();
     }
 
