@@ -99,9 +99,10 @@ class Weather_data_model extends CI_Model {
      * @description      returns countries
      */
     public function get_countries() {
-        // this must be get_sites(), since I have used "Site" for this value in the UI ~Temoto-kun
-        $this->db->distinct();
+        $this->db->start_cache();
         $this->db->select('country');
+        $this->db->distinct();
+        $this->db->stop_cache();
 
         $query = $this->db->get($this->WEATHER_DATA_TABLE);
 
@@ -114,8 +115,10 @@ class Weather_data_model extends CI_Model {
      * @description       returns years
      */
     public function get_years() {
-        $this->db->distinct();
+        $this->db->start_cache();
         $this->db->select('year');
+        $this->db->distinct();
+        $this->db->stop_cache();
 
         $query = $this->db->get($this->WEATHER_DATA_TABLE);
 
