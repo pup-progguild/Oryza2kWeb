@@ -80,6 +80,16 @@ class Weather_data_model extends CI_Model {
         return $query->results_array();
     }
 
+    public function get_weather_from_country_all_years($country_code) {
+        $this->db->start_cache();
+        $this->db->where('country_code', $country_code);
+        $this->db->stop_cache();
+
+        $query = $this->db->get($this->WEATHER_DATA_TABLE);
+
+        return $query->result_array();
+    }
+
     /*
      * @function         get_country_location_list
      * @description      returns 'country' => 'year' value pairs
@@ -95,7 +105,7 @@ class Weather_data_model extends CI_Model {
     }
 
     public function get_station_code($country_code) {
-        $this->db->select('station_code')->where('country_code', $country_code);
+        $this->db->select('station_code, country_code')->where('country_code', $country_code);
 
         $query = $this->db->get($this->WEATHER_DATA_TABLE);
 
@@ -108,7 +118,7 @@ class Weather_data_model extends CI_Model {
      */
     public function get_countries() {
         $this->db->start_cache();
-        $this->db->select('country, country_code')->distinct()->order_by('country','asc');
+        $this->db->select('country, country_code')->order_by('country','asc');
         $this->db->stop_cache();
 
         $query = $this->db->get($this->WEATHER_DATA_TABLE);
@@ -116,13 +126,32 @@ class Weather_data_model extends CI_Model {
         return $query->result_array();
     }
 
+    public function get_first_country() {
+        $this->db->start_cache();
+        $this->db->select('country')->order_by('country', 'asc')->limit(1);
+        $this->db->stop_cache();
+
+        $query = $this->db->get($this->WEATHER_DATA_TABLE);
+
+        return $query->row_array();
+    }
+
+    public function get_last_country() {
+        $this->db->start_cache();
+        $this->db->select('country')->order_by('country', 'desc')->limit(1);
+        $this->db->stop_cache();
+
+        $query = $this->db->get($this->WEATHER_DATA_TABLE);
+
+        return $query->row_array();
+    }
     /*
      * @function          get_years
      * @description       returns years
      */
     public function get_years() {
         $this->db->start_cache();
-        $this->db->select('year')->distinct()->order_by('year','asc');
+        $this->db->distinct()->order_by('year','asc');
         $this->db->stop_cache();
 
         $query = $this->db->get($this->WEATHER_DATA_TABLE);
@@ -132,7 +161,7 @@ class Weather_data_model extends CI_Model {
 
     public function get_last_year() {
         $this->db->start_cache();
-        $this->db->distinct()->order_by('year','desc')->limit(1);
+        $this->db->select('year')->order_by('year','desc')->limit(1);
         $this->db->stop_cache();
 
         $query = $this->db->get($this->WEATHER_DATA_TABLE);
@@ -142,7 +171,7 @@ class Weather_data_model extends CI_Model {
 
     public function get_first_year() {
         $this->db->start_cache();
-        $this->db->distinct()->order_by('year','asc')->limit(1);
+        $this->db->select('year')->order_by('year','asc')->limit(1);
         $this->db->stop_cache();
 
         $query = $this->db->get($this->WEATHER_DATA_TABLE);
