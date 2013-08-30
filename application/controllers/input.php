@@ -27,6 +27,8 @@ class Input extends CI_Controller {
 
         $data['template'] = $this->run_templates_data_model->get_template();
         $data['weather_years'] = $this->weather_data_model->get_country_year_list();
+        $data['years'] = $this->weather_data_model -> get_years();
+        $data['sites'] = $this->weather_data_model -> get_countries();
 
         $this->load->view('templates/header', $data);
         $this->load->view('templates/content-start', $data);
