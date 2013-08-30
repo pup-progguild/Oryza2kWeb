@@ -15,6 +15,9 @@ class Run_cache_model extends CI_Model {
 
     var $op_dat = '';
     var $res_dat = '';
+    var $hash_ident = '';
+    var $run_templates_data_model_refFK = '';
+    var $weather_data_refFK = '';
 
     public function __construct() {
         parent::__construct();
