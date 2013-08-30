@@ -54,19 +54,38 @@ class Input extends CI_Controller {
      *                   $variety       fetches the template for getting the *.exp and *.crp data
      *                   $dateofsowing  sets the day of year of the start day of simulation, maps to STTIME at *.exp
      *                   $seeding       sets method of seeding, maps to ESTAB at *.exp
+     *                   $sdbdur        sets seedbed duration on ESTAB = 'TRANSPLANT'.
+     *
+     * eg. <?= base_url ?>input/simulate_basic/phil/1991/long_term/4/d/45
      */
-    public function simulate_basic($site, $year, $variety, $dateofsowing, $seeding) {
+    public function simulate_basic($site, $year, $variety, $dateofsowing, $seeding, $sdbdur) {
         $template_data = $this->run_templates_data_model->get_template($variety);
+        $weather_data = $this->weather_data_model->get_weather_from_country_all_years($site);
 
         $control_dat = $template_data['control_dat'];
         $experiment_data_dat = $template_data['experiment_data_dat'];
         $crop_data_dat = $template_data['crop_data_dat'];
 
         header("Content-Type: text/plain");
-        echo $control_dat;
+        // echo $control_dat;
 
         $control_dat = $this->modify_control_dat($control_dat, $template_data['file_prefix']);
-        echo $this->modify_experiment_data_dat($experiment_data_dat, $site, $year, $dateofsowing, $seeding);
+        $experiment_data_dat = $this->modify_experiment_data_dat($experiment_data_dat, $site, $year, $dateofsowing, $seeding, $sdbdur);
+
+        write_file('./temp/control.dat', $control_dat);
+        write_file('./temp/'.$template_data['file_prefix'].'.exp', $experiment_data_dat);
+        write_file('./temp/'.$template_data['file_prefix'].'.crp', $crop_data_dat);
+
+        foreach ($weather_data as $weather) {
+            write_file('./temp/'. $weather['country_code'] . $weather['station_code'] .'.'. substr($weather['year'],1,3), $weather['data']);
+        }
+
+        sha1($site.$year.$variety.$dateofsowing.$seeding.$sdbdur);
+
+
+        // echo $experiment_data_dat = preg_replace("/(ESTAB)(\\s*)(=)(\\s*)((\'TRANSPLANTED\')(\'DIRECT\'))/", 'ESTAB = ' . strtoupper($seeding), $experiment_data_dat);
+        // echo
+
 
 
         // print_r($experiment_data_dat);
@@ -74,50 +93,46 @@ class Input extends CI_Controller {
         // print_r($crop_data_dat);
     }
 
-    public function retrieve() {
-        $this -> load -> database();
-        $this -> load -> model('run_templates_data_model');
-
-        $run_templates_data = $this -> db -> get('run_templates_data');
-
-        foreach($run_templates_data -> result_object() as $result)
-            print_r($result);
-    }
-
     private function modify_control_dat($control_dat, $file_prefix) {
-        $control_dat = preg_replace("/(FILEIT)(\\s*)(=)(\\s*)(\\\'.*?\\\')/", 'FILEIT = \''.$file_prefix.'.exp\'', $control_dat, 1);
-        $control_dat = preg_replace("/(FILEI1)(\\s*)(=)(\\s*)(\\\'.*?\\\')/", 'FILEI1 = \''.$file_prefix.'.crp\'', $control_dat, 1);
+        $control_dat = preg_replace("/(FILEIT)(\\s*)(=)(\\s*)(\\'.*?\\')/", 'FILEIT = \''.$file_prefix.'.exp\'', $control_dat, 1);
+        $control_dat = preg_replace("/(FILEI1)(\\s*)(=)(\\s*)(\\'.*?\\')/", 'FILEI1 = \''.$file_prefix.'.crp\'', $control_dat, 1);
 
         return $control_dat;
     }
 
-    private function modify_experiment_data_dat($experiment_data_dat, $site, $year, $dateofsowing, $seeding) {
-        //$experiment_data_dat = preg_replace("/(IYEAR)(\\s*)(=)(\\s+)((?:(?:[1]{1}\\d{1}\\d{1}\\d{1})|(?:[2]{1}\\d{3})))(?![\\d])/", 'IYEAR = '. $year, $experiment_data_dat);
-        //$experiment_data_dat = preg_replace("/(EMYR)(\\s*)(=)(\\s+)((?:(?:[1]{1}\\d{1}\\d{1}\\d{1})|(?:[2]{1}\\d{3})))(?![\\d])/", 'EMYR = '. $year, $experiment_data_dat);
+    private function modify_experiment_data_dat($experiment_data_dat, $site, $year, $dateofsowing, $seeding, $sdbdur) {
         $first_year = $this->weather_data_model->get_first_year();
         $rerun_dat = '';
-        $experiment_data_dat = '';
 
-        if ($year > $first_year) {
+        if ($year > $first_year['year']) {
             $count = 1;
-            for($i = $first_year; $i < $year; $i++) {
-                $rerun_dat = $rerun_dat . '* rerun # ' . $count. '\r\n
-                                           IYEAR = ' . $i . '\r\n
-                                           EMYR = ' . $i . '\r\n';
+            for($i = $first_year['year'] + 1; $i <= $year; $i++) {
+                $rerun_dat = $rerun_dat . "* rerun # {$count}\r\nIYEAR = {$i}\r\nEMYR = {$i} \r\n";
                 $count++;
             }
-        } elseif ($year === $first_year) {
+        } elseif ($year === $first_year['year']) {
             $experiment_data_dat = preg_replace("/(IYEAR)(\\s*)(=)(\\s+)((?:(?:[1]{1}\\d{1}\\d{1}\\d{1})|(?:[2]{1}\\d{3})))(?![\\d])/", 'IYEAR = '. $year, $experiment_data_dat);
             $experiment_data_dat = preg_replace("/(EMYR)(\\s*)(=)(\\s+)((?:(?:[1]{1}\\d{1}\\d{1}\\d{1})|(?:[2]{1}\\d{3})))(?![\\d])/", 'EMYR = '. $year, $experiment_data_dat);
         } else {
-            echo 'I CAN HAS NOT SEE TEH EXISTENCE OF ' . $year . ' IN DATABASE. THAT SUCKS.';
+            echo 'wrong' . $year . $first_year['year'];
         }
 
         $station_code = $this->weather_data_model->get_station_code($site);
 
-        $experiment_data_dat = preg_replace("/(CNTR)(\\s*)(=)(\\s*)(\\\'.*?\\\')/", 'CNTR = ' . $site, $experiment_data_dat);
-        $experiment_data_dat = preg_replace("/(ISTN)(\\s*)(=)(\\s*)(\\\'.*?\\\')/", 'ISTN = ' . $station_code['station_code'], $experiment_data_dat);
+        $experiment_data_dat = preg_replace("/(CNTR)(\\s*)(=)(\\s*)(\\'.*?\\')/", 'CNTR = \'' . $station_code['country_code'] .'\'', $experiment_data_dat);
+        $experiment_data_dat = preg_replace("/(ISTN)(\\s*)(=)(\\s*)(\\d+)/", 'ISTN = ' . $station_code['station_code'], $experiment_data_dat);
 
-        //return $experiment_data_dat;
+        $experiment_data_dat = preg_replace("/(STTIME)(\\s*)(=)(\\s*)(\\d+)/", 'STTIME = ' . $dateofsowing, $experiment_data_dat);
+
+        if ($seeding === 't') {
+            $experiment_data_dat = preg_replace("/(ESTAB)\\s*(=)\\s*(\\'.*?\\')/", 'ESTAB = \'TRANSPLANT\'', $experiment_data_dat);
+            $experiment_data_dat = preg_replace("/(SBDUR)(\\s*)(=)(\\s*)(\\d+)/", 'SDBUR = ' . $sdbdur, $experiment_data_dat);
+        }
+        elseif ($seeding === 'd')
+            $experiment_data_dat = preg_replace("/(ESTAB)\\s*=\\s*(\\'.*?\\')/", 'ESTAB = \'DIRECT-SEED\'', $experiment_data_dat);
+        else
+            show_404();
+
+        return $experiment_data_dat;
     }
 }

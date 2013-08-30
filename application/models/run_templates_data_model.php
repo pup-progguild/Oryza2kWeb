@@ -67,13 +67,13 @@ class Run_templates_data_model extends CI_Model {
      * @description      returns template data for desired $label. if not specified, all table data is returned.
      * @params           $label         The short description of a template
      */
-    public function get_template($label = FALSE) {
-        if($label === FALSE) {
+    public function get_template($file_prefix = FALSE) {
+        if($file_prefix === FALSE) {
             $query = $this->db->get($this->RUN_TEMPLATES_DATA_TABLE);
             return $query->result_array();
         }
 
-        $query = $this->db->get_where($this->RUN_TEMPLATES_DATA_TABLE, array('label' => $label));
+        $query = $this->db->get_where($this->RUN_TEMPLATES_DATA_TABLE, array('file_prefix' => $file_prefix));
         return $query->row_array();
     }
 
