@@ -200,7 +200,7 @@
 
 <script>
     var buffer = $.get({
-        url: "http://localhost/index.php/input/retrieve_template/0/control_dat",
+        url: "<?= base_url() ?>input/retrieve_template/0/control_dat",
         data: "text/plain"
     }, function() { alert("loaded") });
 
