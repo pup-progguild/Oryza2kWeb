@@ -64,9 +64,12 @@
                                 <span id="variety-value">Short-term duration</span> <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a href="#!variety=s">Short-term duration</a></li>
-                                <li><a href="#!variety=m">Medium-term duration</a></li>
-                                <li><a href="#!variety=l">Long-term duration</a></li>
+                                <?php for ($i = 0; $i < count($template); $i++): $variety = $template[$i] ?>
+                                    <li><a href="#!variety=<?= $i ?>">
+                                            <?= $variety['label'] ?>
+                                        </a>
+                                    </li>
+                                <?php endfor ?>
                             </ul>
                         </div>
                     </div>
@@ -116,38 +119,39 @@
         </div>
         <div id="advanced" class="tab-pane">
             <form class="form-horizontal">
-                <input type="hidden" id="variety-edit" name="variety-edit" value="short-term_duration">
+                <input type="hidden" id="variety-edit" name="variety-edit" value="<?= 0 ?>">
                 <div id="variety-edit-control" class="btn-group">
                     <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
                         <span id="variety-edit-value">Short-term duration</span> <span class="caret"></span>
                     </a>
-                    <ul class="dropdown-menu">
-                        <?php foreach ($template as $variety): ?>
-                            <li><a href="#!variety-edit=<?= underscore($variety['label']) ?>">
+                    <ul class="dropdown-menu" id="variety-edit-dropdown">
+                        <?php for ($i = 0; $i < count($template); $i++): $variety = $template[$i] ?>
+                            <li><a href="#!variety-edit=<?= $i ?>">
                                     <?= $variety['label'] ?>
                                 </a>
                             </li>
-                        <?php endforeach ?>
+                        <?php endfor ?>
                     </ul>
                 </div>
+                <input type="hidden" id="template" name="template" value="control_dat">
                 <div class="row-fluid">
                     <div class="span3">
-                        <ul class="nav nav-list">
+                        <ul id="template-sidebar" class="nav nav-list">
                             <li class="nav-header">Control files</li>
-                            <li class="active"><a href="#!">Control data</a></li>
-                            <li><a href="#!">Rerun data</a></li>
+                            <li class="active"><a href="#!template=control_dat">Control data</a></li>
+                            <li><a href="#!template=reruns_dat">Rerun data</a></li>
                             <li class="nav-header">Data files</li>
-                            <li><a href="#!">Crop data</a></li>
-                            <li><a href="#!">Experimental data</a></li>
+                            <li><a href="#!template=crop_data_dat">Crop data</a></li>
+                            <li><a href="#!template=experiment_data_dat">Experimental data</a></li>
+                            <li class="nav-header">Description</li>
+                            <li><textarea id="variety-desc" style="width: 95%"></textarea></li>
+                            <li class="nav-header">Save</li>
+                            <li class="no-select"><a href="#!save">Save</a></li>
+                            <li class="no-select"><a href="#!save_as">Save As...</a></li>
                         </ul>
                     </div>
                     <div class="span3" id="editor"><? //echo html_escape($template[0]['control_dat']) ?></div>
                 </div>
-
-
-
-
-
                 <div style="height: 96px"></div>
             </form>
         </div>
@@ -174,6 +178,7 @@
 
     (function() {
         var lastItem;
+        var edited = false;
 
         function isTransplanted() {
             return $("#seeding").val() == "t";
@@ -181,6 +186,8 @@
 
         function doLogic() {
             displayTransplField(isTransplanted());
+
+            refreshEditor();
         }
 
         function displayTransplField(b) {
@@ -208,10 +215,39 @@
             return valid;
         }
 
+        function loadTemplate(index) {
+            var templates = ["description", "control_dat", "reruns_dat", "crop_data_dat", "experiment_data_dat"];
+            buffer[index] = [];
+            for(var t in templates) {
+                $.ajax("http://localhost/index.php/input/retrieve_template/" + i + "/" + templates[t],
+                {
+                    async: false,
+                    type: 'GET'
+                }).done(function(value) {
+                    buffer[index][templates[t]] = value;
+                });
+            }
+        }
+
         function readyEditor() {
             editor = ace.edit("editor");
             editor.setTheme("ace/theme/monokai");
             editor.getSession().setMode("ace/mode/oryza_dat");
+            for(var i = <?= 0 ?>; i < <?= count($template) ?>; i++) {
+                var templates = ["description", "control_dat", "reruns_dat", "crop_data_dat", "experiment_data_dat"];
+                buffer[i] = [];
+                for(var t in templates) {
+                    $.ajax("http://localhost/index.php/input/retrieve_template/" + i + "/" + templates[t],
+                    {
+                        async: false,
+                        type: 'GET'
+                    }).done(function(value) {
+                        buffer[i][templates[t]] = value;
+                    });
+                }
+            }
+
+            refreshEditor();
         }
 
         function run() {
@@ -220,6 +256,32 @@
             }
             else
                 $("#main").submit();
+        }
+
+        function refreshEditor() {
+            editor.getSession().getDocument().setValue(buffer[$("#variety-edit").val()][$("#template").val()]);
+            editor.moveCursorTo(0, 0);
+            $("#variety-desc").val(buffer[$("#variety-edit").val()]["description"]);
+        }
+
+        function isExisting(varietyName) {
+            return false;
+        }
+
+        function save() {
+            alert("Save");
+        }
+
+        function invokeEvent(id) {
+            switch(id.toLowerCase()) {
+                case "save":
+                    save();
+                    break;
+                case "save_as":
+                    if(isExisting())
+                    // TODO what if overwrite?
+                    break;
+            }
         }
 
         $(window).hashchange(function() {
@@ -234,11 +296,16 @@
                     var pairDivider = segment.indexOf('=');
                     var isSegmentPair = pairDivider != -1;
 
-                    var key = segment.substr(0, isSegmentPair ? pairDivider : segment.length);
-                    var value = isSegmentPair ? segment.substr(pairDivider + 1) : true;
+                    if(isSegmentPair) { // change variables
+                        var key = segment.substr(0, pairDivider);
+                        var value = segment.substr(pairDivider + 1);
 
-                    $("#" + key).val(value);
-                    $("#" + key + "-value").html(lastItem);
+                        $("#" + key).val(value);
+                        $("#" + key + "-value").html(lastItem);
+                    }
+                    else { // invoke named event
+                        invokeEvent(segment);
+                    }
 
                     doLogic();
                 }
@@ -255,12 +322,16 @@
             run();
         });
 
+        $("#template-sidebar").find("li").not(".no-select").find("a").click(function() {
+            $(this).parent().parent().find("li").not(".no-select").removeClass("active");
+            if(!$(this).hasClass(".no-select"))
+                $(this).parent().addClass("active");
+        });
+
         $(document).ready(function() {
             $("#transpl-field").hide();
             location.hash = "";
             readyEditor();
-
-            $("#editor").val(buffer);
         })
     })();
 </script>
