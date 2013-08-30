@@ -21,11 +21,10 @@ class Input extends CI_Controller {
     public function index() {
         $data['title'] = 'Simulation';
 
-        $this->_init();
-
+        $data['template'] = $this->run_templates_data_model->get_template();
+        $data['weather_years'] = $this->weather_data_model->get_country_year_list();
         $data['years'] = $this->weather_data_model -> get_years();
         $data['sites'] = $this->weather_data_model -> get_countries();
-        $data['weather_years'] = $this->weather_data_model->get_country_year_list();
 
         $this->load->view('templates/header', $data);
         $this->load->view('templates/content-start', $data);
@@ -49,5 +48,15 @@ class Input extends CI_Controller {
             'dateofsowing' => $dateofsowing,
             'seeding' => $seeding
         );
+    }
+
+    public function retrieve() {
+        $this -> load -> database();
+        $this -> load -> model('Run_templates_data_model', '', true);
+
+        $run_templates_data = $this -> db -> get('run_templates_data');
+
+        foreach($run_templates_data -> result_object() as $result)
+            print_r($result);
     }
 }
