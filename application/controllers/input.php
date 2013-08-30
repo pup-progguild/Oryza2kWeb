@@ -39,13 +39,26 @@ class Input extends CI_Controller {
         );
     }
 
-    public function retrieve() {
+
+    public function retrieve($id = false, $file) {
         $this -> load -> database();
         $this -> load -> model('Run_templates_data_model', '', true);
 
+        // TODO read models directly, not fetch directly from database
         $run_templates_data = $this -> db -> get('run_templates_data');
 
-        foreach($run_templates_data -> result_object() as $result)
-            print_r($result);
+        $result_all = array();
+        foreach($run_templates_data -> result_array() as $result) {
+            if(!is_integer($id) && $result['id'] == $id) {
+                echo $result[$file];
+                return $result[$file];
+            }
+            else
+                $result_all[] = $result;
+        }
+
+        if(count($result_all) > 1)
+            return $result_all;
+        return false;
     }
 }
