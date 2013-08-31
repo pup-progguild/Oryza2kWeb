@@ -21,7 +21,7 @@
     <div class="tab-content">
         <div id="param" class="tab-pane active">
             <form name="main" id="main" method="get" class="form-horizontal">
-                <div class="control-group" id="site-field">
+                <div class="control-group" id="site-field" title="The location of the plants">
                     <input type="hidden" id="site" name="site" value="PHL">
                     <label class="control-label" for="site-control">Site</label>
                     <div class="controls">
@@ -38,7 +38,7 @@
                     </div>
                 </div>
 
-                <div class="control-group" id="year-field">
+                <div class="control-group" id="year-field" title="The year when the data was taken">
                     <input type="hidden" id="year" name="year" value="<?= $first_year['year'] ?>">
                     <label class="control-label" for="year-control">Year</label>
                     <div class="controls">
@@ -55,7 +55,7 @@
                     </div>
                 </div>
 
-                <div class="control-group" id="variety-field">
+                <div class="control-group" id="variety-field" title="The variety">
                     <input type="hidden" id="variety" name="variety" value="0">
                     <label class="control-label" for="variety-control">Variety</label>
                     <div class="controls">
@@ -75,39 +75,30 @@
                     </div>
                 </div>
 
-                <div class="control-group" id="sowing-field">
-                    <input type="hidden" id="sowing" name="sowing" value="d">
-                    <label class="control-label" for="sowing-date-control">Date of sowing</label>
+                <div class="control-group" id="sowing-field" title="The date of sowing, which is a day of the year from 1&ndash;365 or 1&ndash;366">
+                    <label class="control-label" for="sowing">Date of sowing</label>
                     <div class="controls">
-                        <div id="sowing-date-control" class="btn-group">
+                        <input type="text" id="sowing" name="sowing" value="">
+                    </div>
+                </div>
+
+                <div class="control-group" id="cstab-field" title="The crop establishment, either direct seeding or transplanted">
+                    <input type="hidden" id="cstab" name="cstab" value="d">
+                    <label class="control-label" for="cstab-control">Crop establishment</label>
+                    <div class="controls">
+                        <div id="cstab-control" class="btn-group">
                             <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                                <span id="sowing-value">Dec. 15 &ndash; Jan. 15</span> <span class="caret"></span>
+                                <span id="cstab-value">Direct Seeding</span> <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
-                                <li class="active"><a href="#!sowing=d">Dec. 15 &ndash; Jan. 15</a></li>
-                                <li><a href="#!sowing=w">Jun. 15 &ndash; Jul. 15</a></li>
+                                <li class="active"><a href="#!cstab=d">Direct Seeding</a></li>
+                                <li><a href="#!cstab=t">Transplanted</a></li>
                             </ul>
                         </div>
                     </div>
                 </div>
 
-                <div class="control-group" id="seeding-field">
-                    <input type="hidden" id="seeding" name="seeding" value="d">
-                    <label class="control-label" for="seeding-control">Seeding</label>
-                    <div class="controls">
-                        <div id="seeding-control" class="btn-group">
-                            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                                <span id="seeding-value">Direct Seeding</span> <span class="caret"></span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li class="active"><a href="#!seeding=d">Direct Seeding</a></li>
-                                <li><a href="#!seeding=t">Transplanted</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="control-group" id="transpl-field">
+                <div class="control-group" id="transpl-field" title="Transplanting day">
                     <label class="control-label" for="transpl">Transplanting day</label>
                     <div class="controls">
                         <input id="transpl" name="transpl" type="text">
@@ -157,7 +148,16 @@
             </form>
         </div>
         <div id="run" class="tab-pane">
-            OMG RESULTS HERE
+            <div id="temp-chart-container">
+                <!-- MIN and MAX temperature -->
+            </div>
+            <div id="wrr14-chart-container">
+                <!-- Condition: if date of sowing == NULL or 0 -->
+                <!-- day (X) x WRR14 (Y) (1-365) -->
+
+                <!-- Condition: if date of sowing is 1-366 -->
+                <!-- start day (X) x WRR14 (Y) (start day) till end of output -->
+            </div>
         </div>
     </div>
 </div>
@@ -183,9 +183,10 @@
 
         var isChangedVariety = false;
         var cancelHashEvent = false;
+        var lastVariety = "";
 
         function isTransplanted() {
-            return $("#seeding").val() == "t";
+            return $("#cstab").val() == "t";
         }
 
         function doLogic() {
@@ -194,6 +195,7 @@
             if(isChangedVariety) {
                 loadTemplate($("#variety-edit").val());
                 isChangedVariety = false;
+                $("#variety-edit-value").html(lastVariety);
             }
             refreshEditor();
         }
@@ -214,8 +216,7 @@
             valid &= $("#site").val() != "";
             valid &= $("#year").val() != "";
             valid &= $("#variety").val() != "";
-            valid &= $("#sowing").val() != "";
-            valid &= $("#seeding").val() != "";
+            valid &= $("#cstab").val() != "";
 
             if(isTransplanted())
                 valid &= $("#transpl").val() != "";
@@ -272,8 +273,10 @@
             if(!validate()) {
                 alert("Invalid input");
             }
-            else
+            else {
+                // use the parameters given in parameters section
                 $("#main").submit();
+            }
         }
 
         // Repaints the whole Advanced Input section
@@ -402,6 +405,8 @@
             for(var t in buffer)
                 varietyModified |= buffer[t].isModified;
 
+            lastVariety = $(this).html();
+            $("#variety-edit-value").html("Please wait...");
             if(varietyModified && !confirm("Are you sure you want to switch to another variety? Your changes in this variety will not be saved.")) {
                 cancelHashEvent = true;
                 prevItem.addClass('active');
