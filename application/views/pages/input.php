@@ -148,7 +148,16 @@
             </form>
         </div>
         <div id="run" class="tab-pane">
-            OMG RESULTS HERE
+            <div id="temp-chart-container">
+                <!-- MIN and MAX temperature -->
+            </div>
+            <div id="wrr14-chart-container">
+                <!-- Condition: if date of sowing == NULL or 0 -->
+                <!-- day (X) x WRR14 (Y) (1-365) -->
+
+                <!-- Condition: if date of sowing is 1-366 -->
+                <!-- start day (X) x WRR14 (Y) (start day) till end of output -->
+            </div>
         </div>
     </div>
 </div>
