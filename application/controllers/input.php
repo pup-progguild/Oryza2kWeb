@@ -163,7 +163,6 @@ class Input extends CI_Controller {
                 $graph_me[$s++] = array($int1,$year1,$int2,$int3,$float1,$float2,$float3,$float4,$float5);
             }
         }
-
-        print_r($graph_me);
+        echo json_encode($graph_me);
     }
 }
