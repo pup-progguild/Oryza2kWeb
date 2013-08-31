@@ -1,0 +1,3227 @@
+O:12:"CI_DB_result":8:{s:7:"conn_id";N;s:9:"result_id";N;s:12:"result_array";a:3:{i:0;a:9:{s:2:"id";s:1:"1";s:5:"label";s:19:"Short-term duration";s:11:"file_prefix";s:10:"short_term";s:11:"description";s:49:"Potential yield simulation for short-term variety";s:11:"control_dat";s:2320:"*CONTROLFILE = control.dat
+*strun=0
+*endrun=2
+*----------------------------------------------------------------------*
+*                          CONTROL.DAT                                 *
+* Run control file for ORYZA2000 model (version 4.0)                   *
+* Date: November 2000                                                  *
+*                                                                      *
+* The input files (except FILEIR) may may used in reruns.              *
+*----------------------------------------------------------------------*
+ 
+   FILEON = 'res.dat'     ! Output file
+   FILEOL = 'model.log'   ! Log file
+   FILEIT = 'short_term.exp' ! Experimental data
+   FILEI1 = 'short_term.crp'    ! Crop data
+   FILEIR = 'reruns.dat' ! Rerun file
+*   FILEI2 = ''    ! Soil data
+
+*----------------------------------------------------------------------*
+* Set output/print options                                             *
+*----------------------------------------------------------------------*
+PRDEL  = 1.    ! Output time step (day)
+IPFORM = 5     ! Code for output table format:
+               ! 4 = spaces between columns
+               ! 5 = TAB's between columns (spreadsheet output)
+               ! 6 = two column output
+
+COPINF = 'N'   ! Switch variable whether to copy the input files
+               ! to the output file ('N' = do not copy,
+               ! 'Y' = copy)
+
+DELTMP = 'N'   ! Switch variable what should be done with the
+               ! temporary output file ('N' = do not delete,
+               ! 'Y' = delete)
+
+IFLAG  = 1100  ! Indicates where weather error and warnings
+               ! go (1101 means errors and warnings to log
+               ! file, errors to screen, see FSE manual)
+
+*PRSEL =  'TIME','DVS','WAGT', 'WSO', 'LAI'
+    ! The string array PRSEL contains the output variables for which
+    ! formatted tables have to be made. One or more times there is a
+    ! series of variable names terminated by the word <TABLE>.
+    ! The translator writes the variables in each PRINT statement to
+    ! a separate table
+
+*IOBSD = 1991,182            
+               ! List of observation data for which output is
+               ! required. The list should consist of pairs
+               ! <year>,<day> combination
+
+";s:19:"experiment_data_dat";s:7894:"* ---------------------------------------------------------*
+* File name   : short_term.exp                             *
+* Experimental data file                                   *
+* ---------------------------------------------------------*
+* 1. Selection of modes of running
+* ---------------------------------------------------------*
+
+*--  RICETYPE is to select lowland rice or aerobic/upland rice
+RICETYPE = 'LOWLAND'   ! Lowland rice
+*RICETYPE = 'AEROBIC'   ! Upland or aerobic rice
+
+*--  RUNMODE: mode of running ORYZA
+RUNMODE = 'EXPERIMENT' ! ORYZA simulates particular experiment
+*RUNMODE ='EXPLORATION' ! ORYZA used for exploraton 
+
+*--  PRODENV = Production situation setting
+PRODENV = 'POTENTIAL' ! Potential production
+*PRODENV = 'WATER BALANCE' ! production may be water-limited
+
+*--  WATBAL is choice of water balance
+*    needs only be given when PRODENV = 'WATER BALANCE'
+WATBAL = 'PADDY'   ! PADDY water balance (for lowland soils)
+*WATBAL = 'SAHEL'   ! SAHEL water balance (for freely draining upland soils)
+*WATBAL = 'SAWAH'   ! SAWAH water balance (for lowland or upland soils)
+
+*--  NITROENV = Nitrogen production situation setting
+NITROENV = 'POTENTIAL'        ! Potential production
+*NITROENV = 'NITROGEN BALANCE'   ! Production may be nitrogen-limited
+
+* WARNING: NITROGEN AND WATER LIMITATIONS AT SAME TIME IS AS
+* YET UN UNVALIDATED OPTION IN ORYZA2000!!!! 
+
+*--  ETMOD is method for evapotranspiration calculation:
+ETMOD = 'PENMAN' ! Penman based (van Kraalingen and Stol, 1996)
+*ETMOD = 'PRIESTLY TAYLOR' ! Priestly-Talyer (")
+*ETMOD = 'MAKKINK' ! Makkink (van Kraalingen and Stol, 1996)
+
+* ---------------------------------------------------------*
+* 2. Timer data for simulation
+* ---------------------------------------------------------*
+IYEAR  = 1991                ! start year of simulation (year)
+STTIME =   54.               ! start time (day numer)
+FINTIM = 1000.               ! finish time (days after start)
+DELT   =    1.               ! time step (day)
+
+* ---------------------------------------------------------*
+* 3. Weather station and climatica data for simulation
+* ---------------------------------------------------------*
+WTRDIR = ' ' ! Directory of weather data
+CNTR   = 'indo'              ! Country code
+ISTN   = 43                   ! Station code
+
+ANGA = 0.29                   ! Angstrom A parameter
+ANGB = 0.42                   ! Angstrom B parameter
+
+* Table for temperature increase for climatic change studies
+* X value = day number, Y value is temperature increase (Celsius)
+TMCTB  = 0.,  0.,
+         366.,0.
+
+* Multiplication factor for potential evapotranspiration (FAO)
+FAOF = 1.3  ! Value Murty & Tuong
+
+* Temperature increase in seed-bed due to cover: 
+TMPSB = 0. ! Zero when no cover over seed-bed; 9.5 with seed-bed
+
+* ---------------------------------------------------------*
+* 4. Establishment data
+* ---------------------------------------------------------*
+*** ESTAB is method of establishment: 'TRANSPLANT' or 'DIRECT-SEED'
+ESTAB='TRANSPLANT'
+*ESTAB='DIRECT-SEED'
+
+EMD    =   59    ! Day of emergence (either direct, or in seed-bed)
+EMYR   = 1991    ! Year of emergence (1996)
+SBDUR  =   20    ! seed-bed duration (days)
+
+* ---------------------------------------------------------*
+* 5. Management parameters
+* ---------------------------------------------------------*
+NPLH   = 3.0     ! number of plants per hill 
+NH     = 44.     ! number of hills
+NPLSB  = 1000.   ! number of plants in seed-bed (???)
+NPLDS  = 132.    ! number of plants/m2 direct-seeded
+
+* Initial data at emergence, for either direct-seeding or seed-bed
+* Standard data used.
+LAPE   = 0.0001   ! initial leaf area per plant
+DVSI   = 0.0      ! initial development stage
+WLVGI  = 0.0      ! initial leaf weight
+WSTI   = 0.0      ! initial stem weight
+WRTI   = 0.0      ! initial stem weight
+WSOI   = 0.0      ! initial weight storage organs
+ZRTI   = 0.0001   ! initial root depth (m)
+
+* Re-initialization at transplanting (standard data used)
+ZRTTR  = 0.05     ! root depth at transplanting (m)
+
+*---------------------------------------------------------------*
+* 6. Irrigation parameters
+* Need only to be filled-in when PRODENV = 'WATER BALANCE'
+*---------------------------------------------------------------*
+* No data (potential production mode)
+
+*--------------------------------------------------------------------*
+* 7. Nitrogen parameters                                             *
+* Need only to be filled-in when NITROENV = 'NITROGEN BALANCE'       *
+*--------------------------------------------------------------------*
+* No data (potential production mode)
+*TWO SOIL C AND N DYNAMICS
+NUTRIENT =  'GENERAL SOM'   !USE GENERAL SOIL ORGANIC C AND N MODULE TO HANDLE THE NUTRIENT CHANGES
+*NUTRIENT =  'FIXED SUPPLY' !Use fixed mineralization rate with fertilizer recovery rate
+*NUTRIENT =  'APSIM SOILN'  !USE APSIM SOIL C AND N MODULE TO HANDLE THE NUTRIENT CHANGES, IT CONSISTED
+                            !BY SOILN, POND AND SURFACEOM MODULES
+
+*--------------------------------------------------------------------*
+* 8. Measured data for model calibration and comparison              *
+*    And option to force measured LAI during simulation              *
+*    (instead of using simulated values)                             *
+*--------------------------------------------------------------------*
+* Observed phenology: only required if program DRATES is run!!
+*IDOYTR =   ! Day of transplanting (give 0 if direct-seeded) (d)
+*IYRTR  =   ! Year of transplanting (give 0 if direct-seeded) (y)
+*IDOYPI =     ! Day of panicle initiation
+               ! (give -99 if not observed) (d)
+*IYRPI  =   ! Year of panicle initiation
+               ! (give -99 if not observed) (y)
+*IDOYFL =     ! Day of flowering (d)
+*IYRFL  =   ! Year of flowering (y)
+*IDOYM  =   ! Day of maturity (d)
+*IYRM   =   ! Year of maturity (y)
+
+* Measured leaf area index (LAI; m2 leaf m-2 ground): first column gives
+* year, second column gives day of year, third column gives the measured 
+* LAI at that date (day and year):
+*LAI_OBS =
+
+*-- Parameter to set forcing of measured LAI during simulation
+*LAI_FRC = 0       ! No forcing
+*LAI_FRC = 2      ! Forcing 
+
+* Measured green leaf dry weight (WLVG; kg ha-1): first column gives
+* year, second column gives day of year, third column gives the measured 
+* WLVG at that date (day and year):
+*WLVG_OBS =
+
+* Measured dead leaf dry weight (WLVD; kg ha-1): first column gives
+* year, second column gives day of year, third column gives the measured 
+* WLVD at that date (day and year):
+*WLVD_OBS =
+
+* Measured stem dry weight (WST; kg ha-1): first column gives
+* year, second column gives day of year, third column gives the measured 
+* WST at that date (day and year):
+*WST_OBS =
+
+* Measured panicle dry weight (storage organ)(WSO; kg ha-1): first column 
+* gives year, second column gives day of year, third column gives the 
+* measured WSO at that date (day and year):
+*WSO_OBS =
+
+* Measured total dry weight (WAGT; kg ha-1): first column gives
+* year, second column gives day of year, third column gives the measured 
+* WAGT at that date (day and year):
+*WAGT_OBS =
+
+* Measured leaf N content on weight basis (FNLV; g N g-1 leaf DM): first 
+* column gives year, second column gives day of year, third column gives 
+* the measured FNLV at that date (day and year):
+*FNLV_OBS =
+
+* Measured leaf N content on area basis (NFLV; g N m-2 leaf area): first 
+* column gives year, second column gives day of year, third column gives 
+* the measured NFLV at that date (day and year):
+*NFLV_OBS =
+
+*-- Parameter to set forcing of measured NFLV values during simulation
+*NFLV_FRC = 0       ! No forcing
+*NFLV_FRC = 2      ! Forcing 
+";s:13:"crop_data_dat";s:11136:"***********************************************************************
+* Crop data file for ORYZA2000 rice growth model                      *
+* File name  : short_term.crp                                         *
+***********************************************************************
+
+* 1. Phenological development parameters
+TBD    = 8.      ! Base temperature for development (oC)
+TBLV   = 8.      ! Base temperature for juvenile leaf area growth (oC)
+TMD    = 42.     ! Maximum temperature for development (oC)
+TOD    = 30.     ! Optimum temperature for development (oC)
+* average development rates for 8 crop seasons
+DVRJ  = .000661  ! Development rate in juvenile phase (oCd-1)
+DVRI  = .000758  ! Development rate in photoperiod-sensitive phase (oCd-1)
+DVRP  = .001125  ! Development rate in panicle development (oCd-1)
+DVRR  = .002430  ! Development rate in reproductive phase (oCd-1)
+MOPP   = 11.50   ! Maximum optimum photoperiod (h)
+PPSE   = 0.0     ! Photoperiod sensitivity (h-1)
+SHCKD  = 0.4     ! Relation between seedling age and delay in phenological 
+                 ! development (oCd oCd-1)
+COLDMIN = 12.    ! Lower air temperature treshhold for growth (oC)
+COLDEAD = 3.     ! Consecutive number of days below COLDMIN that crop dies (-)
+CTSTER = 36.6    ! Critical temperature of spikelet sterility (oC)
+
+* 2. Leaf and stem growth parameters
+RGRLMX = 0.0085  ! Maximum relative growth rate of leaf area (oCd-1)
+RGRLMN = 0.0040  ! Minimum relative growth rate of leaf area (oCd-1)
+SHCKL  = 0.25    ! Relation between seedling age and delay in leaf area 
+                 ! development (oCd oCd-1)
+
+* Switch to use SLA as table (give values below) or as fixed function
+SWISLA = 'FUNCTION' ! Give function parameters  ASLA, BSLA, CSLA, DSLA, SLAMAX
+*SWISLA = 'TABLE'   ! Give SLA as a function of DVS in the table SLATB
+
+* If SWISLA='FUNCTION', supply SLA function parameters: 
+* SLA = ASLA + BSLA*EXP(CSLA*(DVS-DSLA)), and SLAMAX
+ASLA = 0.0021 ! (-)
+BSLA = 0.0025 ! (-)
+CSLA = -3.0   ! (-)
+DSLA = 0.30   ! (-)
+SLAMAX = 0.0060 ! maximum value of SLA (ha/kg)
+
+* If SWISLA='TABLE', supply table of specific leaf area (ha kg-1; Y value) 
+* as a function of development stage (-; X value):
+SLATB=0.,  0.006,   ! value in WOFOST file IR64
+      0.24,0.006,
+      0.31,0.004,
+      0.58,0.004,
+      0.67,0.003,
+      1.13,0.003,
+      1.54,0.002,
+      2.50,0.002  
+
+* Table of specific green stem area (ha kg-1; Y value) as a function of 
+* development stage (-; X value):
+SSGATB = 0.0, 0.0003,   
+         0.9, 0.0003,
+         2.0, 0.0000,
+         2.5, 0.0000
+
+* 3. Photosynthesis parameters
+FRPAR  = 0.5  ! Fraction of sunlight energy that is 
+              ! photosynthetically active (-)
+SCP    = 0.2  ! Scattering coefficient of leaves for PAR (-)
+CO2REF = 340. ! Reference level of atmospheric CO2 (ppm)
+CO2    = 340. ! Ambient CO2 concentration (ppm)
+
+* Table of light extinction coefficient for leaves (-; Y-value) as a function
+* of development stage (-; X value):
+KDFTB = 0.00, 0.4,
+        0.65, 0.4,
+        1.00, 0.6,
+        2.50, 0.6
+
+* Table of extinction coefficient of N profile in the canopy (-; Y-value) 
+* as a functionof development stage (-; X value):
+KNFTB = 0.0, 0.4,
+        2.5, 0.4 
+
+* Table of light use effiency (-; Y-value) as a function of 
+* temperature (oC; X value):
+EFFTB  =  10.,0.54,
+          40.,0.36
+
+* Table of effect of temperature on AMAX (-; Y-value) as a function of 
+* temperature (oC; X value):
+REDFTT = -10., 0.,
+          10., 0.,
+          20., 1.,
+          37., 1.,
+          43., 0.
+
+* Table of N fraction in leaves on leaf area basis (g N m-2 leaf; Y-value) 
+* as a function of development stage (-; X value):
+NFLVTB = 0.00, 0.8395,
+         0.14, 0.8395,
+         0.18, 1.8860,
+         0.29, 2.3805,
+         0.38, 1.5295,
+         0.65, 1.4260,
+         0.89, 1.0695,
+         1.00, 1.0580,
+         1.50, 1.0925,
+         2.12, 0.7130,
+         2.5,  0.7130
+
+*Leaf nitrogen content corresponding coefficient to AMax (/(g N m-2 leaf))
+AMAXSLN0 = 22.0
+
+*Minimum leaf nitrogen content for that Am (maximum rate co2 assimilation) is 0.0 (g N/m2 leaf)
+MINSLN = 0.2
+
+* 4. Maintenance parameters
+* Maintenance respiration coefficient (kg CH2O kg-1 DM d-1) of:
+MAINLV = 0.02   ! Leaves 
+MAINST = 0.015  ! Stems 
+MAINSO = 0.003  ! Storage organs (panicles) 
+MAINRT = 0.01   ! Roots  
+
+TREF   = 25.    ! Reference temperature (oC)
+Q10    = 2.     ! Factor accounting for increase of maintenance
+                ! respiration with a 10 oC rise in temperature (-)
+
+* 5. Growth respiration parameters 
+* Carbohydrate requirement for dry matter production (kg CH2O kg-1 DM leaf) of:
+CRGLV  = 1.326  ! Leaves 
+CRGST  = 1.326  ! Stems
+CRGSO  = 1.462  ! Storage organs (panicles)
+CRGRT  = 1.326  ! Roots
+CRGSTR = 1.11   ! Stem reserves
+
+LRSTR  = 0.947  ! Fraction of allocated stem reserves that is
+                ! available for growth (-)
+
+* 6. Growth parameters
+FSTR   = 0.20      ! Fraction of carbohydrates allocated to stems that
+                   ! is stored as reserves (-)
+TCLSTR = 10.       ! Time coefficient for loss of stem reserves (1 d-1)
+SPGF   = 64900.    ! Spikelet growth factor (no kg-1)
+WGRMX  = 0.0000249 ! Maximum individual grain weight (kg grain-1)
+
+* Partitioning tables
+* Table of fraction total dry matter partitioned to the shoot (-; Y-value) 
+* as a function of development stage (-; X value):
+FSHTB  = 0.00,  0.50,
+         0.43,  0.75,
+         1.00,  1.00,
+         2.50,  1.00
+
+* Table of fraction shoot dry matter partitioned to the leaves (-; Y-value) 
+* as a function of development stage (-; X value):
+ FLVTB  =
+    0.000, 0.50,
+    0.350, 0.50,
+    0.610, 0.30,
+    0.720, 0.20,
+    0.880, 0.06,
+    1.230, 0.00,
+    2.5,   0.00
+
+* Table of fraction shoot dry matter partitioned to the stems (-; Y-value) 
+* as a function of development stage (-; X value):
+ FSTTB  =
+    0.000, 0.50,
+    0.350, 0.50,
+    0.610, 0.70,
+    0.720, 0.80,
+    0.880, 0.55,
+    1.230, 0.00,
+    2.5,   0.00
+
+* Table of fraction shoot dry matter partitioned to the panicles (-; Y-value) 
+* as a function of development stage (-; X value):
+ FSOTB  =
+    0.000, 0.000,
+    0.610, 0.000,
+    0.720, 0.000,
+    0.880, 0.390,
+    1.230, 1.000,
+    2.5,   1.000
+
+* Table of leaf death coefficient (d-1; Y-value) as a function of development 
+* stage (-; X value):
+DRLVT = 0.0,  0.00,
+        0.9,  0.00,
+        2.0,  0.11,
+        2.5,  0.11
+
+* 7. Carbon balance parameters
+* Mass fraction carbon (kg C kg-1 DM) in the:
+FCLV   = 0.419  ! Leaves 
+FCST   = 0.431  ! Stems
+FCSO   = 0.487  ! Storage organs (panicles)
+FCRT   = 0.431  ! Roots 
+FCSTR  = 0.444  ! Stem reserves 
+
+* 8. Root parameters (Taken from IR72 data file!!!)
+GZRT   = 0.01   ! Growth rate of roots (m d-1)
+ZRTMCW = 0.25   ! Maximum depth of roots if no drought stress (m)
+ZRTMCD = 0.25   ! Maximum depth of roots if drought (m)
+
+*Additional information for ORYZA2000v.2.13 (JUNE 2009)
+SROOTL = 90.0   ! Special root length (cm/g DM)
+RMINT  = 5.0    ! Minimum temperature for root growth (oC)
+ROPTT  = 25.0   ! Optimum temperature of root growth (oC)
+RTBS   = 2.0    ! Minimum temperature for root to survive (oC)
+RCNL   = 0.012  ! Lowest root nitrogen content (residue root N content, kg N kg-1 root DM)
+MAXD   = 40.0   ! Maximum rooting depth (cm)
+SODT   = 0.9    ! Tolerance index of oxygen deficiency
+
+* 9. Drought stress parameters (Taken from IR72 data file!!!)
+* Upper and lower limits for drought stress effects
+ULLS =   74.31    ! Upper limit leaf rolling (kPa)
+LLLS =  794.33    ! Lower limit leaf rolling (kPa)
+ULDL =  630.95    ! Upper limit death of leaves (kPa)
+LLDL = 1584.89    ! Lower limit death of leaves (kPa)
+ULLE =    1.45    ! Upper limit leaf expansion (kPa) 
+LLLE = 140.4      ! Lower limit leaf expansion (kPa)
+
+* Switch to use ULTR and LLTR as given above or function built in ORYZA 
+* for the reduction in relative transpiration:
+* SWIRTR = 1, Use ULRT AND LLRT for transpiration; SWIRTR = 2, Use SWIRTRF for 
+* transpiration; SWIRTR = 3, Use FSWTD for transpiration 
+*SWIRTR = 3 ! Use function 
+
+* Give value of ULRT and LLRT for SWIRTR = 1
+ULRT =   74.13    ! Upper limit relative transpiration reduction (kPa)
+LLRT = 1584.89    ! Lower limit relative transpiration reduction (kPa)
+
+SWIRTR = 'DATA'    ! Use data
+*SWIRTR = 'FUNCTION' ! Use function
+
+* Give value for SWIRTRF if SWIRTR= 2, default value SWIRTRF=0.003297
+SWIRTRF = 0.020597
+
+* Give value for FSWTD if SWIRTR= 3, default value SWIRTRF=0.003297
+* The upper limit factor while transpiration declines which is the ratio of remaining
+* available water to total water supply capability 
+FSWTD = 0.30
+
+*===================================================================*
+* Drought stress effect parameters for aerobic rice                 *
+* Values are for wheat, taken from SUCROS2 model                    *
+*===================================================================*
+* characteristic potential transpiration rate at a soil water
+* content halfway wilting point and field capacity (mm.d-1)
+  TRANSC = 6.
+
+* Root activity coefficient (-)
+  EDPTFT = 0.,0.15, 0.15,0.6, 0.3,0.8, 0.5,1., 1.1,1.
+*===================================================================*
+
+* 10. Nitrogen parameters
+NMAXUP  = 8.      ! Maximum daily N uptake (kg N ha-1 d-1)
+RFNLV   = 0.004   ! Residual N fraction of leaves (kg N kg-1 leaves)
+FNTRT   = 0.15    ! Fraction N translocation from roots, as (additonal) 
+                  ! fraction of total N translocation from stems and leaves (-)
+RFNST   = 0.0015  ! Residual N fraction of stems (kg N kg-1 stems)
+TCNTRF  = 10.     ! Time coefficient for N translocation to grains (d)
+NFLVI   = 0.5     ! Initial leaf N fraction (on area basis: g N m-2 leaf)
+FNLVI   = 0.025   ! Initial leaf N fraction (on weight basis: kg N kg-1 leaf)
+
+NMAXSO  = 0.0175  ! Maximum N concentration in storage organs (kg N kg-1)
+
+* Table of minimum N concentration in storage organ (kg N kg-1 DM; Y value) 
+* as a function of the amount of N in the crop till flowering (kg N ha-1; X value):
+NMINSOT =  0., .006,
+          50., .0008,
+         150., .0125,
+         250., .015,
+         400., .017,
+        1000., .017
+
+* Table of maximum leaf N fraction on weight basis (kg N kg-1 leaves; Y value)
+* as a function of development stage (-; X value):
+NMAXLT = 0.0,  .053,
+         0.4,  .053,
+         0.75, .040,
+         1.0,  .028,
+         2.0,  .022,
+         2.5,  .015
+
+* Table of minimum leaf N fraction on weight basis (kg N kg-1 leaves; Y value)
+* as a function of development stage (-; X value):
+NMINLT = 0.0, 0.025,
+         1.0, 0.012,
+         2.1, 0.007,
+         2.5, 0.007
+
+*--- Table of effect of N stress on leaf death rate (-; Y value)
+* as a function of N stress level (-; X value):
+NSLLVT = 0.,  1.0,
+         1.1, 1.0,
+         1.5, 1.4,
+         2.0, 1.5,
+         2.5, 1.5
+";s:10:"reruns_dat";s:297:"**********************************************************************
+* RERUNS.DAT file
+**********************************************************************
+* rerun set 1
+PRODENV = 'POTENTIAL'
+IYEAR = 1992
+EMYR = 1992
+* rerun set 2
+PRODENV = 'POTENTIAL'
+IYEAR = 1993
+EMYR = 1993
+
+
+";s:6:"preset";s:1:"1";}i:1;a:9:{s:2:"id";s:1:"2";s:5:"label";s:20:"Medium-term duration";s:11:"file_prefix";s:11:"medium_term";s:11:"description";s:50:"Potential yield simulation for medium-term variety";s:11:"control_dat";s:2322:"*CONTROLFILE = control.dat
+*strun=0
+*endrun=2
+*----------------------------------------------------------------------*
+*                          CONTROL.DAT                                 *
+* Run control file for ORYZA2000 model (version 4.0)                   *
+* Date: November 2000                                                  *
+*                                                                      *
+* The input files (except FILEIR) may may used in reruns.              *
+*----------------------------------------------------------------------*
+ 
+   FILEON = 'res.dat'     ! Output file
+   FILEOL = 'model.log'   ! Log file
+   FILEIT = 'medium_term.exp' ! Experimental data
+   FILEI1 = 'medium_term.crp'    ! Crop data
+   FILEIR = 'reruns.dat' ! Rerun file
+*   FILEI2 = ''    ! Soil data
+
+*----------------------------------------------------------------------*
+* Set output/print options                                             *
+*----------------------------------------------------------------------*
+PRDEL  = 1.    ! Output time step (day)
+IPFORM = 5     ! Code for output table format:
+               ! 4 = spaces between columns
+               ! 5 = TAB's between columns (spreadsheet output)
+               ! 6 = two column output
+
+COPINF = 'N'   ! Switch variable whether to copy the input files
+               ! to the output file ('N' = do not copy,
+               ! 'Y' = copy)
+
+DELTMP = 'N'   ! Switch variable what should be done with the
+               ! temporary output file ('N' = do not delete,
+               ! 'Y' = delete)
+
+IFLAG  = 1100  ! Indicates where weather error and warnings
+               ! go (1101 means errors and warnings to log
+               ! file, errors to screen, see FSE manual)
+
+*PRSEL =  'TIME','DVS','WAGT', 'WSO', 'LAI'
+    ! The string array PRSEL contains the output variables for which
+    ! formatted tables have to be made. One or more times there is a
+    ! series of variable names terminated by the word <TABLE>.
+    ! The translator writes the variables in each PRINT statement to
+    ! a separate table
+
+*IOBSD = 1991,182            
+               ! List of observation data for which output is
+               ! required. The list should consist of pairs
+               ! <year>,<day> combination
+
+";s:19:"experiment_data_dat";s:8481:"*--------------------------------------------------------------------*
+* EXPERIMENTAL DATA FILE                                             *
+*                                                                    *
+* File name        : medium_term.exp                                 *
+*--------------------------------------------------------------------*
+
+*--------------------------------------------------------------------*
+* 1. Selection of modes of running                                   *
+*--------------------------------------------------------------------*
+*--  RICETYPE is to selcet lowland rice or aerobic/upland rice
+RICETYPE = 'LOWLAND'   ! Lowland rice
+*RICETYPE = 'AEROBIC'   ! Upland or aerobic rice
+
+*--  RUNMODE: mode of running ORYZA
+RUNMODE = 'EXPERIMENT'       ! ORYZA simulates particular experiment
+*RUNMODE ='EXPLORATION'      ! ORYZA used for exploraton 
+
+*--  PRODENV = Water production situation setting
+PRODENV = 'POTENTIAL'        ! Potential production
+*PRODENV = 'WATER BALANCE'   ! Production may be water-limited
+
+*-- WATBAL is Choice of water balance
+*   needs only be given when PRODENV = 'WATER BALANCE'
+WATBAL = 'PADDY'   ! PADDY water balance (for lowland soils)
+*WATBAL = 'SAHEL'   ! SAHEL water balance (for freely draining upland soils)
+*WATBAL = 'SAWAH'   ! SAWAH water balance (for lowland or upland soils)
+
+*--  NITROENV = Nitrogen production situation setting
+NITROENV = 'POTENTIAL'        ! Potential production
+*NITROENV = 'NITROGEN BALANCE'   ! Production may be nitrogen-limited
+
+* WARNING: NITROGEN AND WATER LIMITATIONS AT SAME TIME IS AS
+* YET UN UNVALIDATED OPTION IN ORYZA2000!!!! 
+
+*--  ETMOD is method for evapotranspiration calculation:
+ETMOD = 'PENMAN'            ! Penman-based (Van Kraalingen & Stol,1996)
+*ETMOD = 'PRIESTLY TAYLOR'   ! Priestly-Taylor (")
+*ETMOD = 'MAKKINK'           ! Makkink (Van Kraalingen & Stol, 1996)
+
+*--------------------------------------------------------------------*
+* 2. Timer data for simulation                                       *
+*--------------------------------------------------------------------*
+IYEAR  = 1991                ! Start year of simulation (year)
+STTIME = 4.                  ! Start time  (day number)
+FINTIM = 1000.               ! Finish time (days after start)
+DELT   = 1.                  ! Time step   (day)
+
+*--------------------------------------------------------------------*
+* 3. Weather station and climatic data for simulation                *
+*--------------------------------------------------------------------*
+WTRDIR = ' '   ! Directory of weather data
+CNTR   = 'phil'              ! Country code
+ISTN   = 1                   ! Station code
+
+ANGA = 0.29                  ! Angstrom A parameter
+ANGB = 0.45                  ! Angstrom B parameter
+
+TMCTB =  0., 0.,             ! Table for temperature increase
+       366., 0.              ! Climatic Change studies
+
+FAOF  = 1.          ! MultipL. factor for pot. evapotranspiration (FAO)
+                    ! Value Murty & Tuong
+
+TMPSB = 0.          ! Temperature increase in seed-bed due to cover:
+                    ! Zero when no cover over seed-bed; 9.5 with seed-bed
+
+*--------------------------------------------------------------------*
+* 4. Establishment data
+*--------------------------------------------------------------------*
+*--  ESTAB is method of establishment: 'TRANSPLANT' or 'DIRECT-SEED'
+ESTAB='TRANSPLANT'
+*ESTAB='DIRECT-SEED'
+
+* Transplanting date January 16, 1992; sowing date Jan. 4.
+EMD    = 4          ! Day of emergence (either direct, or in seed-bed)
+EMYR   = 1991       ! Year of emergence 
+SBDUR  = 12         ! Seedbed duration (days between emerging and transplanting)
+
+*--------------------------------------------------------------------*
+* 5. Management parameters                                           *
+*--------------------------------------------------------------------*
+NPLH   = 5.         ! Number of plants per hill 
+NH     = 25.        ! Number of hills
+NPLSB  = 1000.      ! Number of plants in seed-bed (???)
+NPLDS  = 200.       ! Number of plants/m2 direct-seeded
+
+*-- Initial data at emergence, for either direct-seeding or seed-bed
+*   Standard data used.
+LAPE   = 0.0001     ! Initial leaf area per plant
+DVSI   = 0.0        ! Initial development stage
+WLVGI  = 0.0        ! Initial leaf weight
+WSTI   = 0.0        ! Initial stem weight
+WRTI   = 0.0        ! Initial stem weight
+WSOI   = 0.0        ! Initial weight storage organs
+ZRTI   = 0.0001     ! Initial root depth (m)
+
+*-- Re-initialization at transplanting (standard data used)
+ZRTTR  = 0.05       ! Root depth at transplanting (m)
+
+*---------------------------------------------------------------*
+* 6. Irrigation parameters
+* Need only to be filled-in when PRODENV = 'WATER BALANCE'
+*---------------------------------------------------------------*
+* No data (potential production mode)
+
+*--------------------------------------------------------------------*
+* 7. Nitrogen parameters                                             *
+* Need only to be filled-in when NITROENV = 'NITROGEN BALANCE'       *
+*--------------------------------------------------------------------*
+* No data (potential production mode)
+*TWO SOIL C AND N DYNAMICS
+NUTRIENT =  'GENERAL SOM'   !USE GENERAL SOIL ORGANIC C AND N MODULE TO HANDLE THE NUTRIENT CHANGES
+*NUTRIENT =  'FIXED SUPPLY' !Use fixed mineralization rate with fertilizer recovery rate
+*NUTRIENT =  'APSIM SOILN'  !USE APSIM SOIL C AND N MODULE TO HANDLE THE NUTRIENT CHANGES, IT CONSISTED
+                            !BY SOILN, POND AND SURFACEOM MODULES
+
+*--------------------------------------------------------------------*
+* 8. Measured data for model calibration and comparison              *
+*    And option to force measured LAI during simulation              *
+*    (instead of using simulated values)                             *
+*--------------------------------------------------------------------*
+* Observed phenology: only required if program DRATES is run!!
+*IDOYTR =   ! Day of transplanting (give 0 if direct-seeded) (d)
+*IYRTR  =   ! Year of transplanting (give 0 if direct-seeded) (y)
+*IDOYPI =     ! Day of panicle initiation
+               ! (give -99 if not observed) (d)
+*IYRPI  =   ! Year of panicle initiation
+               ! (give -99 if not observed) (y)
+*IDOYFL =     ! Day of flowering (d)
+*IYRFL  =   ! Year of flowering (y)
+*IDOYM  =   ! Day of maturity (d)
+*IYRM   =   ! Year of maturity (y)
+
+* Measured leaf area index (LAI; m2 leaf m-2 ground): first column gives
+* year, second column gives day of year, third column gives the measured 
+* LAI at that date (day and year):
+*LAI_OBS =
+
+*-- Parameter to set forcing of measured LAI during simulation
+*LAI_FRC = 0       ! No forcing
+*LAI_FRC = 2      ! Forcing 
+
+* Measured green leaf dry weight (WLVG; kg ha-1): first column gives
+* year, second column gives day of year, third column gives the measured 
+* WLVG at that date (day and year):
+*WLVG_OBS =
+
+* Measured dead leaf dry weight (WLVD; kg ha-1): first column gives
+* year, second column gives day of year, third column gives the measured 
+* WLVD at that date (day and year):
+*WLVD_OBS =
+
+* Measured stem dry weight (WST; kg ha-1): first column gives
+* year, second column gives day of year, third column gives the measured 
+* WST at that date (day and year):
+*WST_OBS =
+
+* Measured panicle dry weight (storage organ)(WSO; kg ha-1): first column 
+* gives year, second column gives day of year, third column gives the 
+* measured WSO at that date (day and year):
+*WSO_OBS =
+
+* Measured total dry weight (WAGT; kg ha-1): first column gives
+* year, second column gives day of year, third column gives the measured 
+* WAGT at that date (day and year):
+*WAGT_OBS =
+
+* Measured leaf N content on weight basis (FNLV; g N g-1 leaf DM): first 
+* column gives year, second column gives day of year, third column gives 
+* the measured FNLV at that date (day and year):
+*FNLV_OBS =
+
+* Measured leaf N content on area basis (NFLV; g N m-2 leaf area): first 
+* column gives year, second column gives day of year, third column gives 
+* the measured NFLV at that date (day and year):
+*NFLV_OBS =
+
+*-- Parameter to set forcing of measured NFLV values during simulation
+*NFLV_FRC = 0       ! No forcing
+*NFLV_FRC = 2      ! Forcing 
+
+";s:13:"crop_data_dat";s:11035:"**********************************************************************
+* Crop data file for ORYZA2000 rice growth model                     *
+* File name   : medium_term.crp                                      *
+**********************************************************************
+
+* 1. Phenological development parameters
+TBD    = 8.      ! Base temperature for development (oC)
+TBLV   = 8.      ! Base temperature for juvenile leaf area growth (oC)
+TMD    = 42.     ! Maximum temperature for development (oC)
+TOD    = 30.     ! Optimum temperature for development (oC)
+DVRJ  = .000773  ! Development rate in juvenile phase (oCd-1)
+DVRI  = .000758  ! Development rate in photoperiod-sensitive phase (oCd-1)
+DVRP  = .000784  ! Development rate in panicle development (oCd-1)
+DVRR  = .001784  ! Development rate in reproductive phase (oCd-1)
+MOPP   = 11.50   ! Maximum optimum photoperiod (h)
+PPSE   = 0.0     ! Photoperiod sensitivity (h-1)
+SHCKD  = 0.4     ! Relation between seedling age and delay in phenological 
+                 ! development (oCd oCd-1)
+COLDMIN = 12.    ! Lower air temperature treshhold for growth (oC)
+COLDEAD = 3.     ! Consecutive number of days below COLDMIN that crop dies (-)
+CTSTER = 36.6    ! Critical temperature of spikelet sterility (oC)
+
+* 2. Leaf and stem growth parameters
+RGRLMX = 0.0085  ! Maximum relative growth rate of leaf area (oCd-1)
+RGRLMN = 0.0040  ! Minimum relative growth rate of leaf area (oCd-1)
+SHCKL  = 0.25    ! Relation between seedling age and delay in leaf area 
+                 ! development (oCd oCd-1)
+
+* Switch to use SLA as table (give values below) or as fixed function
+SWISLA = 'FUNCTION' ! Give function parameters  ASLA, BSLA, CSLA, DSLA, SLAMAX
+*SWISLA = 'TABLE'   ! Give SLA as a function of DVS in the table SLATB
+
+* If SWISLA='FUNCTION', supply SLA function parameters: 
+* SLA = ASLA + BSLA*EXP(CSLA*(DVS-DSLA)), and SLAMAX
+ASLA = 0.0024 ! (-)
+BSLA = 0.0025 ! (-)
+CSLA = -4.5   ! (-)
+DSLA = 0.14   ! (-)
+SLAMAX = 0.0045 ! maximum value of SLA (ha/kg)
+
+* If SWISLA='TABLE', supply table of specific leaf area (ha kg-1; Y value) 
+* as a function of development stage (-; X value):
+SLATB = 0.00, 0.0045,
+        0.16, 0.0045,
+        0.33, 0.0033,
+        0.65, 0.0028,
+        0.79, 0.0024,
+        2.10, 0.0023,
+        2.50, 0.0023
+
+* Table of specific green stem area (ha kg-1; Y value) as a function of 
+* development stage (-; X value):
+SSGATB = 0.0, 0.0003,   
+         0.9, 0.0003,
+         2.1, 0.0000,
+         2.5, 0.0000
+
+* 3. Photosynthesis parameters
+FRPAR  = 0.5  ! fraction of sunlight energy that is 
+              ! photosynthetically active (-)
+SCP    = 0.2  ! Scattering coefficient of leaves for PAR (-)
+CO2REF = 340. ! Reference level of atmospheric CO2 (ppm)
+CO2    = 340. ! Ambient CO2 concentration (ppm)
+
+* Table of light extinction coefficient for leaves (-; Y-value) as a function
+* of development stage (-; X value):
+KDFTB = 0.00, 0.4,
+        0.65, 0.4,
+        1.00, 0.6,
+        2.50, 0.6
+
+* Table of extinction coefficient of N profile in the canopy (-; Y-value) 
+* as a functionof development stage (-; X value):
+KNFTB = 0.0, 0.4,
+        2.5, 0.4 
+
+* Table of light use effiency (-; Y-value) as a function of 
+* temperature (oC; X value):
+EFFTB  =   0.,0.54,
+          10.,0.54,
+          40.,0.36,
+          60.,0.24
+
+* Table of effect of temperature on AMAX (-; Y-value) as a function of 
+* temperature (oC; X value):
+REDFTT = -10., 0.,
+          10., 0.,
+          20., 1.,
+          37., 1.,
+          43., 0.,
+          60., 0.
+
+* Table of N fraction in leaves on leaf area basis (g N m-2 leaf; Y-value) 
+* as a function of development stage (-; X value):
+NFLVTB = 0.00, 0.54,
+         0.16, 0.54,
+         0.33, 1.53,
+         0.65, 1.22,
+         0.79, 1.56,
+         1.00, 1.29,
+         1.46, 1.37,
+         2.02, 0.83,
+         2.50, 0.83
+
+*Leaf nitrogen content corresponding coefficient to AMax (/(g N m-2 leaf))
+AMAXSLN0 = 22.0
+*Minimum leaf nitrogen content for that Am (maximum rate co2 assimilation) is 0.0 (g N/m2 leaf)
+MINSLN = 0.2
+
+* 4. Maintenance parameters
+* Maintenance respiration coefficient (kg CH2O kg-1 DM d-1) of:
+MAINLV = 0.02   ! Leaves 
+MAINST = 0.015  ! Stems 
+MAINSO = 0.003  ! Storage organs (panicles) 
+MAINRT = 0.01   ! Roots 
+
+TREF   = 25.    ! Reference temperature (oC)
+Q10    = 2.     ! Factor accounting for increase in maintenance
+                ! respiration with a 10 oC rise in temperature (-)
+
+* 5. Growth respiration parameters 
+* Carbohydrate requirement for dry matter production (kg CH2O kg-1 DM leaf) of:
+CRGLV  = 1.326  ! Leaves 
+CRGST  = 1.326  ! Stems
+CRGSO  = 1.462  ! Storage organs (panicles)
+CRGRT  = 1.326  ! Roots
+CRGSTR = 1.11   ! Stem reserves
+
+LRSTR  = 0.947  ! Fraction of allocated stem reserves that is
+                ! available for growth (-)
+
+* 6. Growth parameters
+FSTR   = 0.20      ! Fraction of carbohydrates allocated to stems that
+                   ! is stored as reserves (-)
+TCLSTR = 10.       ! Time coefficient for loss of stem reserves (1 d-1)
+SPGF   = 64900.    ! Spikelet growth factor (no kg-1)
+WGRMX  = 0.0000249 ! Maximum individual grain weight (kg grain-1)
+
+* Partitioning tables
+* Table of fraction total dry matter partitioned to the shoot (-; Y-value) 
+* as a function of development stage (-; X value):
+FSHTB  = 0.00,  0.50,
+         0.43,  0.75,
+         1.00,  1.00,
+         2.50,  1.00
+
+* Table of fraction shoot dry matter partitioned to the leaves (-; Y-value) 
+* as a function of development stage (-; X value):
+FLVTB  = 0.000, 0.60,
+         0.500, 0.60,
+         0.750, 0.30,
+         1.000, 0.00,
+         1.200, 0.00,
+         2.5  , 0. 
+
+* Table of fraction shoot dry matter partitioned to the stems (-; Y-value) 
+* as a function of development stage (-; X value):
+FSTTB  = 0.000, 0.40,
+         0.500, 0.40,
+         0.750, 0.70,
+         1.000, 0.40,
+         1.200, 0.00,
+         2.5  , 0. 
+
+* Table of fraction shoot dry matter partitioned to the panicles (-; Y-value) 
+* as a function of development stage (-; X value):
+FSOTB  = 0.000, 0.000,
+         0.500, 0.000, 
+         0.750, 0.000,
+         1.000, 0.600,
+         1.200, 1.000,
+         2.5  , 1. 
+
+* Table of leaf death coefficient (d-1; Y-value) as a function of development 
+* stage (-; X value):
+DRLVT  = 0.00, 0.000, 
+         0.60, 0.000,
+         1.00, 0.015,
+         1.60, 0.025,
+         2.10, 0.050,
+         2.50, 0.050
+
+* 7. Carbon balance parameters
+* Mass fraction carbon (kg C kg-1 DM) in the:
+FCLV   = 0.419  ! Leaves 
+FCST   = 0.431  ! Stems
+FCSO   = 0.487  ! Storage organs (panicles)
+FCRT   = 0.431  ! Roots 
+FCSTR  = 0.444  ! Stem reserves 
+
+* 8. Root parameters
+GZRT   = 0.01   ! Growth rate of roots (m d-1)
+ZRTMCW = 0.25   ! Maximum depth of roots if no drought stress (m)
+ZRTMCD = 0.40   ! Maximum depth of roots if drought (m)
+
+*Additional information for ORYZA2000v.2.13 (JUNE 2009)
+SROOTL = 90.0   ! Special root length (cm/g DM)
+RMINT  = 5.0    ! Minimum temperature for root growth (oC)
+ROPTT  = 25.0   ! Optimum temperature of root growth (oC)
+RTBS   = 2.0    ! Minimum temperature for root to survive (oC)
+RCNL   = 0.012  ! Lowest root nitrogen content (residue root N content, kg N kg-1 root DM)
+MAXD   = 40.0   ! Maximum rooting depth (cm)
+SODT   = 0.9    ! Tolerance index of oxygen deficiency
+
+* 9. Drought stress parameters
+* Upper and lower limits for drought stress effects
+ULLS =   74.13    ! Upper limit leaf rolling (kPa)
+LLLS =  794.33    ! Lower limit leaf rolling (kPa)
+ULDL =  630.95    ! Upper limit death of leaves (kPa)
+LLDL = 1584.89    ! Lower limit death of leaves (kPa)
+ULLE =    1.45    ! Upper limit leaf expansion (kPa) 
+LLLE = 1404.      ! Lower limit leaf expansion (kPa)
+
+* Switch to use ULTR and LLTR as given above or function built in ORYZA 
+* for the reduction in relative transpiration:
+* SWIRTR = 1, Use ULRT AND LLRT for transpiration; SWIRTR = 2, Use SWIRTRF for 
+* transpiration; SWIRTR = 3, Use FSWTD for transpiration 
+*SWIRTR = 3 ! Use function 
+SWIRTR = 'FUNCTION' ! Use function 
+
+* Give value of ULRT and LLRT for SWIRTR = 1
+ULRT =   74.13    ! Upper limit relative transpiration reduction (kPa)
+LLRT = 1584.89    ! Lower limit relative transpiration reduction (kPa)
+
+* Give value for SWIRTRF if SWIRTR= 2, default value SWIRTRF=0.003297
+SWIRTRF = 0.020597
+
+* Give value for FSWTD if SWIRTR= 3, default value SWIRTRF=0.003297
+* The upper limit factor while transpiration declines which is the ratio of remaining
+* available water to total water supply capability 
+FSWTD = 0.30
+
+*===================================================================*
+* Drought stress effect parameters for aerobic rice                 *
+* Values are for wheat, taken from SUCROS2 model                    *
+*===================================================================*
+* characteristic potential transpiration rate at a soil water
+* content halfway wilting point and field capacity (mm.d-1)
+  TRANSC = 6.
+
+* Root activity coefficient (-)
+  EDPTFT = 0.,0.15, 0.15,0.6, 0.3,0.8, 0.5,1., 1.1,1.
+*===================================================================*
+
+* 10. Nitrogen parameters
+NMAXUP  = 8.      ! Maximum daily N uptake (kg N ha-1 d-1)
+RFNLV   = 0.004   ! Residual N fraction of leaves (kg N kg-1 leaves)
+FNTRT   = 0.15    ! Fraction N translocation from roots, as (additonal) 
+                  ! fraction of total N translocation from stems and leaves (-)
+RFNST   = 0.0015  ! Residual N fraction of stems (kg N kg-1 stems)
+TCNTRF  = 10.     ! Time coefficient for N translocation to grains (d)
+NFLVI   = 0.5     ! Initial leaf N fraction (on area basis: g N m-2 leaf)
+FNLVI   = 0.025   ! Initial leaf N fraction (on weight basis: kg N kg-1 leaf)
+
+NMAXSO  = 0.0175  ! Maximum N concentration in storage organs (kg N kg-1)
+
+* Table of minimum N concentration in storage organs (kg N kg-1 DM; Y value) 
+* as a function of the amount of N in the crop till flowering (kg N ha-1; X value):
+NMINSOT =  0., .006,
+          50., .0008,
+         150., .0125,
+         250., .015,
+         400., .017,
+        1000., .017
+
+* Table of maximum leaf N fraction on weight basis (kg N kg-1 leaves; Y value)
+* as a function of development stage (-; X value):
+NMAXLT = 0.0,  .053,
+         0.4,  .053,
+         0.75, .040,
+         1.0,  .028,
+         2.0,  .022,
+         2.5,  .015
+
+* Table of minimum leaf N fraction on weight basis (kg N kg-1 leaves; Y value)
+* as a function of development stage (-; X value):
+NMINLT = 0.0, 0.025,
+         1.0, 0.012,
+         2.1, 0.007,
+         2.5, 0.007
+
+*--- Table of effect of N stress on leaf death rate (-; Y value)
+* as a function of N stress level (-; X value):
+NSLLVT = 0.,  1.0,
+         1.1, 1.0,
+         1.5, 1.4,
+         2.0, 1.5,
+         2.5, 1.5
+
+";s:10:"reruns_dat";s:303:"**********************************************************************
+* RERUNS.DAT file
+**********************************************************************
+* rerun set 1
+PRODENV = 'POTENTIAL'
+IYEAR = 1992
+EMYR = 1992
+* rerun set 2
+PRODENV = 'POTENTIAL'
+IYEAR = 1993
+EMYR = 1993
+
+
+
+
+
+";s:6:"preset";s:1:"1";}i:2;a:9:{s:2:"id";s:1:"3";s:5:"label";s:18:"Long-term duration";s:11:"file_prefix";s:9:"long_term";s:11:"description";s:48:"Potential yield simulation for long-term variety";s:11:"control_dat";s:2318:"*CONTROLFILE = control.dat
+*strun=0
+*endrun=2
+*----------------------------------------------------------------------*
+*                          CONTROL.DAT                                 *
+* Run control file for ORYZA2000 model (version 4.0)                   *
+* Date: November 2000                                                  *
+*                                                                      *
+* The input files (except FILEIR) may may used in reruns.              *
+*----------------------------------------------------------------------*
+ 
+   FILEON = 'res.dat'     ! Output file
+   FILEOL = 'model.log'   ! Log file
+   FILEIT = 'long_term.exp' ! Experimental data
+   FILEI1 = 'long_term.crp'    ! Crop data
+   FILEIR = 'reruns.dat' ! Rerun file
+*   FILEI2 = ''    ! Soil data
+
+*----------------------------------------------------------------------*
+* Set output/print options                                             *
+*----------------------------------------------------------------------*
+PRDEL  = 1.    ! Output time step (day)
+IPFORM = 5     ! Code for output table format:
+               ! 4 = spaces between columns
+               ! 5 = TAB's between columns (spreadsheet output)
+               ! 6 = two column output
+
+COPINF = 'N'   ! Switch variable whether to copy the input files
+               ! to the output file ('N' = do not copy,
+               ! 'Y' = copy)
+
+DELTMP = 'N'   ! Switch variable what should be done with the
+               ! temporary output file ('N' = do not delete,
+               ! 'Y' = delete)
+
+IFLAG  = 1100  ! Indicates where weather error and warnings
+               ! go (1101 means errors and warnings to log
+               ! file, errors to screen, see FSE manual)
+
+*PRSEL =  'TIME','DVS','WAGT', 'WSO', 'LAI'
+    ! The string array PRSEL contains the output variables for which
+    ! formatted tables have to be made. One or more times there is a
+    ! series of variable names terminated by the word <TABLE>.
+    ! The translator writes the variables in each PRINT statement to
+    ! a separate table
+
+*IOBSD = 1991,182            
+               ! List of observation data for which output is
+               ! required. The list should consist of pairs
+               ! <year>,<day> combination
+
+";s:19:"experiment_data_dat";s:9433:"*-------------------------------------------------------------------------*
+* TIMER and EXPERIMENTAL DATA FILE                                        *
+*                                                                         *
+* File name        : CS180_4.t99                                          *
+* Crop             : Oryza sativa cv. 2You501                             *
+* Year/Season      : 1999, summer season                                  *
+* Experimental site: Tuanlin/Hubei/P.R. China, 30.51N, 120.56E, 100m      *
+* Water regime     : continuously submerged                               *
+* N-fertilizer     : 180 kg N splitted as:                                *
+*                  : 25% basal, 25% 10 DAT, 20% PI, 10% before heading    * 
+*                  : 10% after heading, 10% after complete flowering      *
+* P,K fertilizers  : 25 kg P/ha, 70 kg K/ha                               *
+* People           : Belder/Lu Guoan/Bouman                               *
+* Address          : IRRI, DAPO Box 7777, Metro Manila, Philippines       *
+* Additional info  : Exp. testing flooded vs alternately flooded/         *
+*                    non-flooded                                          *
+*-------------------------------------------------------------------------*
+
+*--------------------------------------------------------------------*
+* 1. Selection of modes of running                                   *
+*--------------------------------------------------------------------*
+*--  RICETYPE is to selcet lowland rice or aerobic/upland rice
+RICETYPE = 'LOWLAND'   ! Lowland rice
+*RICETYPE = 'AEROBIC'   ! Upland or aerobic rice
+
+*--  RUNMODE: mode of running ORYZA
+RUNMODE = 'EXPERIMENT'       ! ORYZA simulates particular experiment
+*RUNMODE ='EXPLORATION'      ! ORYZA used for exploraton 
+
+*--  PRODENV = Water production situation setting
+PRODENV = 'POTENTIAL'        ! Potential production
+*PRODENV = 'WATER BALANCE'   ! Production may be water-limited
+
+*-- WATBAL is Choice of water balance
+*   needs only be given when PRODENV = 'WATER BALANCE'
+WATBAL = 'PADDY'   ! PADDY water balance (for lowland soils)
+*WATBAL = 'SAHEL'   ! SAHEL water balance (for freely draining upland soils)
+*WATBAL = 'SAWAH'   ! SAWAH water balance (for lowland or upland soils)
+
+*--  NITROENV = Nitrogen production situation setting
+NITROENV = 'POTENTIAL'        ! Potential production
+*NITROENV = 'NITROGEN BALANCE'   ! Production may be nitrogen-limited
+
+* WARNING: NITROGEN AND WATER LIMITATIONS AT SAME TIME IS AS
+* YET UN UNVALIDATED OPTION IN ORYZA2000!!!! 
+
+*--  ETMOD is method for evapotranspiration calculation:
+ETMOD = 'PENMAN'            ! Penman-based (Van Kraalingen & Stol,1996)
+*ETMOD = 'PRIESTLY TAYLOR'   ! Priestly-Taylor (")
+*ETMOD = 'MAKKINK'           ! Makkink (Van Kraalingen & Stol, 1996)
+
+*--------------------------------------------------------------------*
+* 2. Timer data for simulation                                       *
+*--------------------------------------------------------------------*
+IYEAR  = 1991                ! Start year of simulation (year)
+STTIME = 108.                  ! Start time  (day number)
+FINTIM = 1000.               ! Finish time (days after start)
+DELT   = 1.                  ! Time step   (day)
+
+*--------------------------------------------------------------------*
+* 2. Weather station and climatic data for simulation                *
+*--------------------------------------------------------------------*
+WTRDIR = ' '   ! Directory of weather data
+CNTR   = 'chin'              ! Country code
+ISTN   = 1                   ! Station code
+
+ANGA = 0.29                  ! Angstrom A parameter
+ANGB = 0.45                  ! Angstrom B parameter
+
+TMCTB =  0., 0.,             ! Table for temperature increase
+       366., 0.              ! Climatic Change studies
+
+FAOF  = 1.          ! MultipL. factor for pot. evapotranspiration (FAO)
+                    ! Value Murty & Tuong
+
+TMPSB = 0.          ! Temperature increase in seed-bed due to cover:
+                    ! Zero when no cover over seed-bed; 9.5 with seed-bed
+
+*--------------------------------------------------------------------*
+* 3. Establishment data
+*--------------------------------------------------------------------*
+*--  ESTAB is method of establishment: 'TRANSPLANT' or 'DIRECT-SEED'
+ESTAB='TRANSPLANT'
+*ESTAB='DIRECT-SEED'
+
+* Transplanting date 20 May, 1999; sowing date 18 April, 1999
+EMD    = 111          ! Day of emergence (either direct, or in seed-bed)
+EMYR   = 1991       ! Year of emergence 
+SBDUR  = 29         ! Seed-bed duration (days between sowing and transplanting)
+
+*--------------------------------------------------------------------*
+* 4. Management parameters                                           *
+*--------------------------------------------------------------------*
+NPLH   = 2.         ! Number of plants per hill 
+NH     = 25.        ! Number of hills
+NPLSB  = 1000.      ! Number of plants in seed-bed (???)
+NPLDS  = 200.       ! Number of plants/m2 direct-seeded
+
+*-- Initial data at emergence, for either direct-seeding or seed-bed
+*   Standard data used.
+LAPE   = 0.0001     ! Initial leaf area per plant
+DVSI   = 0.0        ! Initial development stage
+WLVGI  = 0.0        ! Initial leaf weight
+WSTI   = 0.0        ! Initial stem weight
+WRTI   = 0.0        ! Initial stem weight
+WSOI   = 0.0        ! Initial weight storage organs
+ZRTI   = 0.0001     ! Initial root depth (m)
+
+*-- Re-initialization at transplanting (standard data used)
+ZRTTR  = 0.05       ! Root depth at transplanting (m)
+
+*---------------------------------------------------------------*
+* 6. Irrigation parameters
+* Need only to be filled-in when PRODENV = 'WATER BALANCE'
+*---------------------------------------------------------------*
+* No data (potential production mode)
+
+*--------------------------------------------------------------------*
+* 7. Nitrogen parameters                                             *
+* Need only to be filled-in when NITROENV = 'NITROGEN BALANCE'       *
+*--------------------------------------------------------------------*
+* No data (potential production mode)
+*TWO SOIL C AND N DYNAMICS
+NUTRIENT =  'GENERAL SOM'   !USE GENERAL SOIL ORGANIC C AND N MODULE TO HANDLE THE NUTRIENT CHANGES
+*NUTRIENT =  'FIXED SUPPLY' !Use fixed mineralization rate with fertilizer recovery rate
+*NUTRIENT =  'APSIM SOILN'  !USE APSIM SOIL C AND N MODULE TO HANDLE THE NUTRIENT CHANGES, IT CONSISTED
+                            !BY SOILN, POND AND SURFACEOM MODULES
+
+*--------------------------------------------------------------------*
+* 8. Measured data for model calibration and comparison              *
+*    And option to force measured LAI during simulation              *
+*    (instead of using simulated values)                             *
+*--------------------------------------------------------------------*
+* Observed phenology: only required if program DRATES is run!!
+*IDOYTR =   ! Day of transplanting (give 0 if direct-seeded) (d)
+*IYRTR  =   ! Year of transplanting (give 0 if direct-seeded) (y)
+*IDOYPI =     ! Day of panicle initiation
+               ! (give -99 if not observed) (d)
+*IYRPI  =   ! Year of panicle initiation
+               ! (give -99 if not observed) (y)
+*IDOYFL =     ! Day of flowering (d)
+*IYRFL  =   ! Year of flowering (y)
+*IDOYM  =   ! Day of maturity (d)
+*IYRM   =   ! Year of maturity (y)
+
+* Measured leaf area index (LAI; m2 leaf m-2 ground): first column gives
+* year, second column gives day of year, third column gives the measured 
+* LAI at that date (day and year):
+*LAI_OBS =
+
+*-- Parameter to set forcing of measured LAI during simulation
+*LAI_FRC = 0       ! No forcing
+*LAI_FRC = 2      ! Forcing 
+
+* Measured green leaf dry weight (WLVG; kg ha-1): first column gives
+* year, second column gives day of year, third column gives the measured 
+* WLVG at that date (day and year):
+*WLVG_OBS =
+
+* Measured dead leaf dry weight (WLVD; kg ha-1): first column gives
+* year, second column gives day of year, third column gives the measured 
+* WLVD at that date (day and year):
+*WLVD_OBS =
+
+* Measured stem dry weight (WST; kg ha-1): first column gives
+* year, second column gives day of year, third column gives the measured 
+* WST at that date (day and year):
+*WST_OBS =
+
+* Measured panicle dry weight (storage organ)(WSO; kg ha-1): first column 
+* gives year, second column gives day of year, third column gives the 
+* measured WSO at that date (day and year):
+*WSO_OBS =
+
+* Measured total dry weight (WAGT; kg ha-1): first column gives
+* year, second column gives day of year, third column gives the measured 
+* WAGT at that date (day and year):
+*WAGT_OBS =
+
+* Measured leaf N content on weight basis (FNLV; g N g-1 leaf DM): first 
+* column gives year, second column gives day of year, third column gives 
+* the measured FNLV at that date (day and year):
+*FNLV_OBS =
+
+* Measured leaf N content on area basis (NFLV; g N m-2 leaf area): first 
+* column gives year, second column gives day of year, third column gives 
+* the measured NFLV at that date (day and year):
+*NFLV_OBS =
+
+*-- Parameter to set forcing of measured NFLV values during simulation
+*NFLV_FRC = 0       ! No forcing
+*NFLV_FRC = 2      ! Forcing ";s:13:"crop_data_dat";s:10924:"***********************************************************************************
+* Crop data file for ORYZA2000 rice growth model                                  *
+* File name   : long_term.crp                                                     *
+***********************************************************************************
+
+* 1. Phenological development parameters
+TBD    = 8.      ! Base temperature for development (oC)
+TBLV   = 8.      ! Base temperature for juvenile leaf area growth (oC)
+TMD    = 42.     ! Maximum temperature for development (oC)
+TOD    = 30.     ! Optimum temperature for development (oC)
+DVRJ  = .000639  ! Development rate in juvenile phase (oCd-1)
+DVRI  = .000758  ! Development rate in photoperiod-sensitive phase (oCd-1)
+DVRP  = .000672  ! Development rate in panicle development (oCd-1)
+DVRR  = .001564  ! Development rate in reproductive phase (oCd-1)
+MOPP   = 11.50   ! Maximum optimum photoperiod (h)
+PPSE   = 0.0     ! Photoperiod sensitivity (h-1)
+SHCKD  = 0.4     ! Relation between seedling age and delay in phenological 
+                 ! development (oCd oCd-1)
+COLDMIN = 12.    ! Lower air temperature treshhold for growth (oC)
+COLDEAD = 3.     ! Consecutive number of days below COLDMIN that crop dies (-)
+CTSTER = 36.6    ! Critical temperature of spikelet sterility (oC)
+
+* 2. Leaf and stem growth parameters
+RGRLMX = 0.0085  ! Maximum relative growth rate of leaf area (oCd-1)
+RGRLMN = 0.0040  ! Minimum relative growth rate of leaf area (oCd-1)
+SHCKL  = 0.25    ! Relation between seedling age and delay in leaf area 
+                 ! development (oCd oCd-1)
+
+* Switch to use SLA as table (give values below) or as fixed function
+SWISLA = 'FUNCTION' ! Give function parameters  ASLA, BSLA, CSLA, DSLA, SLAMAX
+*SWISLA = 'TABLE'   ! Give SLA as a function of DVS in the table SLATB
+
+* If SWISLA='FUNCTION', supply SLA function parameters: 
+* SLA = ASLA + BSLA*EXP(CSLA*(DVS-DSLA)), and SLAMAX
+* parameters are derived from cv 2You725 used at Tuanlin 2000-2002
+ASLA = 0.0018 ! (-)
+BSLA = 0.0025 ! (-)
+CSLA = -3.0   ! (-)
+DSLA = 0.21   ! (-)
+SLAMAX = 0.0045 ! maximum value of SLA (ha/kg)
+
+* If SWISLA='TABLE', supply table of specific leaf area (ha kg-1; Y value) 
+* as a function of development stage (-; X value):
+SLATB = 0.00, 0.0045,
+        0.16, 0.0045,
+        0.33, 0.0033,
+        0.65, 0.0028,
+        0.79, 0.0024,
+        2.10, 0.0023,
+        2.50, 0.0023
+
+* Table of specific green stem area (ha kg-1; Y value) as a function of 
+* development stage (-; X value):
+* data derived from experiment at Munoz, Philippines in dry season of 2001 using IR72
+SSGATB = 0.0, 0.0008,   
+         0.9, 0.0002,
+         2.1, 0.0001,
+         2.5, 0.0001
+
+* data from IR72 as derived by Wopereis et al in dry season of 1992
+*SSGATB = 0.0, 0.0003,   
+*         0.9, 0.0003,
+*         2.1, 0.0000,
+*         2.5, 0.0000
+
+* 3. Photosynthesis parameters
+FRPAR  = 0.5  ! fraction of sunlight energy that is 
+              ! photosynthetically active (-)
+SCP    = 0.2  ! Scattering coefficient of leaves for PAR (-)
+CO2REF = 340. ! Reference level of atmospheric CO2 (ppm)
+CO2    = 340. ! Ambient CO2 concentration (ppm)
+
+* Table of light extinction coefficient for leaves (-; Y-value) as a function
+* of development stage (-; X value):
+KDFTB = 0.00, 0.4,
+        0.65, 0.4,
+        1.00, 0.6,
+        2.50, 0.6
+
+* Table of extinction coefficient of N profile in the canopy (-; Y-value) 
+* as a functionof development stage (-; X value):
+KNFTB = 0.0, 0.4,
+        2.5, 0.4 
+
+* Table of light use effiency (-; Y-value) as a function of 
+* temperature (oC; X value):
+EFFTB  =   0.,0.54,
+          10.,0.54,
+          40.,0.36
+
+* Table of effect of temperature on AMAX (-; Y-value) as a function of 
+* temperature (oC; X value):
+REDFTT = -10., 0.,
+          10., 0.,
+          20., 1.,
+          37., 1.,
+          43., 0.
+
+* Table of N fraction in leaves on leaf area basis (g N m-2 leaf; Y-value) 
+* as a function of development stage (-; X value):
+* parameters are derived from cv 2You725 used at Tuanlin 2000-2002
+NFLVTB = 0.00, 2.00,
+         0.30, 2.00,
+         0.65, 1.80,
+         1.00, 1.40,
+         2.10, 0.90
+
+* 4. Maintenance parameters
+* Maintenance respiration coefficient (kg CH2O kg-1 DM d-1) of:
+MAINLV = 0.02   ! Leaves 
+MAINST = 0.015  ! Stems 
+MAINSO = 0.003  ! Storage organs (panicles) 
+MAINRT = 0.01   ! Roots 
+
+TREF   = 25.    ! Reference temperature (oC)
+Q10    = 2.     ! Factor accounting for increase in maintenance
+                ! respiration with a 10 oC rise in temperature (-)
+
+* 5. Growth respiration parameters 
+* Carbohydrate requirement for dry matter production (kg CH2O kg-1 DM leaf) of:
+CRGLV  = 1.326  ! Leaves 
+CRGST  = 1.326  ! Stems
+CRGSO  = 1.462  ! Storage organs (panicles)
+CRGRT  = 1.326  ! Roots
+CRGSTR = 1.11   ! Stem reserves
+
+LRSTR  = 0.947  ! Fraction of allocated stem reserves that is
+                ! available for growth (-)
+
+* 6. Growth parameters
+* parameter are derived from cv 2You725 used at Tuanlin 2000-2002
+FSTR   = 0.20      ! Fraction of carbohydrates allocated to stems that
+                   ! is stored as reserves (-)
+TCLSTR = 10.       ! Time coefficient for loss of stem reserves (1 d-1)
+SPGF   = 64900.    ! Spikelet growth factor (no kg-1)
+WGRMX  = 0.0000249 ! Maximum individual grain weight (kg grain-1)
+
+* Partitioning tables
+* Table of fraction total dry matter partitioned to the shoot (-; Y-value) 
+* as a function of development stage (-; X value):
+FSHTB  = 0.00,  0.50,
+         0.43,  0.75,
+         1.00,  1.00,
+         2.50,  1.00
+
+* Table of fraction shoot dry matter partitioned to the leaves (-; Y-value) 
+* as a function of development stage (-; X value):
+* parameters are derived from cv 2You725 used at Tuanlin 2000-2002
+FLVTB = 0.000, 0.50,
+        0.500, 0.50,
+        0.750, 0.30,
+        1.000, 0.00,
+        1.200, 0.00,
+        2.500, 0.00
+
+* Table of fraction shoot dry matter partitioned to the stems (-; Y-value) 
+* as a function of development stage (-; X value):
+* parameters are derived from cv 2You725 used at Tuanlin 2000-2002
+FSTTB = 0.000, 0.50,
+        0.500, 0.50,
+        0.750, 0.70,
+        1.000, 0.286,
+        1.100, 0.00,
+        1.200, 0.00,
+        2.500, 0.00
+
+* Table of fraction shoot dry matter partitioned to the panicles (-; Y-value) 
+* as a function of development stage (-; X value):
+* parameters are derived from cv 2You725 used at Tuanlin 2000-2002
+FSOTB  = 0.000, 0.000,
+         0.600, 0.000, 
+         0.750, 0.000,
+         1.100, 1.000,
+         1.200, 1.000,
+         2.5  , 1. 
+
+* Table of leaf death coefficient (d-1; Y-value) as a function of development 
+* stage (-; X value):
+DRLVT  = 0.00, 0.000, 
+         0.60, 0.000,
+         1.00, 0.015,
+         1.60, 0.025,
+         2.10, 0.050,
+         2.50, 0.050
+
+* 7. Carbon balance parameters
+* Mass fraction carbon (kg C kg-1 DM) in the:
+FCLV   = 0.419  ! Leaves 
+FCST   = 0.431  ! Stems
+FCSO   = 0.487  ! Storage organs (panicles)
+FCRT   = 0.431  ! Roots 
+FCSTR  = 0.444  ! Stem reserves 
+
+* 8. Root parameters
+GZRT   = 0.01   ! Growth rate of roots (m d-1)
+ZRTMCW = 0.25   ! Maximum depth of roots if no drought stress (m)
+ZRTMCD = 0.40   ! Maximum depth of roots if drought (m)
+
+*Additional information for ORYZA2000v.2.13 (JUNE 2009)
+SROOTL = 90.0   ! Special root length (cm/g DM)
+RMINT  = 5.0    ! Minimum temperature for root growth (oC)
+ROPTT  = 25.0   ! Optimum temperature of root growth (oC)
+RTBS   = 2.0    ! Minimum temperature for root to survive (oC)
+RCNL   = 0.012  ! Lowest root nitrogen content (residue root N content, kg N kg-1 root DM)
+MAXD   = 40.0   ! Maximum rooting depth (cm)
+SODT   = 0.9    ! Tolerance index of oxygen deficiency
+
+* 9. Drought stress parameters
+* Upper and lower limits for drought stress effects
+ULLS =   74.13    ! Upper limit leaf rolling (kPa)
+LLLS =  794.33    ! Lower limit leaf rolling (kPa)
+ULDL =  630.95    ! Upper limit death of leaves (kPa)
+LLDL = 1584.89    ! Lower limit death of leaves (kPa)
+ULLE =    1.45    ! Upper limit leaf expansion (kPa) 
+LLLE = 1404.      ! Lower limit leaf expansion (kPa)
+ULRT =   74.13    ! Upper limit relative transpiration reduction (kPa)
+LLRT = 1584.89    ! Lower limit relative transpiration reduction (kPa)
+
+* Switch to use ULTR and LLTR as given above or function built in ORYZA 
+* for the reduction in relative transpiration:
+*SWIRTR = 'DATA'    ! Use data 
+SWIRTR = 'FUNCTION' ! Use function 
+
+*===================================================================*
+* Drought stress effect parameters for aerobic rice                 *
+* Values are for wheat, taken from SUCROS2 model                    *
+*===================================================================*
+* characteristic potential transpiration rate at a soil water
+* content halfway wilting point and field capacity (mm.d-1)
+  TRANSC = 6.
+
+* Root activity coefficient (-)
+  EDPTFT = 0.,0.15, 0.15,0.6, 0.3,0.8, 0.5,1., 1.1,1.
+*===================================================================*
+
+* 10. Nitrogen parameters
+NMAXUP  = 8.      ! Maximum daily N uptake (kg N ha-1 d-1)
+RFNLV   = 0.004   ! Residual N fraction of leaves (kg N kg-1 leaves)
+FNTRT   = 0.15    ! Fraction N translocation from roots, as (additonal) 
+                  ! fraction of total N translocation from stems and leaves (-)
+RFNST   = 0.0015  ! Residual N fraction of stems (kg N kg-1 stems)
+TCNTRF  = 10.     ! Time coefficient for N translocation to grains (d)
+NFLVI   = 0.5     ! Initial leaf N fraction (on area basis: g N m-2 leaf)
+FNLVI   = 0.025   ! Initial leaf N fraction (on weight basis: kg N kg-1 leaf)
+NMAXSO  = 0.0175  ! Maximum N concentration in storage organs (kg N kg-1)
+
+* Table of minimum N concentration in storage organs (kg N kg-1 DM; Y value) 
+* as a function of the amount of N in the crop till flowering (kg N ha-1; X value):
+NMINSOT =  0., .006,
+          50., .0008,
+         150., .0125,
+         250., .015,
+         400., .017,
+        1000., .017
+
+* Table of maximum leaf N fraction on weight basis (kg N kg-1 leaves; Y value)
+* as a function of development stage (-; X value):
+NMAXLT = 0.0,  .053,
+         0.4,  .053,
+         0.75, .040,
+         1.0,  .028,
+         2.0,  .022,
+         2.5,  .015
+
+* Table of minimum leaf N fraction on weight basis (kg N kg-1 leaves; Y value)
+* as a function of development stage (-; X value):
+NMINLT = 0.0, 0.025,
+         1.0, 0.012,
+         2.1, 0.007,
+         2.5, 0.007
+
+
+*--- Table of effect of N stress on leaf death rate (-; Y value)
+* as a function of N stress level (-; X value):
+NSLLVT = 0.,  1.0,
+         1.1, 1.0,
+         1.5, 1.4,
+         2.0, 1.5,
+         2.5, 1.5
+";s:10:"reruns_dat";s:305:"**********************************************************************
+* RERUNS.DAT file
+**********************************************************************
+* rerun set 1
+PRODENV = 'POTENTIAL'
+IYEAR = 1992
+EMYR = 1992
+
+* rerun set 2
+PRODENV = 'POTENTIAL'
+IYEAR = 1993
+EMYR = 1993
+
+
+
+
+
+";s:6:"preset";s:1:"1";}}s:13:"result_object";a:3:{i:0;O:8:"stdClass":9:{s:2:"id";s:1:"1";s:5:"label";s:19:"Short-term duration";s:11:"file_prefix";s:10:"short_term";s:11:"description";s:49:"Potential yield simulation for short-term variety";s:11:"control_dat";s:2320:"*CONTROLFILE = control.dat
+*strun=0
+*endrun=2
+*----------------------------------------------------------------------*
+*                          CONTROL.DAT                                 *
+* Run control file for ORYZA2000 model (version 4.0)                   *
+* Date: November 2000                                                  *
+*                                                                      *
+* The input files (except FILEIR) may may used in reruns.              *
+*----------------------------------------------------------------------*
+ 
+   FILEON = 'res.dat'     ! Output file
+   FILEOL = 'model.log'   ! Log file
+   FILEIT = 'short_term.exp' ! Experimental data
+   FILEI1 = 'short_term.crp'    ! Crop data
+   FILEIR = 'reruns.dat' ! Rerun file
+*   FILEI2 = ''    ! Soil data
+
+*----------------------------------------------------------------------*
+* Set output/print options                                             *
+*----------------------------------------------------------------------*
+PRDEL  = 1.    ! Output time step (day)
+IPFORM = 5     ! Code for output table format:
+               ! 4 = spaces between columns
+               ! 5 = TAB's between columns (spreadsheet output)
+               ! 6 = two column output
+
+COPINF = 'N'   ! Switch variable whether to copy the input files
+               ! to the output file ('N' = do not copy,
+               ! 'Y' = copy)
+
+DELTMP = 'N'   ! Switch variable what should be done with the
+               ! temporary output file ('N' = do not delete,
+               ! 'Y' = delete)
+
+IFLAG  = 1100  ! Indicates where weather error and warnings
+               ! go (1101 means errors and warnings to log
+               ! file, errors to screen, see FSE manual)
+
+*PRSEL =  'TIME','DVS','WAGT', 'WSO', 'LAI'
+    ! The string array PRSEL contains the output variables for which
+    ! formatted tables have to be made. One or more times there is a
+    ! series of variable names terminated by the word <TABLE>.
+    ! The translator writes the variables in each PRINT statement to
+    ! a separate table
+
+*IOBSD = 1991,182            
+               ! List of observation data for which output is
+               ! required. The list should consist of pairs
+               ! <year>,<day> combination
+
+";s:19:"experiment_data_dat";s:7894:"* ---------------------------------------------------------*
+* File name   : short_term.exp                             *
+* Experimental data file                                   *
+* ---------------------------------------------------------*
+* 1. Selection of modes of running
+* ---------------------------------------------------------*
+
+*--  RICETYPE is to select lowland rice or aerobic/upland rice
+RICETYPE = 'LOWLAND'   ! Lowland rice
+*RICETYPE = 'AEROBIC'   ! Upland or aerobic rice
+
+*--  RUNMODE: mode of running ORYZA
+RUNMODE = 'EXPERIMENT' ! ORYZA simulates particular experiment
+*RUNMODE ='EXPLORATION' ! ORYZA used for exploraton 
+
+*--  PRODENV = Production situation setting
+PRODENV = 'POTENTIAL' ! Potential production
+*PRODENV = 'WATER BALANCE' ! production may be water-limited
+
+*--  WATBAL is choice of water balance
+*    needs only be given when PRODENV = 'WATER BALANCE'
+WATBAL = 'PADDY'   ! PADDY water balance (for lowland soils)
+*WATBAL = 'SAHEL'   ! SAHEL water balance (for freely draining upland soils)
+*WATBAL = 'SAWAH'   ! SAWAH water balance (for lowland or upland soils)
+
+*--  NITROENV = Nitrogen production situation setting
+NITROENV = 'POTENTIAL'        ! Potential production
+*NITROENV = 'NITROGEN BALANCE'   ! Production may be nitrogen-limited
+
+* WARNING: NITROGEN AND WATER LIMITATIONS AT SAME TIME IS AS
+* YET UN UNVALIDATED OPTION IN ORYZA2000!!!! 
+
+*--  ETMOD is method for evapotranspiration calculation:
+ETMOD = 'PENMAN' ! Penman based (van Kraalingen and Stol, 1996)
+*ETMOD = 'PRIESTLY TAYLOR' ! Priestly-Talyer (")
+*ETMOD = 'MAKKINK' ! Makkink (van Kraalingen and Stol, 1996)
+
+* ---------------------------------------------------------*
+* 2. Timer data for simulation
+* ---------------------------------------------------------*
+IYEAR  = 1991                ! start year of simulation (year)
+STTIME =   54.               ! start time (day numer)
+FINTIM = 1000.               ! finish time (days after start)
+DELT   =    1.               ! time step (day)
+
+* ---------------------------------------------------------*
+* 3. Weather station and climatica data for simulation
+* ---------------------------------------------------------*
+WTRDIR = ' ' ! Directory of weather data
+CNTR   = 'indo'              ! Country code
+ISTN   = 43                   ! Station code
+
+ANGA = 0.29                   ! Angstrom A parameter
+ANGB = 0.42                   ! Angstrom B parameter
+
+* Table for temperature increase for climatic change studies
+* X value = day number, Y value is temperature increase (Celsius)
+TMCTB  = 0.,  0.,
+         366.,0.
+
+* Multiplication factor for potential evapotranspiration (FAO)
+FAOF = 1.3  ! Value Murty & Tuong
+
+* Temperature increase in seed-bed due to cover: 
+TMPSB = 0. ! Zero when no cover over seed-bed; 9.5 with seed-bed
+
+* ---------------------------------------------------------*
+* 4. Establishment data
+* ---------------------------------------------------------*
+*** ESTAB is method of establishment: 'TRANSPLANT' or 'DIRECT-SEED'
+ESTAB='TRANSPLANT'
+*ESTAB='DIRECT-SEED'
+
+EMD    =   59    ! Day of emergence (either direct, or in seed-bed)
+EMYR   = 1991    ! Year of emergence (1996)
+SBDUR  =   20    ! seed-bed duration (days)
+
+* ---------------------------------------------------------*
+* 5. Management parameters
+* ---------------------------------------------------------*
+NPLH   = 3.0     ! number of plants per hill 
+NH     = 44.     ! number of hills
+NPLSB  = 1000.   ! number of plants in seed-bed (???)
+NPLDS  = 132.    ! number of plants/m2 direct-seeded
+
+* Initial data at emergence, for either direct-seeding or seed-bed
+* Standard data used.
+LAPE   = 0.0001   ! initial leaf area per plant
+DVSI   = 0.0      ! initial development stage
+WLVGI  = 0.0      ! initial leaf weight
+WSTI   = 0.0      ! initial stem weight
+WRTI   = 0.0      ! initial stem weight
+WSOI   = 0.0      ! initial weight storage organs
+ZRTI   = 0.0001   ! initial root depth (m)
+
+* Re-initialization at transplanting (standard data used)
+ZRTTR  = 0.05     ! root depth at transplanting (m)
+
+*---------------------------------------------------------------*
+* 6. Irrigation parameters
+* Need only to be filled-in when PRODENV = 'WATER BALANCE'
+*---------------------------------------------------------------*
+* No data (potential production mode)
+
+*--------------------------------------------------------------------*
+* 7. Nitrogen parameters                                             *
+* Need only to be filled-in when NITROENV = 'NITROGEN BALANCE'       *
+*--------------------------------------------------------------------*
+* No data (potential production mode)
+*TWO SOIL C AND N DYNAMICS
+NUTRIENT =  'GENERAL SOM'   !USE GENERAL SOIL ORGANIC C AND N MODULE TO HANDLE THE NUTRIENT CHANGES
+*NUTRIENT =  'FIXED SUPPLY' !Use fixed mineralization rate with fertilizer recovery rate
+*NUTRIENT =  'APSIM SOILN'  !USE APSIM SOIL C AND N MODULE TO HANDLE THE NUTRIENT CHANGES, IT CONSISTED
+                            !BY SOILN, POND AND SURFACEOM MODULES
+
+*--------------------------------------------------------------------*
+* 8. Measured data for model calibration and comparison              *
+*    And option to force measured LAI during simulation              *
+*    (instead of using simulated values)                             *
+*--------------------------------------------------------------------*
+* Observed phenology: only required if program DRATES is run!!
+*IDOYTR =   ! Day of transplanting (give 0 if direct-seeded) (d)
+*IYRTR  =   ! Year of transplanting (give 0 if direct-seeded) (y)
+*IDOYPI =     ! Day of panicle initiation
+               ! (give -99 if not observed) (d)
+*IYRPI  =   ! Year of panicle initiation
+               ! (give -99 if not observed) (y)
+*IDOYFL =     ! Day of flowering (d)
+*IYRFL  =   ! Year of flowering (y)
+*IDOYM  =   ! Day of maturity (d)
+*IYRM   =   ! Year of maturity (y)
+
+* Measured leaf area index (LAI; m2 leaf m-2 ground): first column gives
+* year, second column gives day of year, third column gives the measured 
+* LAI at that date (day and year):
+*LAI_OBS =
+
+*-- Parameter to set forcing of measured LAI during simulation
+*LAI_FRC = 0       ! No forcing
+*LAI_FRC = 2      ! Forcing 
+
+* Measured green leaf dry weight (WLVG; kg ha-1): first column gives
+* year, second column gives day of year, third column gives the measured 
+* WLVG at that date (day and year):
+*WLVG_OBS =
+
+* Measured dead leaf dry weight (WLVD; kg ha-1): first column gives
+* year, second column gives day of year, third column gives the measured 
+* WLVD at that date (day and year):
+*WLVD_OBS =
+
+* Measured stem dry weight (WST; kg ha-1): first column gives
+* year, second column gives day of year, third column gives the measured 
+* WST at that date (day and year):
+*WST_OBS =
+
+* Measured panicle dry weight (storage organ)(WSO; kg ha-1): first column 
+* gives year, second column gives day of year, third column gives the 
+* measured WSO at that date (day and year):
+*WSO_OBS =
+
+* Measured total dry weight (WAGT; kg ha-1): first column gives
+* year, second column gives day of year, third column gives the measured 
+* WAGT at that date (day and year):
+*WAGT_OBS =
+
+* Measured leaf N content on weight basis (FNLV; g N g-1 leaf DM): first 
+* column gives year, second column gives day of year, third column gives 
+* the measured FNLV at that date (day and year):
+*FNLV_OBS =
+
+* Measured leaf N content on area basis (NFLV; g N m-2 leaf area): first 
+* column gives year, second column gives day of year, third column gives 
+* the measured NFLV at that date (day and year):
+*NFLV_OBS =
+
+*-- Parameter to set forcing of measured NFLV values during simulation
+*NFLV_FRC = 0       ! No forcing
+*NFLV_FRC = 2      ! Forcing 
+";s:13:"crop_data_dat";s:11136:"***********************************************************************
+* Crop data file for ORYZA2000 rice growth model                      *
+* File name  : short_term.crp                                         *
+***********************************************************************
+
+* 1. Phenological development parameters
+TBD    = 8.      ! Base temperature for development (oC)
+TBLV   = 8.      ! Base temperature for juvenile leaf area growth (oC)
+TMD    = 42.     ! Maximum temperature for development (oC)
+TOD    = 30.     ! Optimum temperature for development (oC)
+* average development rates for 8 crop seasons
+DVRJ  = .000661  ! Development rate in juvenile phase (oCd-1)
+DVRI  = .000758  ! Development rate in photoperiod-sensitive phase (oCd-1)
+DVRP  = .001125  ! Development rate in panicle development (oCd-1)
+DVRR  = .002430  ! Development rate in reproductive phase (oCd-1)
+MOPP   = 11.50   ! Maximum optimum photoperiod (h)
+PPSE   = 0.0     ! Photoperiod sensitivity (h-1)
+SHCKD  = 0.4     ! Relation between seedling age and delay in phenological 
+                 ! development (oCd oCd-1)
+COLDMIN = 12.    ! Lower air temperature treshhold for growth (oC)
+COLDEAD = 3.     ! Consecutive number of days below COLDMIN that crop dies (-)
+CTSTER = 36.6    ! Critical temperature of spikelet sterility (oC)
+
+* 2. Leaf and stem growth parameters
+RGRLMX = 0.0085  ! Maximum relative growth rate of leaf area (oCd-1)
+RGRLMN = 0.0040  ! Minimum relative growth rate of leaf area (oCd-1)
+SHCKL  = 0.25    ! Relation between seedling age and delay in leaf area 
+                 ! development (oCd oCd-1)
+
+* Switch to use SLA as table (give values below) or as fixed function
+SWISLA = 'FUNCTION' ! Give function parameters  ASLA, BSLA, CSLA, DSLA, SLAMAX
+*SWISLA = 'TABLE'   ! Give SLA as a function of DVS in the table SLATB
+
+* If SWISLA='FUNCTION', supply SLA function parameters: 
+* SLA = ASLA + BSLA*EXP(CSLA*(DVS-DSLA)), and SLAMAX
+ASLA = 0.0021 ! (-)
+BSLA = 0.0025 ! (-)
+CSLA = -3.0   ! (-)
+DSLA = 0.30   ! (-)
+SLAMAX = 0.0060 ! maximum value of SLA (ha/kg)
+
+* If SWISLA='TABLE', supply table of specific leaf area (ha kg-1; Y value) 
+* as a function of development stage (-; X value):
+SLATB=0.,  0.006,   ! value in WOFOST file IR64
+      0.24,0.006,
+      0.31,0.004,
+      0.58,0.004,
+      0.67,0.003,
+      1.13,0.003,
+      1.54,0.002,
+      2.50,0.002  
+
+* Table of specific green stem area (ha kg-1; Y value) as a function of 
+* development stage (-; X value):
+SSGATB = 0.0, 0.0003,   
+         0.9, 0.0003,
+         2.0, 0.0000,
+         2.5, 0.0000
+
+* 3. Photosynthesis parameters
+FRPAR  = 0.5  ! Fraction of sunlight energy that is 
+              ! photosynthetically active (-)
+SCP    = 0.2  ! Scattering coefficient of leaves for PAR (-)
+CO2REF = 340. ! Reference level of atmospheric CO2 (ppm)
+CO2    = 340. ! Ambient CO2 concentration (ppm)
+
+* Table of light extinction coefficient for leaves (-; Y-value) as a function
+* of development stage (-; X value):
+KDFTB = 0.00, 0.4,
+        0.65, 0.4,
+        1.00, 0.6,
+        2.50, 0.6
+
+* Table of extinction coefficient of N profile in the canopy (-; Y-value) 
+* as a functionof development stage (-; X value):
+KNFTB = 0.0, 0.4,
+        2.5, 0.4 
+
+* Table of light use effiency (-; Y-value) as a function of 
+* temperature (oC; X value):
+EFFTB  =  10.,0.54,
+          40.,0.36
+
+* Table of effect of temperature on AMAX (-; Y-value) as a function of 
+* temperature (oC; X value):
+REDFTT = -10., 0.,
+          10., 0.,
+          20., 1.,
+          37., 1.,
+          43., 0.
+
+* Table of N fraction in leaves on leaf area basis (g N m-2 leaf; Y-value) 
+* as a function of development stage (-; X value):
+NFLVTB = 0.00, 0.8395,
+         0.14, 0.8395,
+         0.18, 1.8860,
+         0.29, 2.3805,
+         0.38, 1.5295,
+         0.65, 1.4260,
+         0.89, 1.0695,
+         1.00, 1.0580,
+         1.50, 1.0925,
+         2.12, 0.7130,
+         2.5,  0.7130
+
+*Leaf nitrogen content corresponding coefficient to AMax (/(g N m-2 leaf))
+AMAXSLN0 = 22.0
+
+*Minimum leaf nitrogen content for that Am (maximum rate co2 assimilation) is 0.0 (g N/m2 leaf)
+MINSLN = 0.2
+
+* 4. Maintenance parameters
+* Maintenance respiration coefficient (kg CH2O kg-1 DM d-1) of:
+MAINLV = 0.02   ! Leaves 
+MAINST = 0.015  ! Stems 
+MAINSO = 0.003  ! Storage organs (panicles) 
+MAINRT = 0.01   ! Roots  
+
+TREF   = 25.    ! Reference temperature (oC)
+Q10    = 2.     ! Factor accounting for increase of maintenance
+                ! respiration with a 10 oC rise in temperature (-)
+
+* 5. Growth respiration parameters 
+* Carbohydrate requirement for dry matter production (kg CH2O kg-1 DM leaf) of:
+CRGLV  = 1.326  ! Leaves 
+CRGST  = 1.326  ! Stems
+CRGSO  = 1.462  ! Storage organs (panicles)
+CRGRT  = 1.326  ! Roots
+CRGSTR = 1.11   ! Stem reserves
+
+LRSTR  = 0.947  ! Fraction of allocated stem reserves that is
+                ! available for growth (-)
+
+* 6. Growth parameters
+FSTR   = 0.20      ! Fraction of carbohydrates allocated to stems that
+                   ! is stored as reserves (-)
+TCLSTR = 10.       ! Time coefficient for loss of stem reserves (1 d-1)
+SPGF   = 64900.    ! Spikelet growth factor (no kg-1)
+WGRMX  = 0.0000249 ! Maximum individual grain weight (kg grain-1)
+
+* Partitioning tables
+* Table of fraction total dry matter partitioned to the shoot (-; Y-value) 
+* as a function of development stage (-; X value):
+FSHTB  = 0.00,  0.50,
+         0.43,  0.75,
+         1.00,  1.00,
+         2.50,  1.00
+
+* Table of fraction shoot dry matter partitioned to the leaves (-; Y-value) 
+* as a function of development stage (-; X value):
+ FLVTB  =
+    0.000, 0.50,
+    0.350, 0.50,
+    0.610, 0.30,
+    0.720, 0.20,
+    0.880, 0.06,
+    1.230, 0.00,
+    2.5,   0.00
+
+* Table of fraction shoot dry matter partitioned to the stems (-; Y-value) 
+* as a function of development stage (-; X value):
+ FSTTB  =
+    0.000, 0.50,
+    0.350, 0.50,
+    0.610, 0.70,
+    0.720, 0.80,
+    0.880, 0.55,
+    1.230, 0.00,
+    2.5,   0.00
+
+* Table of fraction shoot dry matter partitioned to the panicles (-; Y-value) 
+* as a function of development stage (-; X value):
+ FSOTB  =
+    0.000, 0.000,
+    0.610, 0.000,
+    0.720, 0.000,
+    0.880, 0.390,
+    1.230, 1.000,
+    2.5,   1.000
+
+* Table of leaf death coefficient (d-1; Y-value) as a function of development 
+* stage (-; X value):
+DRLVT = 0.0,  0.00,
+        0.9,  0.00,
+        2.0,  0.11,
+        2.5,  0.11
+
+* 7. Carbon balance parameters
+* Mass fraction carbon (kg C kg-1 DM) in the:
+FCLV   = 0.419  ! Leaves 
+FCST   = 0.431  ! Stems
+FCSO   = 0.487  ! Storage organs (panicles)
+FCRT   = 0.431  ! Roots 
+FCSTR  = 0.444  ! Stem reserves 
+
+* 8. Root parameters (Taken from IR72 data file!!!)
+GZRT   = 0.01   ! Growth rate of roots (m d-1)
+ZRTMCW = 0.25   ! Maximum depth of roots if no drought stress (m)
+ZRTMCD = 0.25   ! Maximum depth of roots if drought (m)
+
+*Additional information for ORYZA2000v.2.13 (JUNE 2009)
+SROOTL = 90.0   ! Special root length (cm/g DM)
+RMINT  = 5.0    ! Minimum temperature for root growth (oC)
+ROPTT  = 25.0   ! Optimum temperature of root growth (oC)
+RTBS   = 2.0    ! Minimum temperature for root to survive (oC)
+RCNL   = 0.012  ! Lowest root nitrogen content (residue root N content, kg N kg-1 root DM)
+MAXD   = 40.0   ! Maximum rooting depth (cm)
+SODT   = 0.9    ! Tolerance index of oxygen deficiency
+
+* 9. Drought stress parameters (Taken from IR72 data file!!!)
+* Upper and lower limits for drought stress effects
+ULLS =   74.31    ! Upper limit leaf rolling (kPa)
+LLLS =  794.33    ! Lower limit leaf rolling (kPa)
+ULDL =  630.95    ! Upper limit death of leaves (kPa)
+LLDL = 1584.89    ! Lower limit death of leaves (kPa)
+ULLE =    1.45    ! Upper limit leaf expansion (kPa) 
+LLLE = 140.4      ! Lower limit leaf expansion (kPa)
+
+* Switch to use ULTR and LLTR as given above or function built in ORYZA 
+* for the reduction in relative transpiration:
+* SWIRTR = 1, Use ULRT AND LLRT for transpiration; SWIRTR = 2, Use SWIRTRF for 
+* transpiration; SWIRTR = 3, Use FSWTD for transpiration 
+*SWIRTR = 3 ! Use function 
+
+* Give value of ULRT and LLRT for SWIRTR = 1
+ULRT =   74.13    ! Upper limit relative transpiration reduction (kPa)
+LLRT = 1584.89    ! Lower limit relative transpiration reduction (kPa)
+
+SWIRTR = 'DATA'    ! Use data
+*SWIRTR = 'FUNCTION' ! Use function
+
+* Give value for SWIRTRF if SWIRTR= 2, default value SWIRTRF=0.003297
+SWIRTRF = 0.020597
+
+* Give value for FSWTD if SWIRTR= 3, default value SWIRTRF=0.003297
+* The upper limit factor while transpiration declines which is the ratio of remaining
+* available water to total water supply capability 
+FSWTD = 0.30
+
+*===================================================================*
+* Drought stress effect parameters for aerobic rice                 *
+* Values are for wheat, taken from SUCROS2 model                    *
+*===================================================================*
+* characteristic potential transpiration rate at a soil water
+* content halfway wilting point and field capacity (mm.d-1)
+  TRANSC = 6.
+
+* Root activity coefficient (-)
+  EDPTFT = 0.,0.15, 0.15,0.6, 0.3,0.8, 0.5,1., 1.1,1.
+*===================================================================*
+
+* 10. Nitrogen parameters
+NMAXUP  = 8.      ! Maximum daily N uptake (kg N ha-1 d-1)
+RFNLV   = 0.004   ! Residual N fraction of leaves (kg N kg-1 leaves)
+FNTRT   = 0.15    ! Fraction N translocation from roots, as (additonal) 
+                  ! fraction of total N translocation from stems and leaves (-)
+RFNST   = 0.0015  ! Residual N fraction of stems (kg N kg-1 stems)
+TCNTRF  = 10.     ! Time coefficient for N translocation to grains (d)
+NFLVI   = 0.5     ! Initial leaf N fraction (on area basis: g N m-2 leaf)
+FNLVI   = 0.025   ! Initial leaf N fraction (on weight basis: kg N kg-1 leaf)
+
+NMAXSO  = 0.0175  ! Maximum N concentration in storage organs (kg N kg-1)
+
+* Table of minimum N concentration in storage organ (kg N kg-1 DM; Y value) 
+* as a function of the amount of N in the crop till flowering (kg N ha-1; X value):
+NMINSOT =  0., .006,
+          50., .0008,
+         150., .0125,
+         250., .015,
+         400., .017,
+        1000., .017
+
+* Table of maximum leaf N fraction on weight basis (kg N kg-1 leaves; Y value)
+* as a function of development stage (-; X value):
+NMAXLT = 0.0,  .053,
+         0.4,  .053,
+         0.75, .040,
+         1.0,  .028,
+         2.0,  .022,
+         2.5,  .015
+
+* Table of minimum leaf N fraction on weight basis (kg N kg-1 leaves; Y value)
+* as a function of development stage (-; X value):
+NMINLT = 0.0, 0.025,
+         1.0, 0.012,
+         2.1, 0.007,
+         2.5, 0.007
+
+*--- Table of effect of N stress on leaf death rate (-; Y value)
+* as a function of N stress level (-; X value):
+NSLLVT = 0.,  1.0,
+         1.1, 1.0,
+         1.5, 1.4,
+         2.0, 1.5,
+         2.5, 1.5
+";s:10:"reruns_dat";s:297:"**********************************************************************
+* RERUNS.DAT file
+**********************************************************************
+* rerun set 1
+PRODENV = 'POTENTIAL'
+IYEAR = 1992
+EMYR = 1992
+* rerun set 2
+PRODENV = 'POTENTIAL'
+IYEAR = 1993
+EMYR = 1993
+
+
+";s:6:"preset";s:1:"1";}i:1;O:8:"stdClass":9:{s:2:"id";s:1:"2";s:5:"label";s:20:"Medium-term duration";s:11:"file_prefix";s:11:"medium_term";s:11:"description";s:50:"Potential yield simulation for medium-term variety";s:11:"control_dat";s:2322:"*CONTROLFILE = control.dat
+*strun=0
+*endrun=2
+*----------------------------------------------------------------------*
+*                          CONTROL.DAT                                 *
+* Run control file for ORYZA2000 model (version 4.0)                   *
+* Date: November 2000                                                  *
+*                                                                      *
+* The input files (except FILEIR) may may used in reruns.              *
+*----------------------------------------------------------------------*
+ 
+   FILEON = 'res.dat'     ! Output file
+   FILEOL = 'model.log'   ! Log file
+   FILEIT = 'medium_term.exp' ! Experimental data
+   FILEI1 = 'medium_term.crp'    ! Crop data
+   FILEIR = 'reruns.dat' ! Rerun file
+*   FILEI2 = ''    ! Soil data
+
+*----------------------------------------------------------------------*
+* Set output/print options                                             *
+*----------------------------------------------------------------------*
+PRDEL  = 1.    ! Output time step (day)
+IPFORM = 5     ! Code for output table format:
+               ! 4 = spaces between columns
+               ! 5 = TAB's between columns (spreadsheet output)
+               ! 6 = two column output
+
+COPINF = 'N'   ! Switch variable whether to copy the input files
+               ! to the output file ('N' = do not copy,
+               ! 'Y' = copy)
+
+DELTMP = 'N'   ! Switch variable what should be done with the
+               ! temporary output file ('N' = do not delete,
+               ! 'Y' = delete)
+
+IFLAG  = 1100  ! Indicates where weather error and warnings
+               ! go (1101 means errors and warnings to log
+               ! file, errors to screen, see FSE manual)
+
+*PRSEL =  'TIME','DVS','WAGT', 'WSO', 'LAI'
+    ! The string array PRSEL contains the output variables for which
+    ! formatted tables have to be made. One or more times there is a
+    ! series of variable names terminated by the word <TABLE>.
+    ! The translator writes the variables in each PRINT statement to
+    ! a separate table
+
+*IOBSD = 1991,182            
+               ! List of observation data for which output is
+               ! required. The list should consist of pairs
+               ! <year>,<day> combination
+
+";s:19:"experiment_data_dat";s:8481:"*--------------------------------------------------------------------*
+* EXPERIMENTAL DATA FILE                                             *
+*                                                                    *
+* File name        : medium_term.exp                                 *
+*--------------------------------------------------------------------*
+
+*--------------------------------------------------------------------*
+* 1. Selection of modes of running                                   *
+*--------------------------------------------------------------------*
+*--  RICETYPE is to selcet lowland rice or aerobic/upland rice
+RICETYPE = 'LOWLAND'   ! Lowland rice
+*RICETYPE = 'AEROBIC'   ! Upland or aerobic rice
+
+*--  RUNMODE: mode of running ORYZA
+RUNMODE = 'EXPERIMENT'       ! ORYZA simulates particular experiment
+*RUNMODE ='EXPLORATION'      ! ORYZA used for exploraton 
+
+*--  PRODENV = Water production situation setting
+PRODENV = 'POTENTIAL'        ! Potential production
+*PRODENV = 'WATER BALANCE'   ! Production may be water-limited
+
+*-- WATBAL is Choice of water balance
+*   needs only be given when PRODENV = 'WATER BALANCE'
+WATBAL = 'PADDY'   ! PADDY water balance (for lowland soils)
+*WATBAL = 'SAHEL'   ! SAHEL water balance (for freely draining upland soils)
+*WATBAL = 'SAWAH'   ! SAWAH water balance (for lowland or upland soils)
+
+*--  NITROENV = Nitrogen production situation setting
+NITROENV = 'POTENTIAL'        ! Potential production
+*NITROENV = 'NITROGEN BALANCE'   ! Production may be nitrogen-limited
+
+* WARNING: NITROGEN AND WATER LIMITATIONS AT SAME TIME IS AS
+* YET UN UNVALIDATED OPTION IN ORYZA2000!!!! 
+
+*--  ETMOD is method for evapotranspiration calculation:
+ETMOD = 'PENMAN'            ! Penman-based (Van Kraalingen & Stol,1996)
+*ETMOD = 'PRIESTLY TAYLOR'   ! Priestly-Taylor (")
+*ETMOD = 'MAKKINK'           ! Makkink (Van Kraalingen & Stol, 1996)
+
+*--------------------------------------------------------------------*
+* 2. Timer data for simulation                                       *
+*--------------------------------------------------------------------*
+IYEAR  = 1991                ! Start year of simulation (year)
+STTIME = 4.                  ! Start time  (day number)
+FINTIM = 1000.               ! Finish time (days after start)
+DELT   = 1.                  ! Time step   (day)
+
+*--------------------------------------------------------------------*
+* 3. Weather station and climatic data for simulation                *
+*--------------------------------------------------------------------*
+WTRDIR = ' '   ! Directory of weather data
+CNTR   = 'phil'              ! Country code
+ISTN   = 1                   ! Station code
+
+ANGA = 0.29                  ! Angstrom A parameter
+ANGB = 0.45                  ! Angstrom B parameter
+
+TMCTB =  0., 0.,             ! Table for temperature increase
+       366., 0.              ! Climatic Change studies
+
+FAOF  = 1.          ! MultipL. factor for pot. evapotranspiration (FAO)
+                    ! Value Murty & Tuong
+
+TMPSB = 0.          ! Temperature increase in seed-bed due to cover:
+                    ! Zero when no cover over seed-bed; 9.5 with seed-bed
+
+*--------------------------------------------------------------------*
+* 4. Establishment data
+*--------------------------------------------------------------------*
+*--  ESTAB is method of establishment: 'TRANSPLANT' or 'DIRECT-SEED'
+ESTAB='TRANSPLANT'
+*ESTAB='DIRECT-SEED'
+
+* Transplanting date January 16, 1992; sowing date Jan. 4.
+EMD    = 4          ! Day of emergence (either direct, or in seed-bed)
+EMYR   = 1991       ! Year of emergence 
+SBDUR  = 12         ! Seedbed duration (days between emerging and transplanting)
+
+*--------------------------------------------------------------------*
+* 5. Management parameters                                           *
+*--------------------------------------------------------------------*
+NPLH   = 5.         ! Number of plants per hill 
+NH     = 25.        ! Number of hills
+NPLSB  = 1000.      ! Number of plants in seed-bed (???)
+NPLDS  = 200.       ! Number of plants/m2 direct-seeded
+
+*-- Initial data at emergence, for either direct-seeding or seed-bed
+*   Standard data used.
+LAPE   = 0.0001     ! Initial leaf area per plant
+DVSI   = 0.0        ! Initial development stage
+WLVGI  = 0.0        ! Initial leaf weight
+WSTI   = 0.0        ! Initial stem weight
+WRTI   = 0.0        ! Initial stem weight
+WSOI   = 0.0        ! Initial weight storage organs
+ZRTI   = 0.0001     ! Initial root depth (m)
+
+*-- Re-initialization at transplanting (standard data used)
+ZRTTR  = 0.05       ! Root depth at transplanting (m)
+
+*---------------------------------------------------------------*
+* 6. Irrigation parameters
+* Need only to be filled-in when PRODENV = 'WATER BALANCE'
+*---------------------------------------------------------------*
+* No data (potential production mode)
+
+*--------------------------------------------------------------------*
+* 7. Nitrogen parameters                                             *
+* Need only to be filled-in when NITROENV = 'NITROGEN BALANCE'       *
+*--------------------------------------------------------------------*
+* No data (potential production mode)
+*TWO SOIL C AND N DYNAMICS
+NUTRIENT =  'GENERAL SOM'   !USE GENERAL SOIL ORGANIC C AND N MODULE TO HANDLE THE NUTRIENT CHANGES
+*NUTRIENT =  'FIXED SUPPLY' !Use fixed mineralization rate with fertilizer recovery rate
+*NUTRIENT =  'APSIM SOILN'  !USE APSIM SOIL C AND N MODULE TO HANDLE THE NUTRIENT CHANGES, IT CONSISTED
+                            !BY SOILN, POND AND SURFACEOM MODULES
+
+*--------------------------------------------------------------------*
+* 8. Measured data for model calibration and comparison              *
+*    And option to force measured LAI during simulation              *
+*    (instead of using simulated values)                             *
+*--------------------------------------------------------------------*
+* Observed phenology: only required if program DRATES is run!!
+*IDOYTR =   ! Day of transplanting (give 0 if direct-seeded) (d)
+*IYRTR  =   ! Year of transplanting (give 0 if direct-seeded) (y)
+*IDOYPI =     ! Day of panicle initiation
+               ! (give -99 if not observed) (d)
+*IYRPI  =   ! Year of panicle initiation
+               ! (give -99 if not observed) (y)
+*IDOYFL =     ! Day of flowering (d)
+*IYRFL  =   ! Year of flowering (y)
+*IDOYM  =   ! Day of maturity (d)
+*IYRM   =   ! Year of maturity (y)
+
+* Measured leaf area index (LAI; m2 leaf m-2 ground): first column gives
+* year, second column gives day of year, third column gives the measured 
+* LAI at that date (day and year):
+*LAI_OBS =
+
+*-- Parameter to set forcing of measured LAI during simulation
+*LAI_FRC = 0       ! No forcing
+*LAI_FRC = 2      ! Forcing 
+
+* Measured green leaf dry weight (WLVG; kg ha-1): first column gives
+* year, second column gives day of year, third column gives the measured 
+* WLVG at that date (day and year):
+*WLVG_OBS =
+
+* Measured dead leaf dry weight (WLVD; kg ha-1): first column gives
+* year, second column gives day of year, third column gives the measured 
+* WLVD at that date (day and year):
+*WLVD_OBS =
+
+* Measured stem dry weight (WST; kg ha-1): first column gives
+* year, second column gives day of year, third column gives the measured 
+* WST at that date (day and year):
+*WST_OBS =
+
+* Measured panicle dry weight (storage organ)(WSO; kg ha-1): first column 
+* gives year, second column gives day of year, third column gives the 
+* measured WSO at that date (day and year):
+*WSO_OBS =
+
+* Measured total dry weight (WAGT; kg ha-1): first column gives
+* year, second column gives day of year, third column gives the measured 
+* WAGT at that date (day and year):
+*WAGT_OBS =
+
+* Measured leaf N content on weight basis (FNLV; g N g-1 leaf DM): first 
+* column gives year, second column gives day of year, third column gives 
+* the measured FNLV at that date (day and year):
+*FNLV_OBS =
+
+* Measured leaf N content on area basis (NFLV; g N m-2 leaf area): first 
+* column gives year, second column gives day of year, third column gives 
+* the measured NFLV at that date (day and year):
+*NFLV_OBS =
+
+*-- Parameter to set forcing of measured NFLV values during simulation
+*NFLV_FRC = 0       ! No forcing
+*NFLV_FRC = 2      ! Forcing 
+
+";s:13:"crop_data_dat";s:11035:"**********************************************************************
+* Crop data file for ORYZA2000 rice growth model                     *
+* File name   : medium_term.crp                                      *
+**********************************************************************
+
+* 1. Phenological development parameters
+TBD    = 8.      ! Base temperature for development (oC)
+TBLV   = 8.      ! Base temperature for juvenile leaf area growth (oC)
+TMD    = 42.     ! Maximum temperature for development (oC)
+TOD    = 30.     ! Optimum temperature for development (oC)
+DVRJ  = .000773  ! Development rate in juvenile phase (oCd-1)
+DVRI  = .000758  ! Development rate in photoperiod-sensitive phase (oCd-1)
+DVRP  = .000784  ! Development rate in panicle development (oCd-1)
+DVRR  = .001784  ! Development rate in reproductive phase (oCd-1)
+MOPP   = 11.50   ! Maximum optimum photoperiod (h)
+PPSE   = 0.0     ! Photoperiod sensitivity (h-1)
+SHCKD  = 0.4     ! Relation between seedling age and delay in phenological 
+                 ! development (oCd oCd-1)
+COLDMIN = 12.    ! Lower air temperature treshhold for growth (oC)
+COLDEAD = 3.     ! Consecutive number of days below COLDMIN that crop dies (-)
+CTSTER = 36.6    ! Critical temperature of spikelet sterility (oC)
+
+* 2. Leaf and stem growth parameters
+RGRLMX = 0.0085  ! Maximum relative growth rate of leaf area (oCd-1)
+RGRLMN = 0.0040  ! Minimum relative growth rate of leaf area (oCd-1)
+SHCKL  = 0.25    ! Relation between seedling age and delay in leaf area 
+                 ! development (oCd oCd-1)
+
+* Switch to use SLA as table (give values below) or as fixed function
+SWISLA = 'FUNCTION' ! Give function parameters  ASLA, BSLA, CSLA, DSLA, SLAMAX
+*SWISLA = 'TABLE'   ! Give SLA as a function of DVS in the table SLATB
+
+* If SWISLA='FUNCTION', supply SLA function parameters: 
+* SLA = ASLA + BSLA*EXP(CSLA*(DVS-DSLA)), and SLAMAX
+ASLA = 0.0024 ! (-)
+BSLA = 0.0025 ! (-)
+CSLA = -4.5   ! (-)
+DSLA = 0.14   ! (-)
+SLAMAX = 0.0045 ! maximum value of SLA (ha/kg)
+
+* If SWISLA='TABLE', supply table of specific leaf area (ha kg-1; Y value) 
+* as a function of development stage (-; X value):
+SLATB = 0.00, 0.0045,
+        0.16, 0.0045,
+        0.33, 0.0033,
+        0.65, 0.0028,
+        0.79, 0.0024,
+        2.10, 0.0023,
+        2.50, 0.0023
+
+* Table of specific green stem area (ha kg-1; Y value) as a function of 
+* development stage (-; X value):
+SSGATB = 0.0, 0.0003,   
+         0.9, 0.0003,
+         2.1, 0.0000,
+         2.5, 0.0000
+
+* 3. Photosynthesis parameters
+FRPAR  = 0.5  ! fraction of sunlight energy that is 
+              ! photosynthetically active (-)
+SCP    = 0.2  ! Scattering coefficient of leaves for PAR (-)
+CO2REF = 340. ! Reference level of atmospheric CO2 (ppm)
+CO2    = 340. ! Ambient CO2 concentration (ppm)
+
+* Table of light extinction coefficient for leaves (-; Y-value) as a function
+* of development stage (-; X value):
+KDFTB = 0.00, 0.4,
+        0.65, 0.4,
+        1.00, 0.6,
+        2.50, 0.6
+
+* Table of extinction coefficient of N profile in the canopy (-; Y-value) 
+* as a functionof development stage (-; X value):
+KNFTB = 0.0, 0.4,
+        2.5, 0.4 
+
+* Table of light use effiency (-; Y-value) as a function of 
+* temperature (oC; X value):
+EFFTB  =   0.,0.54,
+          10.,0.54,
+          40.,0.36,
+          60.,0.24
+
+* Table of effect of temperature on AMAX (-; Y-value) as a function of 
+* temperature (oC; X value):
+REDFTT = -10., 0.,
+          10., 0.,
+          20., 1.,
+          37., 1.,
+          43., 0.,
+          60., 0.
+
+* Table of N fraction in leaves on leaf area basis (g N m-2 leaf; Y-value) 
+* as a function of development stage (-; X value):
+NFLVTB = 0.00, 0.54,
+         0.16, 0.54,
+         0.33, 1.53,
+         0.65, 1.22,
+         0.79, 1.56,
+         1.00, 1.29,
+         1.46, 1.37,
+         2.02, 0.83,
+         2.50, 0.83
+
+*Leaf nitrogen content corresponding coefficient to AMax (/(g N m-2 leaf))
+AMAXSLN0 = 22.0
+*Minimum leaf nitrogen content for that Am (maximum rate co2 assimilation) is 0.0 (g N/m2 leaf)
+MINSLN = 0.2
+
+* 4. Maintenance parameters
+* Maintenance respiration coefficient (kg CH2O kg-1 DM d-1) of:
+MAINLV = 0.02   ! Leaves 
+MAINST = 0.015  ! Stems 
+MAINSO = 0.003  ! Storage organs (panicles) 
+MAINRT = 0.01   ! Roots 
+
+TREF   = 25.    ! Reference temperature (oC)
+Q10    = 2.     ! Factor accounting for increase in maintenance
+                ! respiration with a 10 oC rise in temperature (-)
+
+* 5. Growth respiration parameters 
+* Carbohydrate requirement for dry matter production (kg CH2O kg-1 DM leaf) of:
+CRGLV  = 1.326  ! Leaves 
+CRGST  = 1.326  ! Stems
+CRGSO  = 1.462  ! Storage organs (panicles)
+CRGRT  = 1.326  ! Roots
+CRGSTR = 1.11   ! Stem reserves
+
+LRSTR  = 0.947  ! Fraction of allocated stem reserves that is
+                ! available for growth (-)
+
+* 6. Growth parameters
+FSTR   = 0.20      ! Fraction of carbohydrates allocated to stems that
+                   ! is stored as reserves (-)
+TCLSTR = 10.       ! Time coefficient for loss of stem reserves (1 d-1)
+SPGF   = 64900.    ! Spikelet growth factor (no kg-1)
+WGRMX  = 0.0000249 ! Maximum individual grain weight (kg grain-1)
+
+* Partitioning tables
+* Table of fraction total dry matter partitioned to the shoot (-; Y-value) 
+* as a function of development stage (-; X value):
+FSHTB  = 0.00,  0.50,
+         0.43,  0.75,
+         1.00,  1.00,
+         2.50,  1.00
+
+* Table of fraction shoot dry matter partitioned to the leaves (-; Y-value) 
+* as a function of development stage (-; X value):
+FLVTB  = 0.000, 0.60,
+         0.500, 0.60,
+         0.750, 0.30,
+         1.000, 0.00,
+         1.200, 0.00,
+         2.5  , 0. 
+
+* Table of fraction shoot dry matter partitioned to the stems (-; Y-value) 
+* as a function of development stage (-; X value):
+FSTTB  = 0.000, 0.40,
+         0.500, 0.40,
+         0.750, 0.70,
+         1.000, 0.40,
+         1.200, 0.00,
+         2.5  , 0. 
+
+* Table of fraction shoot dry matter partitioned to the panicles (-; Y-value) 
+* as a function of development stage (-; X value):
+FSOTB  = 0.000, 0.000,
+         0.500, 0.000, 
+         0.750, 0.000,
+         1.000, 0.600,
+         1.200, 1.000,
+         2.5  , 1. 
+
+* Table of leaf death coefficient (d-1; Y-value) as a function of development 
+* stage (-; X value):
+DRLVT  = 0.00, 0.000, 
+         0.60, 0.000,
+         1.00, 0.015,
+         1.60, 0.025,
+         2.10, 0.050,
+         2.50, 0.050
+
+* 7. Carbon balance parameters
+* Mass fraction carbon (kg C kg-1 DM) in the:
+FCLV   = 0.419  ! Leaves 
+FCST   = 0.431  ! Stems
+FCSO   = 0.487  ! Storage organs (panicles)
+FCRT   = 0.431  ! Roots 
+FCSTR  = 0.444  ! Stem reserves 
+
+* 8. Root parameters
+GZRT   = 0.01   ! Growth rate of roots (m d-1)
+ZRTMCW = 0.25   ! Maximum depth of roots if no drought stress (m)
+ZRTMCD = 0.40   ! Maximum depth of roots if drought (m)
+
+*Additional information for ORYZA2000v.2.13 (JUNE 2009)
+SROOTL = 90.0   ! Special root length (cm/g DM)
+RMINT  = 5.0    ! Minimum temperature for root growth (oC)
+ROPTT  = 25.0   ! Optimum temperature of root growth (oC)
+RTBS   = 2.0    ! Minimum temperature for root to survive (oC)
+RCNL   = 0.012  ! Lowest root nitrogen content (residue root N content, kg N kg-1 root DM)
+MAXD   = 40.0   ! Maximum rooting depth (cm)
+SODT   = 0.9    ! Tolerance index of oxygen deficiency
+
+* 9. Drought stress parameters
+* Upper and lower limits for drought stress effects
+ULLS =   74.13    ! Upper limit leaf rolling (kPa)
+LLLS =  794.33    ! Lower limit leaf rolling (kPa)
+ULDL =  630.95    ! Upper limit death of leaves (kPa)
+LLDL = 1584.89    ! Lower limit death of leaves (kPa)
+ULLE =    1.45    ! Upper limit leaf expansion (kPa) 
+LLLE = 1404.      ! Lower limit leaf expansion (kPa)
+
+* Switch to use ULTR and LLTR as given above or function built in ORYZA 
+* for the reduction in relative transpiration:
+* SWIRTR = 1, Use ULRT AND LLRT for transpiration; SWIRTR = 2, Use SWIRTRF for 
+* transpiration; SWIRTR = 3, Use FSWTD for transpiration 
+*SWIRTR = 3 ! Use function 
+SWIRTR = 'FUNCTION' ! Use function 
+
+* Give value of ULRT and LLRT for SWIRTR = 1
+ULRT =   74.13    ! Upper limit relative transpiration reduction (kPa)
+LLRT = 1584.89    ! Lower limit relative transpiration reduction (kPa)
+
+* Give value for SWIRTRF if SWIRTR= 2, default value SWIRTRF=0.003297
+SWIRTRF = 0.020597
+
+* Give value for FSWTD if SWIRTR= 3, default value SWIRTRF=0.003297
+* The upper limit factor while transpiration declines which is the ratio of remaining
+* available water to total water supply capability 
+FSWTD = 0.30
+
+*===================================================================*
+* Drought stress effect parameters for aerobic rice                 *
+* Values are for wheat, taken from SUCROS2 model                    *
+*===================================================================*
+* characteristic potential transpiration rate at a soil water
+* content halfway wilting point and field capacity (mm.d-1)
+  TRANSC = 6.
+
+* Root activity coefficient (-)
+  EDPTFT = 0.,0.15, 0.15,0.6, 0.3,0.8, 0.5,1., 1.1,1.
+*===================================================================*
+
+* 10. Nitrogen parameters
+NMAXUP  = 8.      ! Maximum daily N uptake (kg N ha-1 d-1)
+RFNLV   = 0.004   ! Residual N fraction of leaves (kg N kg-1 leaves)
+FNTRT   = 0.15    ! Fraction N translocation from roots, as (additonal) 
+                  ! fraction of total N translocation from stems and leaves (-)
+RFNST   = 0.0015  ! Residual N fraction of stems (kg N kg-1 stems)
+TCNTRF  = 10.     ! Time coefficient for N translocation to grains (d)
+NFLVI   = 0.5     ! Initial leaf N fraction (on area basis: g N m-2 leaf)
+FNLVI   = 0.025   ! Initial leaf N fraction (on weight basis: kg N kg-1 leaf)
+
+NMAXSO  = 0.0175  ! Maximum N concentration in storage organs (kg N kg-1)
+
+* Table of minimum N concentration in storage organs (kg N kg-1 DM; Y value) 
+* as a function of the amount of N in the crop till flowering (kg N ha-1; X value):
+NMINSOT =  0., .006,
+          50., .0008,
+         150., .0125,
+         250., .015,
+         400., .017,
+        1000., .017
+
+* Table of maximum leaf N fraction on weight basis (kg N kg-1 leaves; Y value)
+* as a function of development stage (-; X value):
+NMAXLT = 0.0,  .053,
+         0.4,  .053,
+         0.75, .040,
+         1.0,  .028,
+         2.0,  .022,
+         2.5,  .015
+
+* Table of minimum leaf N fraction on weight basis (kg N kg-1 leaves; Y value)
+* as a function of development stage (-; X value):
+NMINLT = 0.0, 0.025,
+         1.0, 0.012,
+         2.1, 0.007,
+         2.5, 0.007
+
+*--- Table of effect of N stress on leaf death rate (-; Y value)
+* as a function of N stress level (-; X value):
+NSLLVT = 0.,  1.0,
+         1.1, 1.0,
+         1.5, 1.4,
+         2.0, 1.5,
+         2.5, 1.5
+
+";s:10:"reruns_dat";s:303:"**********************************************************************
+* RERUNS.DAT file
+**********************************************************************
+* rerun set 1
+PRODENV = 'POTENTIAL'
+IYEAR = 1992
+EMYR = 1992
+* rerun set 2
+PRODENV = 'POTENTIAL'
+IYEAR = 1993
+EMYR = 1993
+
+
+
+
+
+";s:6:"preset";s:1:"1";}i:2;O:8:"stdClass":9:{s:2:"id";s:1:"3";s:5:"label";s:18:"Long-term duration";s:11:"file_prefix";s:9:"long_term";s:11:"description";s:48:"Potential yield simulation for long-term variety";s:11:"control_dat";s:2318:"*CONTROLFILE = control.dat
+*strun=0
+*endrun=2
+*----------------------------------------------------------------------*
+*                          CONTROL.DAT                                 *
+* Run control file for ORYZA2000 model (version 4.0)                   *
+* Date: November 2000                                                  *
+*                                                                      *
+* The input files (except FILEIR) may may used in reruns.              *
+*----------------------------------------------------------------------*
+ 
+   FILEON = 'res.dat'     ! Output file
+   FILEOL = 'model.log'   ! Log file
+   FILEIT = 'long_term.exp' ! Experimental data
+   FILEI1 = 'long_term.crp'    ! Crop data
+   FILEIR = 'reruns.dat' ! Rerun file
+*   FILEI2 = ''    ! Soil data
+
+*----------------------------------------------------------------------*
+* Set output/print options                                             *
+*----------------------------------------------------------------------*
+PRDEL  = 1.    ! Output time step (day)
+IPFORM = 5     ! Code for output table format:
+               ! 4 = spaces between columns
+               ! 5 = TAB's between columns (spreadsheet output)
+               ! 6 = two column output
+
+COPINF = 'N'   ! Switch variable whether to copy the input files
+               ! to the output file ('N' = do not copy,
+               ! 'Y' = copy)
+
+DELTMP = 'N'   ! Switch variable what should be done with the
+               ! temporary output file ('N' = do not delete,
+               ! 'Y' = delete)
+
+IFLAG  = 1100  ! Indicates where weather error and warnings
+               ! go (1101 means errors and warnings to log
+               ! file, errors to screen, see FSE manual)
+
+*PRSEL =  'TIME','DVS','WAGT', 'WSO', 'LAI'
+    ! The string array PRSEL contains the output variables for which
+    ! formatted tables have to be made. One or more times there is a
+    ! series of variable names terminated by the word <TABLE>.
+    ! The translator writes the variables in each PRINT statement to
+    ! a separate table
+
+*IOBSD = 1991,182            
+               ! List of observation data for which output is
+               ! required. The list should consist of pairs
+               ! <year>,<day> combination
+
+";s:19:"experiment_data_dat";s:9433:"*-------------------------------------------------------------------------*
+* TIMER and EXPERIMENTAL DATA FILE                                        *
+*                                                                         *
+* File name        : CS180_4.t99                                          *
+* Crop             : Oryza sativa cv. 2You501                             *
+* Year/Season      : 1999, summer season                                  *
+* Experimental site: Tuanlin/Hubei/P.R. China, 30.51N, 120.56E, 100m      *
+* Water regime     : continuously submerged                               *
+* N-fertilizer     : 180 kg N splitted as:                                *
+*                  : 25% basal, 25% 10 DAT, 20% PI, 10% before heading    * 
+*                  : 10% after heading, 10% after complete flowering      *
+* P,K fertilizers  : 25 kg P/ha, 70 kg K/ha                               *
+* People           : Belder/Lu Guoan/Bouman                               *
+* Address          : IRRI, DAPO Box 7777, Metro Manila, Philippines       *
+* Additional info  : Exp. testing flooded vs alternately flooded/         *
+*                    non-flooded                                          *
+*-------------------------------------------------------------------------*
+
+*--------------------------------------------------------------------*
+* 1. Selection of modes of running                                   *
+*--------------------------------------------------------------------*
+*--  RICETYPE is to selcet lowland rice or aerobic/upland rice
+RICETYPE = 'LOWLAND'   ! Lowland rice
+*RICETYPE = 'AEROBIC'   ! Upland or aerobic rice
+
+*--  RUNMODE: mode of running ORYZA
+RUNMODE = 'EXPERIMENT'       ! ORYZA simulates particular experiment
+*RUNMODE ='EXPLORATION'      ! ORYZA used for exploraton 
+
+*--  PRODENV = Water production situation setting
+PRODENV = 'POTENTIAL'        ! Potential production
+*PRODENV = 'WATER BALANCE'   ! Production may be water-limited
+
+*-- WATBAL is Choice of water balance
+*   needs only be given when PRODENV = 'WATER BALANCE'
+WATBAL = 'PADDY'   ! PADDY water balance (for lowland soils)
+*WATBAL = 'SAHEL'   ! SAHEL water balance (for freely draining upland soils)
+*WATBAL = 'SAWAH'   ! SAWAH water balance (for lowland or upland soils)
+
+*--  NITROENV = Nitrogen production situation setting
+NITROENV = 'POTENTIAL'        ! Potential production
+*NITROENV = 'NITROGEN BALANCE'   ! Production may be nitrogen-limited
+
+* WARNING: NITROGEN AND WATER LIMITATIONS AT SAME TIME IS AS
+* YET UN UNVALIDATED OPTION IN ORYZA2000!!!! 
+
+*--  ETMOD is method for evapotranspiration calculation:
+ETMOD = 'PENMAN'            ! Penman-based (Van Kraalingen & Stol,1996)
+*ETMOD = 'PRIESTLY TAYLOR'   ! Priestly-Taylor (")
+*ETMOD = 'MAKKINK'           ! Makkink (Van Kraalingen & Stol, 1996)
+
+*--------------------------------------------------------------------*
+* 2. Timer data for simulation                                       *
+*--------------------------------------------------------------------*
+IYEAR  = 1991                ! Start year of simulation (year)
+STTIME = 108.                  ! Start time  (day number)
+FINTIM = 1000.               ! Finish time (days after start)
+DELT   = 1.                  ! Time step   (day)
+
+*--------------------------------------------------------------------*
+* 2. Weather station and climatic data for simulation                *
+*--------------------------------------------------------------------*
+WTRDIR = ' '   ! Directory of weather data
+CNTR   = 'chin'              ! Country code
+ISTN   = 1                   ! Station code
+
+ANGA = 0.29                  ! Angstrom A parameter
+ANGB = 0.45                  ! Angstrom B parameter
+
+TMCTB =  0., 0.,             ! Table for temperature increase
+       366., 0.              ! Climatic Change studies
+
+FAOF  = 1.          ! MultipL. factor for pot. evapotranspiration (FAO)
+                    ! Value Murty & Tuong
+
+TMPSB = 0.          ! Temperature increase in seed-bed due to cover:
+                    ! Zero when no cover over seed-bed; 9.5 with seed-bed
+
+*--------------------------------------------------------------------*
+* 3. Establishment data
+*--------------------------------------------------------------------*
+*--  ESTAB is method of establishment: 'TRANSPLANT' or 'DIRECT-SEED'
+ESTAB='TRANSPLANT'
+*ESTAB='DIRECT-SEED'
+
+* Transplanting date 20 May, 1999; sowing date 18 April, 1999
+EMD    = 111          ! Day of emergence (either direct, or in seed-bed)
+EMYR   = 1991       ! Year of emergence 
+SBDUR  = 29         ! Seed-bed duration (days between sowing and transplanting)
+
+*--------------------------------------------------------------------*
+* 4. Management parameters                                           *
+*--------------------------------------------------------------------*
+NPLH   = 2.         ! Number of plants per hill 
+NH     = 25.        ! Number of hills
+NPLSB  = 1000.      ! Number of plants in seed-bed (???)
+NPLDS  = 200.       ! Number of plants/m2 direct-seeded
+
+*-- Initial data at emergence, for either direct-seeding or seed-bed
+*   Standard data used.
+LAPE   = 0.0001     ! Initial leaf area per plant
+DVSI   = 0.0        ! Initial development stage
+WLVGI  = 0.0        ! Initial leaf weight
+WSTI   = 0.0        ! Initial stem weight
+WRTI   = 0.0        ! Initial stem weight
+WSOI   = 0.0        ! Initial weight storage organs
+ZRTI   = 0.0001     ! Initial root depth (m)
+
+*-- Re-initialization at transplanting (standard data used)
+ZRTTR  = 0.05       ! Root depth at transplanting (m)
+
+*---------------------------------------------------------------*
+* 6. Irrigation parameters
+* Need only to be filled-in when PRODENV = 'WATER BALANCE'
+*---------------------------------------------------------------*
+* No data (potential production mode)
+
+*--------------------------------------------------------------------*
+* 7. Nitrogen parameters                                             *
+* Need only to be filled-in when NITROENV = 'NITROGEN BALANCE'       *
+*--------------------------------------------------------------------*
+* No data (potential production mode)
+*TWO SOIL C AND N DYNAMICS
+NUTRIENT =  'GENERAL SOM'   !USE GENERAL SOIL ORGANIC C AND N MODULE TO HANDLE THE NUTRIENT CHANGES
+*NUTRIENT =  'FIXED SUPPLY' !Use fixed mineralization rate with fertilizer recovery rate
+*NUTRIENT =  'APSIM SOILN'  !USE APSIM SOIL C AND N MODULE TO HANDLE THE NUTRIENT CHANGES, IT CONSISTED
+                            !BY SOILN, POND AND SURFACEOM MODULES
+
+*--------------------------------------------------------------------*
+* 8. Measured data for model calibration and comparison              *
+*    And option to force measured LAI during simulation              *
+*    (instead of using simulated values)                             *
+*--------------------------------------------------------------------*
+* Observed phenology: only required if program DRATES is run!!
+*IDOYTR =   ! Day of transplanting (give 0 if direct-seeded) (d)
+*IYRTR  =   ! Year of transplanting (give 0 if direct-seeded) (y)
+*IDOYPI =     ! Day of panicle initiation
+               ! (give -99 if not observed) (d)
+*IYRPI  =   ! Year of panicle initiation
+               ! (give -99 if not observed) (y)
+*IDOYFL =     ! Day of flowering (d)
+*IYRFL  =   ! Year of flowering (y)
+*IDOYM  =   ! Day of maturity (d)
+*IYRM   =   ! Year of maturity (y)
+
+* Measured leaf area index (LAI; m2 leaf m-2 ground): first column gives
+* year, second column gives day of year, third column gives the measured 
+* LAI at that date (day and year):
+*LAI_OBS =
+
+*-- Parameter to set forcing of measured LAI during simulation
+*LAI_FRC = 0       ! No forcing
+*LAI_FRC = 2      ! Forcing 
+
+* Measured green leaf dry weight (WLVG; kg ha-1): first column gives
+* year, second column gives day of year, third column gives the measured 
+* WLVG at that date (day and year):
+*WLVG_OBS =
+
+* Measured dead leaf dry weight (WLVD; kg ha-1): first column gives
+* year, second column gives day of year, third column gives the measured 
+* WLVD at that date (day and year):
+*WLVD_OBS =
+
+* Measured stem dry weight (WST; kg ha-1): first column gives
+* year, second column gives day of year, third column gives the measured 
+* WST at that date (day and year):
+*WST_OBS =
+
+* Measured panicle dry weight (storage organ)(WSO; kg ha-1): first column 
+* gives year, second column gives day of year, third column gives the 
+* measured WSO at that date (day and year):
+*WSO_OBS =
+
+* Measured total dry weight (WAGT; kg ha-1): first column gives
+* year, second column gives day of year, third column gives the measured 
+* WAGT at that date (day and year):
+*WAGT_OBS =
+
+* Measured leaf N content on weight basis (FNLV; g N g-1 leaf DM): first 
+* column gives year, second column gives day of year, third column gives 
+* the measured FNLV at that date (day and year):
+*FNLV_OBS =
+
+* Measured leaf N content on area basis (NFLV; g N m-2 leaf area): first 
+* column gives year, second column gives day of year, third column gives 
+* the measured NFLV at that date (day and year):
+*NFLV_OBS =
+
+*-- Parameter to set forcing of measured NFLV values during simulation
+*NFLV_FRC = 0       ! No forcing
+*NFLV_FRC = 2      ! Forcing ";s:13:"crop_data_dat";s:10924:"***********************************************************************************
+* Crop data file for ORYZA2000 rice growth model                                  *
+* File name   : long_term.crp                                                     *
+***********************************************************************************
+
+* 1. Phenological development parameters
+TBD    = 8.      ! Base temperature for development (oC)
+TBLV   = 8.      ! Base temperature for juvenile leaf area growth (oC)
+TMD    = 42.     ! Maximum temperature for development (oC)
+TOD    = 30.     ! Optimum temperature for development (oC)
+DVRJ  = .000639  ! Development rate in juvenile phase (oCd-1)
+DVRI  = .000758  ! Development rate in photoperiod-sensitive phase (oCd-1)
+DVRP  = .000672  ! Development rate in panicle development (oCd-1)
+DVRR  = .001564  ! Development rate in reproductive phase (oCd-1)
+MOPP   = 11.50   ! Maximum optimum photoperiod (h)
+PPSE   = 0.0     ! Photoperiod sensitivity (h-1)
+SHCKD  = 0.4     ! Relation between seedling age and delay in phenological 
+                 ! development (oCd oCd-1)
+COLDMIN = 12.    ! Lower air temperature treshhold for growth (oC)
+COLDEAD = 3.     ! Consecutive number of days below COLDMIN that crop dies (-)
+CTSTER = 36.6    ! Critical temperature of spikelet sterility (oC)
+
+* 2. Leaf and stem growth parameters
+RGRLMX = 0.0085  ! Maximum relative growth rate of leaf area (oCd-1)
+RGRLMN = 0.0040  ! Minimum relative growth rate of leaf area (oCd-1)
+SHCKL  = 0.25    ! Relation between seedling age and delay in leaf area 
+                 ! development (oCd oCd-1)
+
+* Switch to use SLA as table (give values below) or as fixed function
+SWISLA = 'FUNCTION' ! Give function parameters  ASLA, BSLA, CSLA, DSLA, SLAMAX
+*SWISLA = 'TABLE'   ! Give SLA as a function of DVS in the table SLATB
+
+* If SWISLA='FUNCTION', supply SLA function parameters: 
+* SLA = ASLA + BSLA*EXP(CSLA*(DVS-DSLA)), and SLAMAX
+* parameters are derived from cv 2You725 used at Tuanlin 2000-2002
+ASLA = 0.0018 ! (-)
+BSLA = 0.0025 ! (-)
+CSLA = -3.0   ! (-)
+DSLA = 0.21   ! (-)
+SLAMAX = 0.0045 ! maximum value of SLA (ha/kg)
+
+* If SWISLA='TABLE', supply table of specific leaf area (ha kg-1; Y value) 
+* as a function of development stage (-; X value):
+SLATB = 0.00, 0.0045,
+        0.16, 0.0045,
+        0.33, 0.0033,
+        0.65, 0.0028,
+        0.79, 0.0024,
+        2.10, 0.0023,
+        2.50, 0.0023
+
+* Table of specific green stem area (ha kg-1; Y value) as a function of 
+* development stage (-; X value):
+* data derived from experiment at Munoz, Philippines in dry season of 2001 using IR72
+SSGATB = 0.0, 0.0008,   
+         0.9, 0.0002,
+         2.1, 0.0001,
+         2.5, 0.0001
+
+* data from IR72 as derived by Wopereis et al in dry season of 1992
+*SSGATB = 0.0, 0.0003,   
+*         0.9, 0.0003,
+*         2.1, 0.0000,
+*         2.5, 0.0000
+
+* 3. Photosynthesis parameters
+FRPAR  = 0.5  ! fraction of sunlight energy that is 
+              ! photosynthetically active (-)
+SCP    = 0.2  ! Scattering coefficient of leaves for PAR (-)
+CO2REF = 340. ! Reference level of atmospheric CO2 (ppm)
+CO2    = 340. ! Ambient CO2 concentration (ppm)
+
+* Table of light extinction coefficient for leaves (-; Y-value) as a function
+* of development stage (-; X value):
+KDFTB = 0.00, 0.4,
+        0.65, 0.4,
+        1.00, 0.6,
+        2.50, 0.6
+
+* Table of extinction coefficient of N profile in the canopy (-; Y-value) 
+* as a functionof development stage (-; X value):
+KNFTB = 0.0, 0.4,
+        2.5, 0.4 
+
+* Table of light use effiency (-; Y-value) as a function of 
+* temperature (oC; X value):
+EFFTB  =   0.,0.54,
+          10.,0.54,
+          40.,0.36
+
+* Table of effect of temperature on AMAX (-; Y-value) as a function of 
+* temperature (oC; X value):
+REDFTT = -10., 0.,
+          10., 0.,
+          20., 1.,
+          37., 1.,
+          43., 0.
+
+* Table of N fraction in leaves on leaf area basis (g N m-2 leaf; Y-value) 
+* as a function of development stage (-; X value):
+* parameters are derived from cv 2You725 used at Tuanlin 2000-2002
+NFLVTB = 0.00, 2.00,
+         0.30, 2.00,
+         0.65, 1.80,
+         1.00, 1.40,
+         2.10, 0.90
+
+* 4. Maintenance parameters
+* Maintenance respiration coefficient (kg CH2O kg-1 DM d-1) of:
+MAINLV = 0.02   ! Leaves 
+MAINST = 0.015  ! Stems 
+MAINSO = 0.003  ! Storage organs (panicles) 
+MAINRT = 0.01   ! Roots 
+
+TREF   = 25.    ! Reference temperature (oC)
+Q10    = 2.     ! Factor accounting for increase in maintenance
+                ! respiration with a 10 oC rise in temperature (-)
+
+* 5. Growth respiration parameters 
+* Carbohydrate requirement for dry matter production (kg CH2O kg-1 DM leaf) of:
+CRGLV  = 1.326  ! Leaves 
+CRGST  = 1.326  ! Stems
+CRGSO  = 1.462  ! Storage organs (panicles)
+CRGRT  = 1.326  ! Roots
+CRGSTR = 1.11   ! Stem reserves
+
+LRSTR  = 0.947  ! Fraction of allocated stem reserves that is
+                ! available for growth (-)
+
+* 6. Growth parameters
+* parameter are derived from cv 2You725 used at Tuanlin 2000-2002
+FSTR   = 0.20      ! Fraction of carbohydrates allocated to stems that
+                   ! is stored as reserves (-)
+TCLSTR = 10.       ! Time coefficient for loss of stem reserves (1 d-1)
+SPGF   = 64900.    ! Spikelet growth factor (no kg-1)
+WGRMX  = 0.0000249 ! Maximum individual grain weight (kg grain-1)
+
+* Partitioning tables
+* Table of fraction total dry matter partitioned to the shoot (-; Y-value) 
+* as a function of development stage (-; X value):
+FSHTB  = 0.00,  0.50,
+         0.43,  0.75,
+         1.00,  1.00,
+         2.50,  1.00
+
+* Table of fraction shoot dry matter partitioned to the leaves (-; Y-value) 
+* as a function of development stage (-; X value):
+* parameters are derived from cv 2You725 used at Tuanlin 2000-2002
+FLVTB = 0.000, 0.50,
+        0.500, 0.50,
+        0.750, 0.30,
+        1.000, 0.00,
+        1.200, 0.00,
+        2.500, 0.00
+
+* Table of fraction shoot dry matter partitioned to the stems (-; Y-value) 
+* as a function of development stage (-; X value):
+* parameters are derived from cv 2You725 used at Tuanlin 2000-2002
+FSTTB = 0.000, 0.50,
+        0.500, 0.50,
+        0.750, 0.70,
+        1.000, 0.286,
+        1.100, 0.00,
+        1.200, 0.00,
+        2.500, 0.00
+
+* Table of fraction shoot dry matter partitioned to the panicles (-; Y-value) 
+* as a function of development stage (-; X value):
+* parameters are derived from cv 2You725 used at Tuanlin 2000-2002
+FSOTB  = 0.000, 0.000,
+         0.600, 0.000, 
+         0.750, 0.000,
+         1.100, 1.000,
+         1.200, 1.000,
+         2.5  , 1. 
+
+* Table of leaf death coefficient (d-1; Y-value) as a function of development 
+* stage (-; X value):
+DRLVT  = 0.00, 0.000, 
+         0.60, 0.000,
+         1.00, 0.015,
+         1.60, 0.025,
+         2.10, 0.050,
+         2.50, 0.050
+
+* 7. Carbon balance parameters
+* Mass fraction carbon (kg C kg-1 DM) in the:
+FCLV   = 0.419  ! Leaves 
+FCST   = 0.431  ! Stems
+FCSO   = 0.487  ! Storage organs (panicles)
+FCRT   = 0.431  ! Roots 
+FCSTR  = 0.444  ! Stem reserves 
+
+* 8. Root parameters
+GZRT   = 0.01   ! Growth rate of roots (m d-1)
+ZRTMCW = 0.25   ! Maximum depth of roots if no drought stress (m)
+ZRTMCD = 0.40   ! Maximum depth of roots if drought (m)
+
+*Additional information for ORYZA2000v.2.13 (JUNE 2009)
+SROOTL = 90.0   ! Special root length (cm/g DM)
+RMINT  = 5.0    ! Minimum temperature for root growth (oC)
+ROPTT  = 25.0   ! Optimum temperature of root growth (oC)
+RTBS   = 2.0    ! Minimum temperature for root to survive (oC)
+RCNL   = 0.012  ! Lowest root nitrogen content (residue root N content, kg N kg-1 root DM)
+MAXD   = 40.0   ! Maximum rooting depth (cm)
+SODT   = 0.9    ! Tolerance index of oxygen deficiency
+
+* 9. Drought stress parameters
+* Upper and lower limits for drought stress effects
+ULLS =   74.13    ! Upper limit leaf rolling (kPa)
+LLLS =  794.33    ! Lower limit leaf rolling (kPa)
+ULDL =  630.95    ! Upper limit death of leaves (kPa)
+LLDL = 1584.89    ! Lower limit death of leaves (kPa)
+ULLE =    1.45    ! Upper limit leaf expansion (kPa) 
+LLLE = 1404.      ! Lower limit leaf expansion (kPa)
+ULRT =   74.13    ! Upper limit relative transpiration reduction (kPa)
+LLRT = 1584.89    ! Lower limit relative transpiration reduction (kPa)
+
+* Switch to use ULTR and LLTR as given above or function built in ORYZA 
+* for the reduction in relative transpiration:
+*SWIRTR = 'DATA'    ! Use data 
+SWIRTR = 'FUNCTION' ! Use function 
+
+*===================================================================*
+* Drought stress effect parameters for aerobic rice                 *
+* Values are for wheat, taken from SUCROS2 model                    *
+*===================================================================*
+* characteristic potential transpiration rate at a soil water
+* content halfway wilting point and field capacity (mm.d-1)
+  TRANSC = 6.
+
+* Root activity coefficient (-)
+  EDPTFT = 0.,0.15, 0.15,0.6, 0.3,0.8, 0.5,1., 1.1,1.
+*===================================================================*
+
+* 10. Nitrogen parameters
+NMAXUP  = 8.      ! Maximum daily N uptake (kg N ha-1 d-1)
+RFNLV   = 0.004   ! Residual N fraction of leaves (kg N kg-1 leaves)
+FNTRT   = 0.15    ! Fraction N translocation from roots, as (additonal) 
+                  ! fraction of total N translocation from stems and leaves (-)
+RFNST   = 0.0015  ! Residual N fraction of stems (kg N kg-1 stems)
+TCNTRF  = 10.     ! Time coefficient for N translocation to grains (d)
+NFLVI   = 0.5     ! Initial leaf N fraction (on area basis: g N m-2 leaf)
+FNLVI   = 0.025   ! Initial leaf N fraction (on weight basis: kg N kg-1 leaf)
+NMAXSO  = 0.0175  ! Maximum N concentration in storage organs (kg N kg-1)
+
+* Table of minimum N concentration in storage organs (kg N kg-1 DM; Y value) 
+* as a function of the amount of N in the crop till flowering (kg N ha-1; X value):
+NMINSOT =  0., .006,
+          50., .0008,
+         150., .0125,
+         250., .015,
+         400., .017,
+        1000., .017
+
+* Table of maximum leaf N fraction on weight basis (kg N kg-1 leaves; Y value)
+* as a function of development stage (-; X value):
+NMAXLT = 0.0,  .053,
+         0.4,  .053,
+         0.75, .040,
+         1.0,  .028,
+         2.0,  .022,
+         2.5,  .015
+
+* Table of minimum leaf N fraction on weight basis (kg N kg-1 leaves; Y value)
+* as a function of development stage (-; X value):
+NMINLT = 0.0, 0.025,
+         1.0, 0.012,
+         2.1, 0.007,
+         2.5, 0.007
+
+
+*--- Table of effect of N stress on leaf death rate (-; Y value)
+* as a function of N stress level (-; X value):
+NSLLVT = 0.,  1.0,
+         1.1, 1.0,
+         1.5, 1.4,
+         2.0, 1.5,
+         2.5, 1.5
+";s:10:"reruns_dat";s:305:"**********************************************************************
+* RERUNS.DAT file
+**********************************************************************
+* rerun set 1
+PRODENV = 'POTENTIAL'
+IYEAR = 1992
+EMYR = 1992
+
+* rerun set 2
+PRODENV = 'POTENTIAL'
+IYEAR = 1993
+EMYR = 1993
+
+
+
+
+
+";s:6:"preset";s:1:"1";}}s:20:"custom_result_object";a:0:{}s:11:"current_row";i:0;s:8:"num_rows";i:3;s:8:"row_data";N;}

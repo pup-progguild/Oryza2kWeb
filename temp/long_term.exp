@@ -1,0 +1,192 @@
+*-------------------------------------------------------------------------*
+* TIMER and EXPERIMENTAL DATA FILE                                        *
+*                                                                         *
+* File name        : CS180_4.t99                                          *
+* Crop             : Oryza sativa cv. 2You501                             *
+* Year/Season      : 1999, summer season                                  *
+* Experimental site: Tuanlin/Hubei/P.R. China, 30.51N, 120.56E, 100m      *
+* Water regime     : continuously submerged                               *
+* N-fertilizer     : 180 kg N splitted as:                                *
+*                  : 25% basal, 25% 10 DAT, 20% PI, 10% before heading    * 
+*                  : 10% after heading, 10% after complete flowering      *
+* P,K fertilizers  : 25 kg P/ha, 70 kg K/ha                               *
+* People           : Belder/Lu Guoan/Bouman                               *
+* Address          : IRRI, DAPO Box 7777, Metro Manila, Philippines       *
+* Additional info  : Exp. testing flooded vs alternately flooded/         *
+*                    non-flooded                                          *
+*-------------------------------------------------------------------------*
+
+*--------------------------------------------------------------------*
+* 1. Selection of modes of running                                   *
+*--------------------------------------------------------------------*
+*--  RICETYPE is to selcet lowland rice or aerobic/upland rice
+RICETYPE = 'LOWLAND'   ! Lowland rice
+*RICETYPE = 'AEROBIC'   ! Upland or aerobic rice
+
+*--  RUNMODE: mode of running ORYZA
+RUNMODE = 'EXPERIMENT'       ! ORYZA simulates particular experiment
+*RUNMODE ='EXPLORATION'      ! ORYZA used for exploraton 
+
+*--  PRODENV = Water production situation setting
+PRODENV = 'POTENTIAL'        ! Potential production
+*PRODENV = 'WATER BALANCE'   ! Production may be water-limited
+
+*-- WATBAL is Choice of water balance
+*   needs only be given when PRODENV = 'WATER BALANCE'
+WATBAL = 'PADDY'   ! PADDY water balance (for lowland soils)
+*WATBAL = 'SAHEL'   ! SAHEL water balance (for freely draining upland soils)
+*WATBAL = 'SAWAH'   ! SAWAH water balance (for lowland or upland soils)
+
+*--  NITROENV = Nitrogen production situation setting
+NITROENV = 'POTENTIAL'        ! Potential production
+*NITROENV = 'NITROGEN BALANCE'   ! Production may be nitrogen-limited
+
+* WARNING: NITROGEN AND WATER LIMITATIONS AT SAME TIME IS AS
+* YET UN UNVALIDATED OPTION IN ORYZA2000!!!! 
+
+*--  ETMOD is method for evapotranspiration calculation:
+ETMOD = 'PENMAN'            ! Penman-based (Van Kraalingen & Stol,1996)
+*ETMOD = 'PRIESTLY TAYLOR'   ! Priestly-Taylor (")
+*ETMOD = 'MAKKINK'           ! Makkink (Van Kraalingen & Stol, 1996)
+
+*--------------------------------------------------------------------*
+* 2. Timer data for simulation                                       *
+*--------------------------------------------------------------------*
+IYEAR  = 1991                ! Start year of simulation (year)
+STTIME = 69.                  ! Start time  (day number)
+FINTIM = 1000.               ! Finish time (days after start)
+DELT   = 1.                  ! Time step   (day)
+
+*--------------------------------------------------------------------*
+* 2. Weather station and climatic data for simulation                *
+*--------------------------------------------------------------------*
+WTRDIR = ' '   ! Directory of weather data
+CNTR = 'indo'              ! Country code
+ISTN = 43                   ! Station code
+
+ANGA = 0.29                  ! Angstrom A parameter
+ANGB = 0.45                  ! Angstrom B parameter
+
+TMCTB =  0., 0.,             ! Table for temperature increase
+       366., 0.              ! Climatic Change studies
+
+FAOF  = 1.          ! MultipL. factor for pot. evapotranspiration (FAO)
+                    ! Value Murty & Tuong
+
+TMPSB = 0.          ! Temperature increase in seed-bed due to cover:
+                    ! Zero when no cover over seed-bed; 9.5 with seed-bed
+
+*--------------------------------------------------------------------*
+* 3. Establishment data
+*--------------------------------------------------------------------*
+*--  ESTAB is method of establishment: 'TRANSPLANT' or 'DIRECT-SEED'
+ESTAB = 'DIRECT-SEED'
+*ESTAB = 'DIRECT-SEED'
+
+* Transplanting date 20 May, 1999; sowing date 18 April, 1999
+EMD    = 111          ! Day of emergence (either direct, or in seed-bed)
+EMYR   = 1991       ! Year of emergence 
+SBDUR  = 29         ! Seed-bed duration (days between sowing and transplanting)
+
+*--------------------------------------------------------------------*
+* 4. Management parameters                                           *
+*--------------------------------------------------------------------*
+NPLH   = 2.         ! Number of plants per hill 
+NH     = 25.        ! Number of hills
+NPLSB  = 1000.      ! Number of plants in seed-bed (???)
+NPLDS  = 200.       ! Number of plants/m2 direct-seeded
+
+*-- Initial data at emergence, for either direct-seeding or seed-bed
+*   Standard data used.
+LAPE   = 0.0001     ! Initial leaf area per plant
+DVSI   = 0.0        ! Initial development stage
+WLVGI  = 0.0        ! Initial leaf weight
+WSTI   = 0.0        ! Initial stem weight
+WRTI   = 0.0        ! Initial stem weight
+WSOI   = 0.0        ! Initial weight storage organs
+ZRTI   = 0.0001     ! Initial root depth (m)
+
+*-- Re-initialization at transplanting (standard data used)
+ZRTTR  = 0.05       ! Root depth at transplanting (m)
+
+*---------------------------------------------------------------*
+* 6. Irrigation parameters
+* Need only to be filled-in when PRODENV = 'WATER BALANCE'
+*---------------------------------------------------------------*
+* No data (potential production mode)
+
+*--------------------------------------------------------------------*
+* 7. Nitrogen parameters                                             *
+* Need only to be filled-in when NITROENV = 'NITROGEN BALANCE'       *
+*--------------------------------------------------------------------*
+* No data (potential production mode)
+*TWO SOIL C AND N DYNAMICS
+NUTRIENT =  'GENERAL SOM'   !USE GENERAL SOIL ORGANIC C AND N MODULE TO HANDLE THE NUTRIENT CHANGES
+*NUTRIENT =  'FIXED SUPPLY' !Use fixed mineralization rate with fertilizer recovery rate
+*NUTRIENT =  'APSIM SOILN'  !USE APSIM SOIL C AND N MODULE TO HANDLE THE NUTRIENT CHANGES, IT CONSISTED
+                            !BY SOILN, POND AND SURFACEOM MODULES
+
+*--------------------------------------------------------------------*
+* 8. Measured data for model calibration and comparison              *
+*    And option to force measured LAI during simulation              *
+*    (instead of using simulated values)                             *
+*--------------------------------------------------------------------*
+* Observed phenology: only required if program DRATES is run!!
+*IDOYTR =   ! Day of transplanting (give 0 if direct-seeded) (d)
+*IYRTR  =   ! Year of transplanting (give 0 if direct-seeded) (y)
+*IDOYPI =     ! Day of panicle initiation
+               ! (give -99 if not observed) (d)
+*IYRPI  =   ! Year of panicle initiation
+               ! (give -99 if not observed) (y)
+*IDOYFL =     ! Day of flowering (d)
+*IYRFL  =   ! Year of flowering (y)
+*IDOYM  =   ! Day of maturity (d)
+*IYRM   =   ! Year of maturity (y)
+
+* Measured leaf area index (LAI; m2 leaf m-2 ground): first column gives
+* year, second column gives day of year, third column gives the measured 
+* LAI at that date (day and year):
+*LAI_OBS =
+
+*-- Parameter to set forcing of measured LAI during simulation
+*LAI_FRC = 0       ! No forcing
+*LAI_FRC = 2      ! Forcing 
+
+* Measured green leaf dry weight (WLVG; kg ha-1): first column gives
+* year, second column gives day of year, third column gives the measured 
+* WLVG at that date (day and year):
+*WLVG_OBS =
+
+* Measured dead leaf dry weight (WLVD; kg ha-1): first column gives
+* year, second column gives day of year, third column gives the measured 
+* WLVD at that date (day and year):
+*WLVD_OBS =
+
+* Measured stem dry weight (WST; kg ha-1): first column gives
+* year, second column gives day of year, third column gives the measured 
+* WST at that date (day and year):
+*WST_OBS =
+
+* Measured panicle dry weight (storage organ)(WSO; kg ha-1): first column 
+* gives year, second column gives day of year, third column gives the 
+* measured WSO at that date (day and year):
+*WSO_OBS =
+
+* Measured total dry weight (WAGT; kg ha-1): first column gives
+* year, second column gives day of year, third column gives the measured 
+* WAGT at that date (day and year):
+*WAGT_OBS =
+
+* Measured leaf N content on weight basis (FNLV; g N g-1 leaf DM): first 
+* column gives year, second column gives day of year, third column gives 
+* the measured FNLV at that date (day and year):
+*FNLV_OBS =
+
+* Measured leaf N content on area basis (NFLV; g N m-2 leaf area): first 
+* column gives year, second column gives day of year, third column gives 
+* the measured NFLV at that date (day and year):
+*NFLV_OBS =
+
+*-- Parameter to set forcing of measured NFLV values during simulation
+*NFLV_FRC = 0       ! No forcing
+*NFLV_FRC = 2      ! Forcing 

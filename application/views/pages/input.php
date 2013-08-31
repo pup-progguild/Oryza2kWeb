@@ -27,7 +27,7 @@
                     <div class="controls">
                         <div id="site-control" class="btn-group">
                             <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                                <span id="site-value">PHL</span> <span class="caret"></span>
+                                <span id="site-value"><?= $sites[0]['country'] ?></span> <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
                                 <?php for($i = 0; $i < count($sites); $i++): $site = $sites[$i] ?>
@@ -39,33 +39,33 @@
                 </div>
 
                 <div class="control-group" id="year-field">
-                    <input type="hidden" id="year" name="year" value="1991">
+                    <input type="hidden" id="year" name="year" value="<?= $first_year['year'] ?>">
                     <label class="control-label" for="year-control">Year</label>
                     <div class="controls">
                         <div id="year-control" class="btn-group">
                             <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                                <span id="year-value">1991</span> <span class="caret"></span>
+                                <span id="year-value"><?= $first_year['year'] ?></span> <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
-                                <? foreach($years as $year): ?>
-                                    <li><a href="#!year=<?= $year['year'] ?>"><?= $year['year'] ?></a></li>
-                                <? endforeach ?>
+                                <?php for($i = 0; $i < count($years); $i++): $year = $years[$i] ?>
+                                    <li<?= $i == 0 ? ' class="active"' : '' ?>><a href="#!year=<?= $year['year'] ?>"><?= $year['year'] ?></a></li>
+                                <?php endfor ?>
                             </ul>
                         </div>
                     </div>
                 </div>
 
                 <div class="control-group" id="variety-field">
-                    <input type="hidden" id="variety" name="variety" value="s">
+                    <input type="hidden" id="variety" name="variety" value="0">
                     <label class="control-label" for="variety-control">Variety</label>
                     <div class="controls">
                         <div id="variety-control" class="btn-group">
                             <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                                <span id="variety-value">Short-term duration</span> <span class="caret"></span>
+                                <span id="variety-value"><?= $template[0]['label'] ?></span> <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
                                 <?php for ($i = 0; $i < count($template); $i++): $variety = $template[$i] ?>
-                                    <li><a href="#!variety=<?= $i ?>">
+                                    <li<?= $i == 0 ? ' class="active"' : '' ?>><a href="#!variety=<?= $i ?>">
                                             <?= $variety['label'] ?>
                                         </a>
                                     </li>
@@ -84,7 +84,7 @@
                                 <span id="sowing-value">Dec. 15 &ndash; Jan. 15</span> <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a href="#!sowing=d">Dec. 15 &ndash; Jan. 15</a></li>
+                                <li class="active"><a href="#!sowing=d">Dec. 15 &ndash; Jan. 15</a></li>
                                 <li><a href="#!sowing=w">Jun. 15 &ndash; Jul. 15</a></li>
                             </ul>
                         </div>
@@ -100,7 +100,7 @@
                                 <span id="seeding-value">Direct Seeding</span> <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a href="#!seeding=d">Direct Seeding</a></li>
+                                <li class="active"><a href="#!seeding=d">Direct Seeding</a></li>
                                 <li><a href="#!seeding=t">Transplanted</a></li>
                             </ul>
                         </div>
@@ -121,12 +121,12 @@
             <form class="form-horizontal">
                 <input type="hidden" id="variety-edit" name="variety-edit" value="<?= 0 ?>">
                 <div id="variety-edit-control" class="btn-group">
-                    <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                        <span id="variety-edit-value">Short-term duration</span> <span class="caret"></span>
+                    <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" data-loading-text="Loading...">
+                        <span id="variety-edit-value"><?= $template[0]['label'] ?></span> <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu" id="variety-edit-dropdown">
                         <?php for ($i = 0; $i < count($template); $i++): $variety = $template[$i] ?>
-                            <li><a href="#!variety-edit=<?= $i ?>">
+                            <li<?= $i == 0 ? ' class="active"' : '' ?>><a href="#!variety-edit=<?= $i ?>">
                                     <?= $variety['label'] ?>
                                 </a>
                             </li>
@@ -178,8 +178,11 @@
     var editor;
 
     (function() {
-        var lastItem;
-        var edited = false;
+        var currItem;
+        var prevItem;
+
+        var isChangedVariety = false;
+        var cancelHashEvent = false;
 
         function isTransplanted() {
             return $("#seeding").val() == "t";
@@ -188,6 +191,10 @@
         function doLogic() {
             displayTransplField(isTransplanted());
 
+            if(isChangedVariety) {
+                loadTemplate($("#variety-edit").val());
+                isChangedVariety = false;
+            }
             refreshEditor();
         }
 
@@ -216,16 +223,39 @@
             return valid;
         }
 
-        function loadTemplate(index) {
+        function loadTemplate() {
             var templates = ["description", "control_dat", "reruns_dat", "crop_data_dat", "experiment_data_dat", "preset"];
-            buffer[index] = [];
+            buffer = [];
+            var index = $("#variety-edit").val();
             for(var t in templates) {
                 $.ajax("<?= base_url() ?>index.php/input/retrieve_template/" + index + "/" + templates[t],
                 {
                     async: false,
                     type: 'GET'
                 }).done(function(value) {
-                    buffer[index][templates[t]] = value;
+                    switch(templates[t]) {
+                        case "description":
+                        case "preset":
+                            buffer[templates[t]] = {
+                                "value": value,
+                                "isModified": false
+                            };
+                            break;
+                        default:
+                            var mode = editor.getSession().getMode();
+                            var session = ace.createEditSession(value, mode);
+                            buffer[templates[t]] = {
+                                "session": session,
+                                "isModified": false
+                            };
+                            session.on('change', function() {
+                                buffer[templates[t]].isModified = true;
+                            });
+                    }
+                    $("#variety-desc").on('change', function() {
+                        buffer["description"].value = $(this).val();
+                        buffer["description"].isModified = true;
+                    });
                 });
             }
         }
@@ -234,12 +264,7 @@
             editor = ace.edit("editor");
             editor.setTheme("ace/theme/monokai");
             editor.getSession().setMode("ace/mode/oryza_dat");
-            for(var i = <?= 0 ?>; i < <?= count($template) ?>; i++) {
-                var templates = ["description", "control_dat", "reruns_dat", "crop_data_dat", "experiment_data_dat"];
-                buffer[i] = [];
-                loadTemplate(i)
-            }
-
+            loadTemplate($("#variety-edit").val());
             refreshEditor();
         }
 
@@ -251,21 +276,58 @@
                 $("#main").submit();
         }
 
+        // Repaints the whole Advanced Input section
         function refreshEditor() {
-            editor.getSession().getDocument().setValue(buffer[$("#variety-edit").val()][$("#template").val()]);
-            editor.moveCursorTo(0, 0);
-            $("#variety-desc").val(buffer[$("#variety-edit").val()]["description"]);
-            if($("#preset").val()) {
+            editor.setSession(buffer[$("#template").val()].session);
+            $("#variety-desc").val(buffer["description"].value);
 
+            if($("#preset").val()) {
+                $("#save").hide();
             }
+            else {
+                $("#save").show();
+            }
+
+            $("#variety-desc").attr("disabled", $("#preset").val());
         }
 
         function isExisting(varietyName) {
+            // TODO determine if variety is existing
             return false;
         }
 
-        function save() {
-            alert("Save");
+        function save(filename) {
+            var varietyToSave = {
+                label: filename,
+                file_prefix: filename.toLowerCase().replace(' ', '_'),
+                description: buffer["description"].value,
+                control_dat: buffer["control_dat"].session.getValue(),
+                reruns_dat: buffer["reruns_dat"].session.getValue(),
+                crop_data_dat: buffer["crop_data_dat"].session.getValue(),
+                experiment_data_dat: buffer["experiment_data_dat"].session.getValue(),
+                preset: 0
+            };
+            var success = false;
+            $.ajax("<?= base_url() ?>index.php/input/save_template",
+                {
+                    type: 'POST',
+                    data: varietyToSave
+                }).done(function() {
+                    for(var t in buffer)
+                        buffer[t].isModified = false;
+                    success = true;
+                }).error(function() {
+                    success = false;
+                });
+            return success;
+        }
+
+        function saveAs() {
+            var filename = prompt("Enter new variety");
+            if(filename != "")
+                if(isExisting(filename) && confirm("Are you sure you want to overwrite this variety?") || !isExisting(filename))
+                    return save(filename);
+            return false;
         }
 
         function invokeEvent(id) {
@@ -274,13 +336,18 @@
                     save();
                     break;
                 case "save_as":
-                    if(isExisting())
-                    // TODO what if overwrite?
+                    saveAs();
                     break;
             }
         }
 
+        // Default hook for hash events
         $(window).hashchange(function() {
+            if(cancelHashEvent) {
+                cancelHashEvent = false;
+                return;
+            }
+
             var rawHash = location.hash.substr(1);
             var isHashEvent = rawHash.indexOf('!') == 0; // event data k/v pair(s) are specified after bang character.
 
@@ -296,8 +363,11 @@
                         var key = segment.substr(0, pairDivider);
                         var value = segment.substr(pairDivider + 1);
 
-                        $("#" + key).val(value);
-                        $("#" + key + "-value").html(lastItem);
+                        try {
+                            $("#" + key).val(value);
+                            $("#" + key + "-value").html(currItem.text());
+                        } catch(e) {
+                        }
                     }
                     else { // invoke named event
                         invokeEvent(segment);
@@ -308,10 +378,13 @@
             }
         });
 
+        // Default hook for dropdowns
         $(".dropdown-menu").find("li").find("a").click(function() {
-            $(this).parent().parent().find("li").removeClass("active");
-            $(this).parent().addClass("active");
-            lastItem = $(this).text();
+            prevItem = $(this).parent().parent().find(".active");
+            currItem = $(this).parent();
+
+            prevItem.removeClass("active");
+            currItem.addClass("active");
         });
 
         $("#tab-run").click(function() {
@@ -322,6 +395,21 @@
             $(this).parent().parent().find("li").not(".no-select").removeClass("active");
             if(!$(this).hasClass(".no-select"))
                 $(this).parent().addClass("active");
+        });
+
+        $("#variety-edit-dropdown").find("li").find("a").click(function() {
+            var varietyModified = false;
+            for(var t in buffer)
+                varietyModified |= buffer[t].isModified;
+
+            if(varietyModified && !confirm("Are you sure you want to switch to another variety? Your changes in this variety will not be saved.")) {
+                cancelHashEvent = true;
+                prevItem.addClass('active');
+                currItem.removeClass('active');
+                currItem = prevItem;
+            }
+            else
+                isChangedVariety = true;
         });
 
         $(document).ready(function() {

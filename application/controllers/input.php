@@ -26,6 +26,7 @@ class Input extends CI_Controller {
         $data['template'] = $this->run_templates_data_model->get_template();
         $data['weather_years'] = $this->weather_data_model->get_country_year_list();
         $data['years'] = $this->weather_data_model -> get_years();
+        $data['first_year'] = $this->weather_data_model -> get_first_year();
         $data['sites'] = $this->weather_data_model -> get_countries();
 
         $this->load->view('templates/header', $data);
@@ -39,6 +40,10 @@ class Input extends CI_Controller {
         $template = $this->run_templates_data_model -> get_template();
         header("Content-Type: text/plain");
         echo $template[$variety][$file];
+    }
+
+    public function save_template() {
+        $this -> run_templates_data_model -> add();
     }
 
     /*

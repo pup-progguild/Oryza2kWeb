@@ -1,0 +1,15 @@
+[global]
+ApplicationName=oryza2kweb_dev
+AwsCredentialFile=C:\Users\hoshi~\.elasticbeanstalk\aws_credential_file
+DevToolsEndpoint=git.elasticbeanstalk.ap-northeast-1.amazonaws.com
+EnvironmentName=oryza2kwebdev-env
+EnvironmentType=SingleInstance
+InstanceProfileName=
+OptionSettingFile=C:\xampp\htdocs\.elasticbeanstalk\optionsettings.oryza2kwebdev-env
+RdsDeletionPolicy=Snapshot
+RdsEnabled=Yes
+RdsSourceSnapshotName=
+Region=ap-northeast-1
+ServiceEndpoint=https://elasticbeanstalk.ap-northeast-1.amazonaws.com
+SolutionStack=64bit Amazon Linux running PHP 5.4
+
