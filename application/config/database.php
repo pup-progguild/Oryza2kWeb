@@ -48,7 +48,6 @@
 $active_group = 'default';
 $active_record = TRUE;
 
-<<<<<<< HEAD
 $db['default']['hostname'] = 'localhost';   // TODO change to localhost for deployment
 $db['default']['username'] = 'oryza';
 $db['default']['password'] = 'dev_oryza2kweb';

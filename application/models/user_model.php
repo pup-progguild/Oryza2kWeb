@@ -24,11 +24,12 @@ class User_model extends CI_Model {
     }
 
     public function add() {
-        $this->input->post('username');
-        $this->input->post('password');
-        $this->input->post('email');
+        $data = array('username' => $this->input->post('username') ,
+                      'password' => $this->input->post('password') ,
+                      'email' => $this->input->post('email')
+        );
 
-        $this->db->insert($this->USERS_TABLE, $this);
+        $this->db->insert($this->USERS_TABLE, $data);
     }
 
     public function update() {
