@@ -164,5 +164,5 @@ pip-log.txt
 
 .idea
 *.iml
-cache
+cache/
 .elasticbeanstalk/
