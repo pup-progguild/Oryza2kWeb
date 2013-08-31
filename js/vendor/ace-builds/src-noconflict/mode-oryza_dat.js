@@ -89,14 +89,19 @@ var OryzaDatHighlightRules = function() {
                 next  : "cvalue"
             }, {
                 // push <<squote>>
-                token : "string",
+                token : "string.single",
                 regex : /[']/,
                 next  : "qstring"
             }, {
                 // push <<dquote>>
-                token : "string",
+                token : "string.double",
                 regex : /["]/,
                 next  : "qqstring"
+            }, {
+                // push <<comment>>
+                token : "comment",
+                regex : /[*!]$/,
+                next  : "start"
             }, {
                 // push <<comment>>
                 token : "comment",
@@ -122,14 +127,19 @@ var OryzaDatHighlightRules = function() {
                 next  : "cvalue"
             }, {
                 // push <<squote>>
-                token : "string",
+                token : "string.single",
                 regex : /[']/,
                 next  : "qstring"
             }, {
                 // push <<dquote>>
-                token : "string",
+                token : "string.double",
                 regex : /["]/,
                 next  : "qqstring"
+            }, {
+                // push <<comment>>
+                token : "comment",
+                regex : /[*!]$/,
+                next  : "value"
             }, {
                 // push <<comment>>
                 token : "comment",
@@ -147,21 +157,31 @@ var OryzaDatHighlightRules = function() {
         "qstring" : [
             {
                 // pop <<squote>>
-                token : "string",
+                token : "string.single",
+                regex : /[']$/,
+                next  : "start"
+            }, {
+                // pop <<squote>>
+                token : "string.single",
                 regex : /[']/,
                 next  : "value"
             }, {
-                defaultToken : "string"
+                defaultToken : "string.single"
             }
         ],
         "qqstring" : [
             {
                 // pop <<dquote>>
-                token : "string",
+                token : "string.double",
+                regex : /["]$/,
+                next  : "start"
+            }, {
+                // pop <<dquote>>
+                token : "string.double",
                 regex : /["]/,
                 next  : "value"
             }, {
-                defaultToken : "string"
+                defaultToken : "string.double"
             }
         ],
         "comment" : [

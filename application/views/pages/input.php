@@ -149,9 +149,10 @@
         </div>
         <div id="run" class="tab-pane">
             <div id="temp-chart-container">
-                <!-- MIN and MAX temperature -->
+                <canvas id="temp-chart" width="300" height="300"></canvas>
             </div>
             <div id="wrr14-chart-container">
+                <canvas id="wrr14-chart" width="300" height="300"></canvas>
                 <!-- Condition: if date of sowing == NULL or 0 -->
                 <!-- day (X) x WRR14 (Y) (1-365) -->
 
@@ -169,6 +170,7 @@
 <script src="<?= base_url() ?>js/vendor/jquery-1.9.1.min.js"></script>
 <script src="<?= base_url() ?>js/vendor/jquery.ba-hashchange.min.js"></script>
 <!-- <script src="<?= base_url() ?>js/plugins.js"></script> -->
+<script src="<?= base_url() ?>js/vendor/Chart.js-master/Chart.min.js"></script>
 <script src="<?= base_url() ?>js/vendor/require.js"></script>
 <script src="<?= base_url() ?>js/vendor/ace-builds/src-noconflict/ace.js" type="text/javascript"></script>
 <script src="<?= base_url() ?>js/vendor/ace-builds/src-noconflict/mode-oryza_dat.js"></script>
@@ -274,6 +276,30 @@
                 alert("Invalid input");
             }
             else {
+                var ctx = $("#temp-chart").getContext("2d");
+                var tempChart = new Chart(ctx).Line({
+                    labels : ["January","February","March","April","May","June","July"],
+                    datasets : [
+                        {
+                            fillColor : "rgba(220,220,220,0.5)",
+                            strokeColor : "rgba(220,220,220,1)",
+                            pointColor : "rgba(220,220,220,1)",
+                            pointStrokeColor : "#fff",
+                            data : [65,59,90,81,56,55,40]
+                        },
+                        {
+                            fillColor : "rgba(151,187,205,0.5)",
+                            strokeColor : "rgba(151,187,205,1)",
+                            pointColor : "rgba(151,187,205,1)",
+                            pointStrokeColor : "#fff",
+                            data : [28,48,40,19,96,27,100]
+                        }
+                    ]
+                }, {
+                    // options
+                });
+
+
                 // use the parameters given in parameters section
                 $("#main").submit();
             }
