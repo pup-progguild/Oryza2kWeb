@@ -72,8 +72,9 @@ class Input extends CI_Controller {
         $experiment_data_dat = $this->modify_experiment_data_dat($experiment_data_dat, $site, $year, $dateofsowing, $seeding, $sdbdur);
 
         write_file('./temp/control.dat', $control_dat);
-        write_file('./temp/'.$template_data['file_prefix'].'.exp', $experiment_data_dat);
         write_file('./temp/'.$template_data['file_prefix'].'.crp', $crop_data_dat);
+        write_file('./temp/reruns.dat', $experiment_data_dat['reruns']);
+        write_file('./temp/'.$template_data['file_prefix'].'.exp', $experiment_data_dat['experimental_data']);
 
         foreach ($weather_data as $weather) {
             write_file('./temp/'. $weather['country_code'] . $weather['station_code'] .'.'. substr($weather['year'],1,3), $weather['data']);
@@ -82,8 +83,6 @@ class Input extends CI_Controller {
         exec('./home/nix/www/oryza2kweb/temp/oryza2000 control.dat', $exec_output = array());
 
         header("Content-Type: text/plain");
-
-        echo $control_dat;
 
         echo sha1($site.$year.$variety.$dateofsowing.$seeding.$sdbdur);
 
@@ -100,12 +99,18 @@ class Input extends CI_Controller {
     private function modify_experiment_data_dat($experiment_data_dat, $site, $year, $dateofsowing, $seeding, $sdbdur) {
         $first_year = $this->weather_data_model->get_first_year();
         $rerun_dat = '';
-        /*
-        if ($year > $first_year['year']) {
-            $count = 1;
-            for($i = $first_year['year'] + 1; $i <= $year; $i++) {
-                $rerun_dat = $rerun_dat . "* rerun # {$count}\r\nIYEAR = {$i}\r\nEMYR = {$i} \r\n";
-                $count++;
+
+        if ($year >= $first_year['year']) {
+            if ($dateofsowing > 0) {
+                $count = 1;
+                for ($i = $first_year['year']; $i <= $year; $i++) {
+                    $day = date('L', strtotime("$i-1-1")) ? 366 : 365;
+                    for ($j = 1; $j <= $day; $j++) {
+                        $rerun_dat = $rerun_dat . "* rerun # {$count}\r\nIYEAR = {$i}\r\nEMYR = {$i} \r\n";
+                        $rerun_dat = $rerun_dat . "EMD = {$j}\r\n";
+                    }
+                    $count++;
+                }
             }
         } elseif ($year === $first_year['year']) {
             $experiment_data_dat = preg_replace("/(IYEAR)(\\s*)(=)(\\s+)((?:(?:[1]{1}\\d{1}\\d{1}\\d{1})|(?:[2]{1}\\d{3})))(?![\\d])/", 'IYEAR = '. $year, $experiment_data_dat);
@@ -113,17 +118,13 @@ class Input extends CI_Controller {
         } else {
             echo 'wrong' . $year . $first_year['year'];
         }
-        */
-
-
-
-
         $station_code = $this->weather_data_model->get_station_code($site);
 
         $experiment_data_dat = preg_replace("/(CNTR)(\\s*)(=)(\\s*)(\\'.*?\\')/", 'CNTR = \'' . $station_code['country_code'] .'\'', $experiment_data_dat);
         $experiment_data_dat = preg_replace("/(ISTN)(\\s*)(=)(\\s*)(\\d+)/", 'ISTN = ' . $station_code['station_code'], $experiment_data_dat);
 
-        $experiment_data_dat = preg_replace("/(STTIME)(\\s*)(=)(\\s*)(\\d+)/", 'STTIME = ' . $dateofsowing, $experiment_data_dat);
+        if($dateofsowing !== 0)
+            $experiment_data_dat = preg_replace("/(STTIME)(\\s*)(=)(\\s*)(\\d+)/", 'STTIME = ' . $dateofsowing, $experiment_data_dat);
 
         if ($seeding === 't') {
             $experiment_data_dat = preg_replace("/(ESTAB)\\s*(=)\\s*(\\'.*?\\')/", 'ESTAB = \'TRANSPLANT\'', $experiment_data_dat);
@@ -134,6 +135,6 @@ class Input extends CI_Controller {
         else
             show_404();
 
-        return $experiment_data_dat;
+        return array('reruns' => $rerun_dat, 'experiment_data' => $experiment_data_dat);
     }
 }
