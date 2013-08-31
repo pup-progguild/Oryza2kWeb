@@ -58,26 +58,26 @@ class Weather_data_model extends CI_Model {
      *                              row that matches year, and the same goes for $country.
      * @params           $country, $year
      */
-    public function get_weather_data($country = FALSE, $year = FALSE) {
-        if($country === FALSE && $year === FALSE) {
+    public function get_weather_data($country_code = FALSE, $year = FALSE) {
+        if($country_code === FALSE && $year === FALSE) {
             $query = $this->db->get($this->WEATHER_DATA_TABLE);
             return $query->result_array();
 
-        } elseif ($country === FALSE) {
+        } elseif ($country_code === FALSE) {
             $query = $this->db->get_where($this->WEATHER_DATA_TABLE, array('year' => $year));
             return $query->result_array();
 
         } elseif ($year === FALSE) {
-            $query = $this->db->get_where($this->WEATHER_DATA_TABLE, array('country' => $country));
+            $query = $this->db->get_where($this->WEATHER_DATA_TABLE, array('country_code' => $country_code));
             return $query->result_array();
         }
 
         $query = $this->db->get_where($this->WEATHER_DATA_TABLE, array(
-            'country' => $country,
+            'country_code' => $country_code,
             'year' => $year
         ));
 
-        return $query->results_array();
+        return $query->row_array();
     }
 
     public function get_weather_from_country_all_years($country_code) {

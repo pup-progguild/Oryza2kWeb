@@ -74,7 +74,7 @@ class Input extends CI_Controller {
         write_file('./temp/control.dat', $control_dat);
         write_file('./temp/'.$template_data['file_prefix'].'.crp', $crop_data_dat);
         write_file('./temp/reruns.dat', $experiment_data_dat['reruns']);
-        write_file('./temp/'.$template_data['file_prefix'].'.exp', $experiment_data_dat['experimental_data']);
+        write_file('./temp/'.$template_data['file_prefix'].'.exp', $experiment_data_dat['experiment_data']);
 
         foreach ($weather_data as $weather) {
             write_file('./temp/'. $weather['country_code'] . $weather['station_code'] .'.'. substr($weather['year'],1,3), $weather['data']);
@@ -136,5 +136,34 @@ class Input extends CI_Controller {
             show_404();
 
         return array('reruns' => $rerun_dat, 'experiment_data' => $experiment_data_dat);
+    }
+
+    public function parse_weather_data($country_code, $year) {
+        $weather_data = $this->weather_data_model->get_weather_data($country_code,$year);
+
+        $re1='(\\s+)(\\d+)(\\s+)((?:(?:[1]{1}\\d{1}\\d{1}\\d{1})|(?:[2]{1}\\d{3})))(?![\\d])(\\s+)(\\d+)(\\s+)(\\d+)(\\s+)([+-]?\\d*\\.\\d+)(?![-+0-9\\.])(\\s+)([+-]?\\d*\\.\\d+)(?![-+0-9\\.])(\\s+)([+-]?\\d*\\.\\d+)(?![-+0-9\\.])(\\s+)([+-]?\\d*\\.\\d+)(?![-+0-9\\.])(\\s+)([+-]?\\d*\\.\\d+)(?![-+0-9\\.])';	# Float 5
+
+        $weather_data_array = explode("\n",$weather_data['data']);
+
+        $s = 0;
+
+        foreach ($weather_data_array as $data) {
+            if (preg_match_all ("/".$re1."/is", $data, $matches)) {
+
+                $int1=$matches[2][0];
+                $year1=$matches[4][0];
+                $int2=$matches[6][0];
+                $int3=$matches[8][0];
+                $float1=$matches[10][0];
+                $float2=$matches[12][0];
+                $float3=$matches[14][0];
+                $float4=$matches[16][0];
+                $float5=$matches[18][0];
+
+                $graph_me[$s++] = array($int1,$year1,$int2,$int3,$float1,$float2,$float3,$float4,$float5);
+            }
+        }
+
+        print_r($graph_me);
     }
 }
