@@ -48,7 +48,7 @@
 $active_group = 'default';
 $active_record = TRUE;
 
-$db['default']['hostname'] = '192.168.137.144';   // TODO change to localhost for deployment
+$db['default']['hostname'] = 'localhost';   // TODO change to localhost for deployment
 $db['default']['username'] = 'oryza';
 $db['default']['password'] = 'dev_oryza2kweb';
 $db['default']['database'] = 'oryza';
@@ -57,7 +57,7 @@ $db['default']['dbprefix'] = '';
 $db['default']['pconnect'] = TRUE;
 $db['default']['db_debug'] = TRUE;
 $db['default']['cache_on'] = TRUE;
-$db['default']['cachedir'] = '~/www/oryza2kweb/application/cache';
+$db['default']['cachedir'] = 'application/cache';
 $db['default']['char_set'] = 'utf8';
 $db['default']['dbcollat'] = 'utf8_general_ci';
 $db['default']['swap_pre'] = '';

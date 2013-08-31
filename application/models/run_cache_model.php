@@ -28,7 +28,16 @@ class Run_cache_model extends CI_Model {
     public function add() {
         $this->input->post('op_dat');
         $this->input->post('res_dat');
+        $this->input->post('run_templates_data_model_refFK');
 
         $this->db->insert($this->RUN_CACHE_TABLE, $this);
+    }
+
+    public function search_run_cache($hash) {
+        $this->db->where('hash',$hash);
+
+        $query = $this->db->get($this->RUN_CACHE_TABLE);
+
+        return $query->row_array();
     }
 }

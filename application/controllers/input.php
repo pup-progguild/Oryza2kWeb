@@ -51,17 +51,16 @@ class Input extends CI_Controller {
      *                   $seeding       sets method of seeding, maps to ESTAB at *.exp
      *                   $sdbdur        sets seedbed duration on ESTAB = 'TRANSPLANT'.
      *
-     * eg. <?= base_url ?>input/simulate_basic/phil/1991/long_term/4/d/45
+     * eg. <?= base_url ?>input/simulate_basic/phil/1991/long_term/0?/d/45
      */
     public function simulate_basic($site, $year, $variety, $dateofsowing, $seeding, $sdbdur) {
         $template_data = $this->run_templates_data_model->get_template($variety);
-        $weather_data = $this->weather_data_model->get_weather_from_country_all_years($site);
+        $weather_data = $this->weather_data_model->get_weather_from_country_till_selected_years($site,$year);
 
         $control_dat = $template_data['control_dat'];
         $experiment_data_dat = $template_data['experiment_data_dat'];
         $crop_data_dat = $template_data['crop_data_dat'];
 
-        header("Content-Type: text/plain");
         // echo $control_dat;
 
         $control_dat = $this->modify_control_dat($control_dat, $template_data['file_prefix']);
@@ -75,17 +74,15 @@ class Input extends CI_Controller {
             write_file('./temp/'. $weather['country_code'] . $weather['station_code'] .'.'. substr($weather['year'],1,3), $weather['data']);
         }
 
-        sha1($site.$year.$variety.$dateofsowing.$seeding.$sdbdur);
+        exec('./home/nix/www/oryza2kweb/temp/oryza2000 control.dat', $exec_output = array());
 
+        header("Content-Type: text/plain");
 
-        // echo $experiment_data_dat = preg_replace("/(ESTAB)(\\s*)(=)(\\s*)((\'TRANSPLANTED\')(\'DIRECT\'))/", 'ESTAB = ' . strtoupper($seeding), $experiment_data_dat);
-        // echo
+        echo $control_dat;
 
+        echo sha1($site.$year.$variety.$dateofsowing.$seeding.$sdbdur);
 
-
-        // print_r($experiment_data_dat);
-
-        // print_r($crop_data_dat);
+        //print_r($exec_output);
     }
 
     private function modify_control_dat($control_dat, $file_prefix) {
@@ -98,7 +95,7 @@ class Input extends CI_Controller {
     private function modify_experiment_data_dat($experiment_data_dat, $site, $year, $dateofsowing, $seeding, $sdbdur) {
         $first_year = $this->weather_data_model->get_first_year();
         $rerun_dat = '';
-
+        /*
         if ($year > $first_year['year']) {
             $count = 1;
             for($i = $first_year['year'] + 1; $i <= $year; $i++) {
@@ -111,6 +108,10 @@ class Input extends CI_Controller {
         } else {
             echo 'wrong' . $year . $first_year['year'];
         }
+        */
+
+
+
 
         $station_code = $this->weather_data_model->get_station_code($site);
 

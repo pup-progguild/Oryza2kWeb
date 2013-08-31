@@ -90,6 +90,17 @@ class Weather_data_model extends CI_Model {
         return $query->result_array();
     }
 
+    public function get_weather_from_country_till_selected_years($country_code, $year) {
+        $this->db->start_cache();
+        $this->db->where(array('country_code' => $country_code,
+                               'year <='         => $year));
+        $this->db->stop_cache();
+
+        $query = $this->db->get($this->WEATHER_DATA_TABLE);
+
+        return $query->result_array();
+    }
+
     /*
      * @function         get_country_location_list
      * @description      returns 'country' => 'year' value pairs
