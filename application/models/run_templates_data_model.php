@@ -33,16 +33,17 @@ class Run_templates_data_model extends CI_Model {
      * @description      generic addition of row data to table
      */
     public function add() {
-        $this->label = $this->input->post('label');
-        $this->file_prefix = $this->input->post('file_prefix');
-        $this->description = $this->input->post('description');
-        $this->control_dat = $this->input->post('control_dat');
-        $this->experiment_data_dat = $this->input->post('experiment_data_dat');
-        $this->crop_data_dat = $this->input->post('crop_data_dat');
-        $this->reruns_dat = $this->input->post('reruns_dat');
-        $this->preset = $this->input->post('preset');
+        $data = array('label' => $this->input->post('label'),
+                      'file_prefix' => $this->input->post('file_prefix'),
+                      'description' => $this->input->post('description'),
+                      'control_dat' => $this->input->post('control_dat'),
+                      'experiment_data_dat' => $this->input->post('experiment_data_dat'),
+                      'crop_data_dat' => $this->input->post('crop_data_dat'),
+                      'reruns_dat' => $this->input->post('reruns_dat'),
+                      'preset' => $this->input->post('preset')
+    );
 
-        $this->db->insert($this->RUN_TEMPLATES_DATA_TABLE, $this);
+        $this->db->insert($this->RUN_TEMPLATES_DATA_TABLE, $data);
     }
 
     /*
