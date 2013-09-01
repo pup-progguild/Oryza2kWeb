@@ -34,10 +34,12 @@ class Run_cache_model extends CI_Model {
     }
 
     public function search_run_cache($hash) {
-        $this->db->where('hash',$hash);
+        $this->db->where('hash_ident',$hash);
 
         $query = $this->db->get($this->RUN_CACHE_TABLE);
 
         return $query->row_array();
     }
+
+
 }
