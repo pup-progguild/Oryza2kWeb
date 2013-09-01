@@ -6,6 +6,35 @@
         height: 300px;
         width: 70%;
     }
+
+    ul.scroll-menu {
+        position: relative;
+        display: inherit !important;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        -moz-overflow-scrolling: touch;
+        -ms-overflow-scrolling: touch;
+        -o-overflow-scrolling: touch;
+        overflow-scrolling: touch;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100%;
+        height: auto;
+        max-height: 100px;
+        margin: 0;
+        border-left: none;
+        border-right: none;
+        -webkit-border-radius: 0 !important;
+        -moz-border-radius: 0 !important;
+        -ms-border-radius: 0 !important;
+        -o-border-radius: 0 !important;
+        border-radius: 0 !important;
+        -webkit-box-shadow: none;
+        -moz-box-shadow: none;
+        -ms-box-shadow: none;
+        -o-box-shadow: none;
+        box-shadow: none;
+    }
 </style>
 
 <div class="page-header">
@@ -21,34 +50,15 @@
     <div class="tab-content">
         <div id="param" class="tab-pane active">
             <form name="main" id="main" method="get" class="form-horizontal">
-                <div class="control-group" id="site-field" title="The location of the plants">
-                    <input type="hidden" id="site" name="site" value="PHL">
-                    <label class="control-label" for="site-control">Site</label>
+                <div class="control-group" id="site-field" title="The weather data by location and year">
+                    <input type="hidden" id="site" name="site" value="phil">
+                    <input type="hidden" id="year" name="year" value="<?= $first_year['year'] ?>">
+                    <label class="control-label" for="site-control">Weather data</label>
                     <div class="controls">
                         <div id="site-control" class="btn-group">
-                            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                                <span id="site-value"><?= $sites[0]['country'] ?></span> <span class="caret"></span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <?php for($i = 0; $i < count($sites); $i++): $site = $sites[$i] ?>
-                                    <li<?= $i == 0 ? ' class="active"' : '' ?>><a href="#!site=<?= $site['country'] ?>"><?= $site['country'] ?></a></li>
-                                <?php endfor ?>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="control-group" id="year-field" title="The year when the data was taken">
-                    <input type="hidden" id="year" name="year" value="<?= $first_year['year'] ?>">
-                    <label class="control-label" for="year-control">Year</label>
-                    <div class="controls">
-                        <div id="year-control" class="btn-group">
-                            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                                <span id="year-value"><?= $first_year['year'] ?></span> <span class="caret"></span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <?php for($i = 0; $i < count($years); $i++): $year = $years[$i] ?>
-                                    <li<?= $i == 0 ? ' class="active"' : '' ?>><a href="#!year=<?= $year['year'] ?>"><?= $year['year'] ?></a></li>
+                            <ul class="dropdown-menu scroll-menu">
+                                <?php for($i = 0; $i < count($weather_years); $i++): $weather_year = $weather_years[$i] ?>
+                                    <li<?= $i == 0 ? ' class="active"' : '' ?>><a href="#!site=<?= $weather_year['country_code'] ?>&year=<?= $weather_year['year'] ?>"><?= "{$weather_year['country']} ({$weather_year['year']})" ?></a></li>
                                 <?php endfor ?>
                             </ul>
                         </div>
@@ -276,19 +286,14 @@
                 alert("Invalid input");
             }
             else {
-                var weather_ccode_mapping = {
-                    "Philippines": "phil",
-                    "China": "chn",
-                    "Indonesia": "indo"
-                };
                 var ctx = document.getElementById("temp-chart").getContext("2d");
-                $.getJSON('<?= base_url() ?>index.php/input/parse_weather_data/' + weather_ccode_mapping[$("#site").val()] + '/' + $("#year").val(), function(json) {
+                $.getJSON('<?= base_url() ?>index.php/input/parse_weather_data/' + $("#site").val() + '/' + $("#year").val(), function(json) {
                     var day = [], min = [], max = [], avg = [];
                     for(var i in json) {
                         day.unshift(Number(json[i][2]));
                         min.unshift(Number(json[i][4]));
                         max.unshift(Number(json[i][5]));
-                        avg.unshift((Number(json[i][4]) + Number(json[i][5])) / 2.0);
+                        avg.unshift(Number(json[i][6]));
                     }
 
                     var extremes = [

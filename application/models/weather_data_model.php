@@ -107,7 +107,7 @@ class Weather_data_model extends CI_Model {
      */
     public function get_country_year_list() {
         $this->db->start_cache();
-        $this->db->select('country, year');
+        $this->db->select('country, country_code, year');
         $this->db->stop_cache();
 
         $query = $this->db->get($this->WEATHER_DATA_TABLE);
@@ -136,6 +136,20 @@ class Weather_data_model extends CI_Model {
 
         $this->db->distinct();
         return $query->result_array();
+    }
+
+    public function get_years_by_country($country_code) {
+        $this->db->start_cache();
+        $this->db->select('year')->order_by('year', 'asc');
+        $this->db->where(array(
+            "country_code" => $country_code
+        ));
+
+        $this->db->stop_cache();
+
+        $query = $this->db->get($this->WEATHER_DATA_TABLE);
+
+        return $query->row_array();
     }
 
     public function get_first_country() {

@@ -138,7 +138,28 @@ class Input extends CI_Controller {
         return array('reruns' => $rerun_dat, 'experiment_data' => $experiment_data_dat);
     }
 
-    public function parse_weather_data($country_code, $year) {
+    public function get_all_time_average_temp($country_code, $from, $to) {
+        $year_avg_temp = array();
+        $years = $this->weather_data_model->get_years_by_country($country_code);
+        foreach($years as $year)
+            $year_avg_temp[$year] = get_average_temp_for_year($country_code, $year);
+
+        echo json_encode($year_avg_temp);
+    }
+
+    public function get_average_temp_for_year($country_code, $year) {
+        $avg_temp = array();
+        $data = parse_weather_data($country_code, $year, "php_array", FALSE);
+        foreach($data as $day => $day_data)
+            $avg_temp[] = $day_data[$day][6]; // avg min/max temp
+
+        $real_avg_temp = 0;
+        foreach($avg_temp as $individual_avg_temp)
+            $real_avg_temp += $avg;
+        return ($real_avg_temp /= count($individual_avg_temp));
+    }
+
+    public function parse_weather_data($country_code, $year, $output = "json", $echo = TRUE) {
         $weather_data = $this->weather_data_model->get_weather_data($country_code,$year);
 
         $re1='(\\s+)(\\d+)(\\s+)((?:(?:[1]{1}\\d{1}\\d{1}\\d{1})|(?:[2]{1}\\d{3})))(?![\\d])(\\s+)(\\d+)(\\s+)(\\d+)(\\s+)([+-]?\\d*\\.\\d+)(?![-+0-9\\.])(\\s+)([+-]?\\d*\\.\\d+)(?![-+0-9\\.])(\\s+)([+-]?\\d*\\.\\d+)(?![-+0-9\\.])(\\s+)([+-]?\\d*\\.\\d+)(?![-+0-9\\.])(\\s+)([+-]?\\d*\\.\\d+)(?![-+0-9\\.])';	# Float 5
@@ -148,7 +169,7 @@ class Input extends CI_Controller {
         $s = 0;
 
         foreach ($weather_data_array as $data) {
-            if (preg_match_all ("/".$re1."/is", $data, $matches)) {
+            if (preg_match_all ("/$re1/is", $data, $matches)) {
 
                 $int1=$matches[2][0];
                 $year1=$matches[4][0];
@@ -156,13 +177,30 @@ class Input extends CI_Controller {
                 $int3=$matches[8][0];
                 $float1=$matches[10][0];
                 $float2=$matches[12][0];
+                $avg = ((float)$float1 + (float)$float2) / 2; // avg temperature
                 $float3=$matches[14][0];
                 $float4=$matches[16][0];
                 $float5=$matches[18][0];
 
-                $graph_me[$s++] = array($int1,$year1,$int2,$int3,$float1,$float2,$float3,$float4,$float5);
+                $graph_me[$s++] = array($int1,$year1,$int2,$int3,$float1,$float2,$avg,$float3,$float4,$float5);
             }
         }
-        echo json_encode($graph_me);
+
+        switch(strtolower($output)) {
+            case "json":
+                $graph_me = json_encode($graph_me);
+                break;
+            case "php_array":
+                // by default it returns a PHP array
+                break;
+        }
+
+        if($echo) {
+            echo $graph_me;
+            return FALSE;
+        }
+        else {
+            return $graph_me;
+        }
     }
 }
