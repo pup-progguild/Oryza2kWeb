@@ -81,7 +81,7 @@ class Input extends CI_Controller {
             write_file('./temp/'. $weather['country_code'] . $weather['station_code'] .'.'. substr($weather['year'],1,3), $weather['data']);
         }
 
-        //exec('./home/nix/www/oryza2kweb/temp/oryza2000 control.dat', $exec_output = array());
+        exec('./temp/oryza2000 control.dat', $exec_output = array());
 
         header("Content-Type: text/plain");
 
