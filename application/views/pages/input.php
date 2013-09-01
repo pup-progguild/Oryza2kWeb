@@ -149,10 +149,10 @@
         </div>
         <div id="run" class="tab-pane">
             <div id="temp-chart-container">
-                <canvas id="temp-chart" width="300" height="300"></canvas>
+                <canvas id="temp-chart" width="500" height="300"></canvas>
             </div>
             <div id="wrr14-chart-container">
-                <canvas id="wrr14-chart" width="300" height="300"></canvas>
+                <canvas id="wrr14-chart" width="500" height="300"></canvas>
                 <!-- Condition: if date of sowing == NULL or 0 -->
                 <!-- day (X) x WRR14 (Y) (1-365) -->
 
@@ -276,32 +276,54 @@
                 alert("Invalid input");
             }
             else {
-                var ctx = $("#temp-chart").getContext("2d");
-                var tempChart = new Chart(ctx).Line({
-                    labels : ["January","February","March","April","May","June","July"],
-                    datasets : [
+                var weather_ccode_mapping = {
+                    "Philippines": "phil",
+                    "China": "chn",
+                    "Indonesia": "indo"
+                };
+                var ctx = document.getElementById("temp-chart").getContext("2d");
+                $.getJSON('<?= base_url() ?>index.php/input/parse_weather_data/' + weather_ccode_mapping[$("#site").val()] + '/' + $("#year").val(), function(json) {
+                    var day = [], min = [], max = [], avg = [];
+                    for(var i in json) {
+                        day.unshift(Number(json[i][2]));
+                        min.unshift(Number(json[i][4]));
+                        max.unshift(Number(json[i][5]));
+                        avg.unshift((Number(json[i][4]) + Number(json[i][5])) / 2.0);
+                    }
+
+                    var extremes = [
                         {
-                            fillColor : "rgba(220,220,220,0.5)",
-                            strokeColor : "rgba(220,220,220,1)",
-                            pointColor : "rgba(220,220,220,1)",
-                            pointStrokeColor : "#fff",
-                            data : [65,59,90,81,56,55,40]
+                            fillColor : "rgba(204, 0, 0, 0.5)",
+                            strokeColor : "rgba(102, 0, 0, 1.0)",
+                            pointColor : "rgba(102, 0, 0, 1.0)",
+                            pointStrokeColor : "rgba(102, 0, 0, 1.0)",
+                            data : max
                         },
                         {
-                            fillColor : "rgba(151,187,205,0.5)",
-                            strokeColor : "rgba(151,187,205,1)",
-                            pointColor : "rgba(151,187,205,1)",
-                            pointStrokeColor : "#fff",
-                            data : [28,48,40,19,96,27,100]
+                            fillColor : "rgba(255, 255, 255, 0.0)",
+                            strokeColor : "rgba(102, 0, 102, 0.5)",
+                            pointColor : "rgba(102, 0, 102, 0.5)",
+                            pointStrokeColor : "rgba(102, 0, 102, 0.5)",
+                            data : avg
+                        },
+                        {
+                            fillColor : "rgba(255, 255, 255, 1.0)",
+                            strokeColor : "rgba(0, 0, 102, 1.0)",
+                            pointColor : "rgba(0, 0, 102, 1.0)",
+                            pointStrokeColor : "rgba(0, 0, 102, 1.0)",
+                            data : min
                         }
-                    ]
-                }, {
-                    // options
+                    ];
+
+                    var tempChart = new Chart(ctx).Line({
+                        labels : ["J","F","M","A","M","J","J","A","S","O","N","D"],
+                        datasets : extremes
+                    }, {
+                        // options
+                    });
                 });
-
-
                 // use the parameters given in parameters section
-                $("#main").submit();
+                //$("#main").submit();
             }
         }
 
